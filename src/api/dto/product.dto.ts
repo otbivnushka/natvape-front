@@ -1,0 +1,38 @@
+import type { ApiCategoryInfo } from './category.dto';
+
+export interface ApiProduct {
+  id: number;
+  name: string;
+  category: ApiCategoryInfo;
+  price: number;
+  oldPrice?: number;
+  rating: number;
+  image: string;
+  description: string;
+  badge?: 'NEW' | 'SALE';
+  brand: string;
+  variantLabel?: string;
+  variants?: { name: string; value: string; stock: number }[];
+  colors?: { name: string; hex: string; stock: number }[];
+}
+
+export interface ApiProductsResponse {
+  items: ApiProduct[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface ProductsQuery {
+  category?: string;
+  search?: string;
+  brand?: string;
+  priceMin?: number;
+  priceMax?: number;
+  sort?: string;
+  page?: number;
+  limit?: number;
+}

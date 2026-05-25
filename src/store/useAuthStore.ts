@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { authApi } from '../api/auth';
-import { profileApi } from '../api/profile';
+import { Api } from '../api';
 
 interface AuthUser {
   id: number;
@@ -28,21 +27,21 @@ export const useAuthStore = create<AuthState>()(
       user: null,
 
       login: async (email, password) => {
-        const res = await authApi.login(email, password);
+        const res = await Api.auth.login(email, password);
         set({ token: res.accessToken, user: res.user });
       },
 
       register: async (name, email, password, phone) => {
-        await authApi.register({ name, email, password, phone });
+        await Api.auth.register({ name, email, password, phone });
       },
 
       logout: () => {
-        authApi.logout().catch(() => {});
+        Api.auth.logout().catch(() => {});
         set({ token: null, user: null });
       },
 
       updateProfile: async (data) => {
-        const res = await profileApi.update(data);
+        const res = await Api.profile.update(data);
         set({
           user: {
             id: res.id,

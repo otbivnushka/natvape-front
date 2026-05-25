@@ -1,63 +1,28 @@
-import { api } from './client';
+import { ApiRoutes } from './constants';
+import type { ApiProduct, ApiProductsResponse, ProductsQuery } from './dto/product.dto';
 import type { Product, Category } from '../types';
+import { axiosInstance } from './instance';
 
-export interface ApiCategoryInfo {
-  id: number;
-  key: string;
-  label: string;
-}
-
-export interface ApiProduct {
-  id: number;
-  name: string;
-  category: ApiCategoryInfo;
-  price: number;
-  oldPrice?: number;
-  rating: number;
-  image: string;
-  description: string;
-  badge?: 'NEW' | 'SALE';
-  brand: string;
-  variantLabel?: string;
-  variants?: { name: string; value: string; stock: number }[];
-  colors?: { name: string; hex: string; stock: number }[];
-}
-
-export interface ApiProductsResponse {
-  items: ApiProduct[];
-  meta: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
-}
-
-export interface ProductsQuery {
-  category?: string;
-  search?: string;
-  brand?: string;
-  priceMin?: number;
-  priceMax?: number;
-  sort?: string;
-  page?: number;
-  limit?: number;
-}
-
-export function mapProduct(api: ApiProduct): Product {
-  return {
-    ...api,
-    category: api.category.key as Category,
-  };
-}
-
-export const productsApi = {
-  getAll: (query?: ProductsQuery) =>
-    api.get<ApiProductsResponse>('/products', query as Record<string, string | number | undefined>),
-
-  getById: (id: number) =>
-    api.get<ApiProduct>(`/products/${id}`),
-
-  getBrands: (category?: string) =>
-    api.get<string[]>('/products/brands', { category }),
+export const getAll = async (query?: ProductsQuery): Promise<ApiProductsResponse> => {
+  const { data } = await axiosInstance.get<ApiProductsResponse>(ApiRoutes.PRODUCTS, {
+    params: query,
+  });
+  return data;
 };
+
+export const getById = async (id: number): Promise<ApiProduct> => {
+  const { data } = await axiosInstance.get<ApiProduct>(ApiRoutes.PRODUCT_BY_ID.replace(':id', String(id)));
+  return data;
+};
+
+export const getBrands = async (category?: string): Promise<string[]> => {
+  const { data } = await axiosInstance.get<string[]>(ApiRoutes.PRODUCTS_BRANDS, {
+    params: { category },
+  });
+  return data;
+};
+
+export const mapProduct = (api: ApiProduct): Product => ({
+  ...api,
+  category: api.category.key as Category,
+});

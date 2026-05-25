@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { productsApi, mapProduct } from '../api/products';
-import { productCache } from '../api/product-cache';
+import { Api } from '../api';
 import type { Product, ProductColor } from '../types';
 import { useCartStore } from '../store/useCartStore';
 import { useToastStore } from '../store/useToastStore';
@@ -43,10 +42,10 @@ const ProductDetail = () => {
     if (!id) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
-    productsApi.getById(Number(id))
+    Api.products.getById(Number(id))
       .then((api) => {
-        const p = mapProduct(api);
-        productCache.setOne(p);
+        const p = Api.products.mapProduct(api);
+        Api.productCache.setOne(p);
         setProduct(p);
       })
       .catch(() => setProduct(null))

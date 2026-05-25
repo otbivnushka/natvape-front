@@ -1,6 +1,7 @@
 import { useState, useEffect, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { categoriesApi, type ApiCategoryInfo } from '../api/categories';
+import { Api } from '../api';
+import type { ApiCategoryInfo } from '../api/dto/category.dto';
 import { LiquidIcon, EvaporatorIcon, CartridgeIcon, SnusIcon, PodIcon, DisposableIcon } from '../components/ui/icons';
 import { PageLayout } from '../components/shared';
 import { Skeleton } from '../components/ui';
@@ -23,8 +24,7 @@ const Catalog = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    categoriesApi
-      .getAll()
+    Api.categories.getAll()
       .then(setCats)
       .catch(() => {})
       .finally(() => setLoading(false));

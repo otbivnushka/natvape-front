@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { useAuthStore } from './useAuthStore';
-import { cartApi, type ApiCartItem } from '../api/cart';
-import { productCache } from '../api/product-cache';
+import { Api } from '../api';
+import type { ApiCartItem } from '../api/dto/cart.dto';
 import type { Product, CartItem } from '../types';
 
 let localId = 0;
@@ -21,7 +21,7 @@ interface CartState {
 }
 
 function mapApiItem(i: ApiCartItem): CartItem {
-  const cached = productCache.get(i.product.id);
+  const cached = Api.productCache.get(i.product.id);
   const product = cached ?? {
     id: i.product.id,
     name: i.product.name,
@@ -48,7 +48,7 @@ export const useCartStore = create<CartState>()(
 
       syncFromServer: async () => {
         try {
-          const res = await cartApi.get();
+          const res = await Api.cart.get();
           set({ items: res.items.map(mapApiItem) });
         } catch {
           // Server not available — keep local state
@@ -60,7 +60,7 @@ export const useCartStore = create<CartState>()(
 
         if (authed) {
           try {
-            const res = await cartApi.add(productId, quantity, variantKey);
+            const res = await Api.cart.add(productId, quantity, variantKey);
             set({ items: res.items.map(mapApiItem) });
             return;
           } catch {
@@ -82,7 +82,7 @@ export const useCartStore = create<CartState>()(
               ),
             };
           }
-          const cached = productCache.get(productId);
+          const cached = Api.productCache.get(productId);
           const product = cached ?? { id: productId, name: `Товар #${productId}`, price: 0, rating: 0, image: '', description: '', brand: '', category: 'liquids' } as Product;
           return { items: [...state.items, { id: nextId(), product, quantity, variantKey }] };
         });
@@ -93,7 +93,7 @@ export const useCartStore = create<CartState>()(
 
         if (authed) {
           try {
-            const res = await cartApi.remove(itemId);
+            const res = await Api.cart.remove(itemId);
             set({ items: res.items.map(mapApiItem) });
             return;
           } catch {
@@ -113,7 +113,7 @@ export const useCartStore = create<CartState>()(
 
         if (authed) {
           try {
-            const res = await cartApi.updateQty(itemId, item.quantity + 1);
+            const res = await Api.cart.updateQty(itemId, item.quantity + 1);
             set({ items: res.items.map(mapApiItem) });
             return;
           } catch {
@@ -137,10 +137,10 @@ export const useCartStore = create<CartState>()(
           try {
             const nextQty = item.quantity - 1;
             if (nextQty <= 0) {
-              const res = await cartApi.remove(itemId);
+              const res = await Api.cart.remove(itemId);
               set({ items: res.items.map(mapApiItem) });
             } else {
-              const res = await cartApi.updateQty(itemId, nextQty);
+              const res = await Api.cart.updateQty(itemId, nextQty);
               set({ items: res.items.map(mapApiItem) });
             }
             return;
@@ -165,7 +165,7 @@ export const useCartStore = create<CartState>()(
 
         if (authed) {
           try {
-            const res = await cartApi.clear();
+            const res = await Api.cart.clear();
             set({ items: res.items.map(mapApiItem) });
             return;
           } catch {

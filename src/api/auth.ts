@@ -1,30 +1,17 @@
-import { api } from './client';
+import { ApiRoutes } from './constants';
+import type { ApiLoginResponse, RegisterDto } from './dto/auth.dto';
+import { axiosInstance } from './instance';
 
-export interface ApiLoginResponse {
-  accessToken: string;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-    avatar: string | null;
-    phone: string | null;
-  };
-}
+export const login = async (email: string, password: string): Promise<ApiLoginResponse> => {
+  const { data } = await axiosInstance.post<ApiLoginResponse>(ApiRoutes.LOGIN, { email, password });
+  return data;
+};
 
-export interface RegisterDto {
-  name: string;
-  email: string;
-  password: string;
-  phone?: string;
-}
+export const register = async (dto: RegisterDto): Promise<{ id: number; name: string; email: string }> => {
+  const { data } = await axiosInstance.post<{ id: number; name: string; email: string }>(ApiRoutes.REGISTER, dto);
+  return data;
+};
 
-export const authApi = {
-  login: (email: string, password: string) =>
-    api.post<ApiLoginResponse>('/auth/login', { email, password }),
-
-  register: (data: RegisterDto) =>
-    api.post<{ id: number; name: string; email: string }>('/auth/register', data),
-
-  logout: () =>
-    api.post<{ message: string }>('/auth/logout'),
+export const logout = async (): Promise<void> => {
+  await axiosInstance.post(ApiRoutes.LOGOUT);
 };

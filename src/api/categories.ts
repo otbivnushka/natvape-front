@@ -1,12 +1,8 @@
-import { api } from './client';
+import { ApiRoutes } from './constants';
+import type { ApiCategoryInfo } from './dto/category.dto';
+import { axiosInstance } from './instance';
 
-export interface ApiCategoryInfo {
-  id: number;
-  key: string;
-  label: string;
-  productCount?: number;
-}
-
-export const categoriesApi = {
-  getAll: () => api.get<ApiCategoryInfo[]>('/categories'),
+export const getAll = async (): Promise<ApiCategoryInfo[]> => {
+  const { data } = await axiosInstance.get<ApiCategoryInfo[]>(ApiRoutes.CATEGORIES);
+  return data;
 };

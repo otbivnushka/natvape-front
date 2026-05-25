@@ -1,41 +1,28 @@
-import { api } from './client';
+import { ApiRoutes } from './constants';
+import type { ApiCartResponse } from './dto/cart.dto';
+import { axiosInstance } from './instance';
 
-export interface ApiCartProduct {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  category: { id: number; key: string; label: string };
-  brand: string;
-  badge?: 'NEW' | 'SALE';
-}
+export const get = async (): Promise<ApiCartResponse> => {
+  const { data } = await axiosInstance.get<ApiCartResponse>(ApiRoutes.CART);
+  return data;
+};
 
-export interface ApiCartItem {
-  id: number;
-  product: ApiCartProduct;
-  quantity: number;
-  variantKey: string | null;
-}
+export const add = async (productId: number, quantity: number, variantKey?: string): Promise<ApiCartResponse> => {
+  const { data } = await axiosInstance.post<ApiCartResponse>(ApiRoutes.CART, { productId, quantity, variantKey });
+  return data;
+};
 
-export interface ApiCartResponse {
-  items: ApiCartItem[];
-  totalItems: number;
-  subtotal: number;
-}
+export const updateQty = async (itemId: number, quantity: number): Promise<ApiCartResponse> => {
+  const { data } = await axiosInstance.patch<ApiCartResponse>(ApiRoutes.CART_ITEM.replace(':id', String(itemId)), { quantity });
+  return data;
+};
 
-export const cartApi = {
-  get: () =>
-    api.get<ApiCartResponse>('/cart'),
+export const remove = async (itemId: number): Promise<ApiCartResponse> => {
+  const { data } = await axiosInstance.delete<ApiCartResponse>(ApiRoutes.CART_ITEM.replace(':id', String(itemId)));
+  return data;
+};
 
-  add: (productId: number, quantity: number, variantKey?: string) =>
-    api.post<ApiCartResponse>('/cart', { productId, quantity, variantKey }),
-
-  updateQty: (itemId: number, quantity: number) =>
-    api.patch<ApiCartResponse>(`/cart/${itemId}`, { quantity }),
-
-  remove: (itemId: number) =>
-    api.delete<ApiCartResponse>(`/cart/${itemId}`),
-
-  clear: () =>
-    api.delete<ApiCartResponse>('/cart'),
+export const clear = async (): Promise<ApiCartResponse> => {
+  const { data } = await axiosInstance.delete<ApiCartResponse>(ApiRoutes.CART);
+  return data;
 };

@@ -1,35 +1,7 @@
-import { api } from './client';
+import { ApiRoutes } from './constants';
+import type { ApiOrder, CreateOrderDto, ApiOrderItem } from './dto/order.dto';
 import type { Order, OrderItem } from '../types';
-
-export interface ApiOrderItem {
-  id: number;
-  productId: number;
-  productName: string;
-  productImage: string;
-  variantKey: string | null;
-  variantName: string | null;
-  quantity: number;
-  price: number;
-}
-
-export interface ApiOrder {
-  id: number;
-  items: ApiOrderItem[];
-  total: number;
-  status: 'processing' | 'shipping' | 'delivered';
-  deliveryMethod: 'pickup' | 'delivery';
-  comment: string | null;
-  createdAt: string;
-  addressId?: number;
-  deliveryTime?: string;
-}
-
-export interface CreateOrderDto {
-  deliveryMethod: 'pickup' | 'delivery';
-  comment?: string;
-  addressId?: number;
-  deliveryTime?: string;
-}
+import { axiosInstance } from './instance';
 
 function mapOrderItem(i: ApiOrderItem): OrderItem {
   return i;
@@ -43,13 +15,17 @@ function mapOrder(o: ApiOrder): Order {
   };
 }
 
-export const ordersApi = {
-  create: (data: CreateOrderDto) =>
-    api.post<ApiOrder>('/orders', data).then(mapOrder),
+export const create = async (dto: CreateOrderDto): Promise<Order> => {
+  const { data } = await axiosInstance.post<ApiOrder>(ApiRoutes.ORDERS, dto);
+  return mapOrder(data);
+};
 
-  getAll: () =>
-    api.get<ApiOrder[]>('/orders').then((list) => list.map(mapOrder)),
+export const getAll = async (): Promise<Order[]> => {
+  const { data } = await axiosInstance.get<ApiOrder[]>(ApiRoutes.ORDERS);
+  return data.map(mapOrder);
+};
 
-  getById: (id: number) =>
-    api.get<ApiOrder>(`/orders/${id}`).then(mapOrder),
+export const getById = async (id: number): Promise<Order> => {
+  const { data } = await axiosInstance.get<ApiOrder>(ApiRoutes.ORDER_BY_ID.replace(':id', String(id)));
+  return mapOrder(data);
 };

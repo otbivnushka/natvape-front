@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useThemeStore } from '../store/useThemeStore';
-import { ordersApi } from '../api/orders';
-import { profileApi } from '../api/profile';
+import { Api } from '../api';
 import type { Order } from '../types';
 import { Lock, Package, Sun, Moon, Loader2, Info } from 'lucide-react';
 import { EmptyState, PageLayout, ProjectInfoModal, FixedButton, OrderCard } from '../components/shared';
@@ -27,14 +26,13 @@ const Profile = () => {
     if (!user) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrdersLoading(true);
-    ordersApi
-      .getAll()
+    Api.orders.getAll()
       .then(setOrders)
       .catch((err) => {
         console.log(err);
       })
       .finally(() => setOrdersLoading(false));
-    profileApi.get().then((p) => setTotalSpent(p.totalSpent)).catch(() => {});
+    Api.profile.get().then((p) => setTotalSpent(p.totalSpent)).catch(() => {});
   }, [user]);
 
   const handleLogin = async () => {

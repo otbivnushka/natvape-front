@@ -1,11 +1,17 @@
-import { api } from './client';
+import { ApiRoutes } from './constants';
 import type { Address } from '../types';
+import { axiosInstance } from './instance';
 
-export const addressesApi = {
-  getAll: () => api.get<Address[]>('/addresses'),
+export const getAll = async (): Promise<Address[]> => {
+  const { data } = await axiosInstance.get<Address[]>(ApiRoutes.ADDRESSES);
+  return data;
+};
 
-  create: (data: { label: string; lat: number; lng: number }) =>
-    api.post<Address>('/addresses', data),
+export const create = async (dto: { label: string; lat: number; lng: number }): Promise<Address> => {
+  const { data } = await axiosInstance.post<Address>(ApiRoutes.ADDRESSES, dto);
+  return data;
+};
 
-  remove: (id: number) => api.delete(`/addresses/${id}`),
+export const remove = async (id: number): Promise<void> => {
+  await axiosInstance.delete(ApiRoutes.ADDRESS_BY_ID.replace(':id', String(id)));
 };

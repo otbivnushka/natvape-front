@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Heart } from 'lucide-react';
 import { useWishlistStore } from '../store/useWishlistStore';
-import { productsApi, mapProduct } from '../api/products';
-import { productCache } from '../api/product-cache';
+import { Api } from '../api';
 import type { Product } from '../types';
 import { Skeleton } from '../components/ui';
 import { ProductCard, EmptyState, PageLayout } from '../components/shared';
@@ -20,10 +19,10 @@ const Wishlist = () => {
       return;
     }
     setLoading(true);
-    productsApi.getAll({ limit: 100 })
+    Api.products.getAll({ limit: 100 })
       .then((res) => {
-        const all = res.items.map(mapProduct);
-        productCache.set(all);
+        const all = res.items.map(Api.products.mapProduct);
+        Api.productCache.set(all);
         setProducts(all.filter((p) => productIds.includes(p.id)));
       })
       .catch(() => setProducts([]))

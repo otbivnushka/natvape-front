@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { useAuthStore } from './useAuthStore';
-import { wishlistApi } from '../api/wishlist';
+import { Api } from '../api';
 
 interface WishlistState {
   productIds: number[];
@@ -18,7 +18,7 @@ export const useWishlistStore = create<WishlistState>()(
 
       syncFromServer: async () => {
         try {
-          const res = await wishlistApi.get();
+          const res = await Api.wishlist.get();
           set({ productIds: res.productIds });
         } catch {
           // keep local
@@ -31,10 +31,10 @@ export const useWishlistStore = create<WishlistState>()(
         if (authed) {
           try {
             if (get().productIds.includes(productId)) {
-              const res = await wishlistApi.remove(productId);
+              const res = await Api.wishlist.remove(productId);
               set({ productIds: res.productIds });
             } else {
-              const res = await wishlistApi.add(productId);
+              const res = await Api.wishlist.add(productId);
               set({ productIds: res.productIds });
             }
             return;
@@ -57,7 +57,7 @@ export const useWishlistStore = create<WishlistState>()(
         const authed = useAuthStore.getState().isLoggedIn();
         if (authed) {
           try {
-            await wishlistApi.get(); // just to check server is alive
+            await Api.wishlist.get(); // just to check server is alive
             // API doesn't have a batch remove, but we can just clear locally
             // and the server will be out of sync — acceptable for MVP
           } catch {

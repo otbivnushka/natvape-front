@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Store, Truck, ShoppingCart, Loader2, Clock, RotateCcw } from 'lucide-react';
-import { ordersApi } from '../api/orders';
-import { addressesApi } from '../api/addresses';
+import { Api } from '../api';
 import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { useToastStore } from '../store/useToastStore';
@@ -38,7 +37,7 @@ const Checkout = () => {
   const selectedAddress = addresses.find((a) => a.id === selectedAddressId) ?? null;
 
   useEffect(() => {
-    addressesApi.getAll()
+    Api.addresses.getAll()
       .then((list) => {
         setAddresses(list);
         if (list.length > 0) setSelectedAddressId(list[0].id);
@@ -67,7 +66,7 @@ const Checkout = () => {
     const trimmed = pendingLabel.trim();
     if (!trimmed || pendingLat === null || pendingLng === null) return;
     try {
-      const newAddr = await addressesApi.create({ label: trimmed, lat: pendingLat, lng: pendingLng });
+      const newAddr = await Api.addresses.create({ label: trimmed, lat: pendingLat, lng: pendingLng });
       setAddresses((prev) => [...prev, newAddr]);
       setSelectedAddressId(newAddr.id);
       setIsAddingAddress(false);
@@ -82,7 +81,7 @@ const Checkout = () => {
 
   const handleDeleteAddress = async (id: number) => {
     try {
-      await addressesApi.remove(id);
+      await Api.addresses.remove(id);
       setAddresses((prev) => prev.filter((a) => a.id !== id));
       if (selectedAddressId === id) {
         const remaining = addresses.filter((a) => a.id !== id);
@@ -112,7 +111,7 @@ const Checkout = () => {
 
     setSubmitting(true);
     try {
-      const order = await ordersApi.create({
+      const order = await Api.orders.create({
         deliveryMethod: delivery,
         comment: comment || undefined,
         addressId: delivery === 'delivery' ? (selectedAddressId ?? undefined) : undefined,

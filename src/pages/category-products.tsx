@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { HelpCircle, SearchX } from 'lucide-react';
-import { productsApi, mapProduct } from '../api/products';
-import { categoriesApi, type ApiCategoryInfo } from '../api/categories';
-import { productCache } from '../api/product-cache';
+import { Api } from '../api';
+import type { ApiCategoryInfo } from '../api/dto/category.dto';
 import type { SortOption, Product } from '../types';
 import { SearchBar, SortSelect, PriceFilter, BrandFilter, Skeleton } from '../components/ui';
 import { ProductCard, EmptyState, PageLayout } from '../components/shared';
@@ -25,7 +24,7 @@ const CategoryProducts = () => {
   const initialLoad = useRef(true);
 
   useEffect(() => {
-    categoriesApi.getAll().then((cats) => {
+    Api.categories.getAll().then((cats) => {
       const found = cats.find((c) => c.key === category);
       setCatInfo(found ?? null);
     }).catch(() => {});
@@ -36,7 +35,7 @@ const CategoryProducts = () => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     Promise.all([
-      productsApi.getAll({
+      Api.products.getAll({
         category,
         search: search || undefined,
         sort: sort !== 'name' ? sort : undefined,
@@ -45,11 +44,11 @@ const CategoryProducts = () => {
         priceMax: maxPrice > 0 ? maxPrice : undefined,
         limit: 50,
       }),
-      productsApi.getBrands(category).catch(() => [] as string[]),
+      Api.products.getBrands(category).catch(() => [] as string[]),
     ])
       .then(([res, brandsList]) => {
-        const mapped = res.items.map(mapProduct);
-        productCache.set(mapped);
+        const mapped = res.items.map(Api.products.mapProduct);
+        Api.productCache.set(mapped);
         setProducts(mapped);
         setBrands(brandsList);
         if (res.items.length > 0 && initialLoad.current) {

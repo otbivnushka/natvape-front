@@ -1,16 +1,18 @@
-import { api } from './client';
+import { ApiRoutes } from './constants';
+import type { WishlistResponse } from './dto/wishlist.dto';
+import { axiosInstance } from './instance';
 
-export interface WishlistResponse {
-  productIds: number[];
-}
+export const get = async (): Promise<WishlistResponse> => {
+  const { data } = await axiosInstance.get<WishlistResponse>(ApiRoutes.WISHLIST);
+  return data;
+};
 
-export const wishlistApi = {
-  get: () =>
-    api.get<WishlistResponse>('/wishlist'),
+export const add = async (productId: number): Promise<WishlistResponse> => {
+  const { data } = await axiosInstance.post<WishlistResponse>(ApiRoutes.WISHLIST, { productId });
+  return data;
+};
 
-  add: (productId: number) =>
-    api.post<WishlistResponse>('/wishlist', { productId }),
-
-  remove: (productId: number) =>
-    api.delete<WishlistResponse>(`/wishlist/${productId}`),
+export const remove = async (productId: number): Promise<WishlistResponse> => {
+  const { data } = await axiosInstance.delete<WishlistResponse>(ApiRoutes.WISHLIST_ITEM.replace(':productId', String(productId)));
+  return data;
 };
