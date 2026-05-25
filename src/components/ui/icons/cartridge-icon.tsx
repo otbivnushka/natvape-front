@@ -1,0 +1,29 @@
+import React from 'react';
+
+const CartridgeIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
+  return (
+    <svg viewBox="0 0 200 200" fill="none" {...props}>
+      <path
+        d="M55 174.5H145V129.5H149V100C148.667 95.1667 147.4 80.5 145 60.5C145 39.7 130.333 35.8333 123 36.5H73.5C59.5 36.5 55.3333 52.5 55 60.5L51 100V129.5H55V174.5Z"
+        stroke="currentColor"
+        strokeWidth={5}
+      />
+      <path d="M52.5 101.5H148" stroke="currentColor" strokeWidth={5} />
+      <path d="M52.5 78.5H148" stroke="currentColor" strokeWidth={5} />
+      <path d="M55.5 134H145" stroke="currentColor" strokeWidth={5} />
+      <path
+        d="M54.5 77.5L57.5 51L65.5 39L72 36.5H127L133.5 39L144 51L146.5 77.5H54.5Z"
+        fill="currentColor"
+        stroke="currentColor"
+      />
+      <rect x={90.5} y={104.5} width={21} height={29} stroke="currentColor" strokeWidth={5} />
+      <circle cx={101} cy={119} r={4} fill="currentColor" />
+      <path
+        d="M70 152C70 149.239 72.2386 147 75 147H126C128.761 147 131 149.239 131 152V173H70V152Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+};
+
+export { CartridgeIcon };

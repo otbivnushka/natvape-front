@@ -1,0 +1,86 @@
+export type Category = 'liquids' | 'coils' | 'cartridges' | 'snus' | 'pods' | 'disposables';
+
+export interface CategoryInfo {
+  id: number;
+  key: Category;
+  label: string;
+}
+
+export interface ProductColor {
+  name: string;
+  hex: string;
+  stock: number;
+}
+
+export interface ProductVariant {
+  name: string;
+  value: string;
+  stock: number;
+}
+
+export interface Product {
+  id: number;
+  name: string;
+  category: Category;
+  price: number;
+  oldPrice?: number;
+  rating: number;
+  image: string;
+  description: string;
+  badge?: 'NEW' | 'SALE';
+  brand: string;
+  variantLabel?: string;
+  variants?: ProductVariant[];
+  colors?: ProductColor[];
+}
+
+export interface CartItem {
+  id: number;
+  product: Product;
+  quantity: number;
+  variantKey?: string;
+}
+
+export interface OrderItem {
+  id: number;
+  productId: number;
+  productName: string;
+  productImage: string;
+  variantKey: string | null;
+  variantName: string | null;
+  quantity: number;
+  price: number;
+}
+
+export interface Address {
+  id: number;
+  label: string;
+  lat: number;
+  lng: number;
+}
+
+export interface Order {
+  id: number;
+  items: OrderItem[];
+  total: number;
+  status: 'delivered' | 'shipping' | 'processing';
+  date: string;
+  deliveryMethod: 'pickup' | 'delivery';
+  comment: string | null;
+  createdAt: string;
+  addressId?: number;
+  deliveryTime?: string;
+}
+
+export interface UserProfile {
+  id: number;
+  name: string;
+  email: string;
+  phone: string | null;
+  avatar: string | null;
+  addresses: Address[];
+  totalSpent: number;
+  ordersCount: number;
+}
+
+export type SortOption = 'price-asc' | 'price-desc' | 'rating' | 'name';
