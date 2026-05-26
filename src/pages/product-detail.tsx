@@ -4,7 +4,6 @@ import { Api } from '../api';
 import type { Product, ProductColor } from '../types';
 import { useCartStore } from '../store/useCartStore';
 import { useToastStore } from '../store/useToastStore';
-import { formatPrice } from '../utils/formatPrice';
 import { ArrowLeft, HelpCircle } from 'lucide-react';
 import {
   StarRating,
@@ -177,7 +176,10 @@ const ProductDetail = () => {
               variants={product.variants!}
               variantLabel={product.variantLabel!}
               selectedValue={selectedVariant}
-              onSelect={setSelectedVariant}
+              onSelect={(obj) => {
+                setSelectedVariant(obj);
+                setQuantity(1);
+              }}
               disabledValues={disabledVariantValues}
             />
           )}
@@ -186,7 +188,10 @@ const ProductDetail = () => {
             <ColorPicker
               colors={product.colors!}
               selectedColor={selectedColor}
-              onSelect={setSelectedColor}
+              onSelect={(obj) => {
+                setSelectedColor(obj);
+                setQuantity(1);
+              }}
               disabledKeys={disabledColorNames}
             />
           )}
@@ -224,9 +229,7 @@ const ProductDetail = () => {
             </div>
 
             <PrimaryButton onClick={handleAddToCart} disabled={!canAdd || maxQuantity === 0}>
-              {!canAdd
-                ? 'Выберите вариант'
-                : `В корзину — ${formatPrice(product.price * quantity)}`}
+              {!canAdd ? 'Выберите вариант' : `В корзину — ${quantity} шт.`}
             </PrimaryButton>
           </div>
         </div>

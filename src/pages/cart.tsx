@@ -4,10 +4,15 @@ import { useCartStore } from '../store/useCartStore';
 import { PrimaryButton } from '../components/ui';
 import { CartItem as CartItemComponent, EmptyState, PageLayout } from '../components/shared';
 import { formatPrice } from '../utils/formatPrice';
+import { useEffect } from 'react';
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { items, subtotal } = useCartStore();
+  const { items, syncFromServer, subtotal } = useCartStore();
+
+  useEffect(() => {
+    syncFromServer();
+  }, []);
 
   const total = subtotal();
 

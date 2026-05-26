@@ -2,10 +2,12 @@ export interface ApiCartProduct {
   id: number;
   name: string;
   price: number;
+  doublePrice: number | null;
   image: string;
+  imageId: number | null;
   category: { id: number; key: string; label: string };
   brand: string;
-  badge?: 'NEW' | 'SALE';
+  badge: string | null;
 }
 
 export interface ApiCartItem {

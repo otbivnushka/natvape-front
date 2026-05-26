@@ -4,6 +4,7 @@ import { HelpCircle, SearchX } from 'lucide-react';
 import { Api } from '../api';
 import type { ApiCategoryInfo } from '../api/dto/category.dto';
 import type { SortOption, Product } from '../types';
+import { useDebounce } from '@uidotdev/usehooks';
 import { SearchBar, SortSelect, PriceFilter, BrandFilter, Skeleton } from '../components/ui';
 import { ProductCard, EmptyState, PageLayout } from '../components/shared';
 
@@ -22,6 +23,10 @@ const CategoryProducts = () => {
   const [catInfo, setCatInfo] = useState<ApiCategoryInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const initialLoad = useRef(true);
+  const skipNextFetch = useRef(false);
+  const debouncedSearch = useDebounce(search, 300);
+  const debouncedMinPrice = useDebounce(minPrice, 300);
+  const debouncedMaxPrice = useDebounce(maxPrice, 300);
 
   useEffect(() => {
     Api.categories.getAll().then((cats) => {
@@ -32,25 +37,32 @@ const CategoryProducts = () => {
 
   useEffect(() => {
     if (!category) return;
+    Api.products.getBrands(category)
+      .then(setBrands)
+      .catch(() => setBrands([]));
+  }, [category]);
+
+  useEffect(() => {
+    if (!category) return;
+    if (skipNextFetch.current) {
+      skipNextFetch.current = false;
+      return;
+    }
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
-    Promise.all([
-      Api.products.getAll({
-        category,
-        search: search || undefined,
-        sort: sort !== 'name' ? sort : undefined,
-        brand: brand || undefined,
-        priceMin: minPrice > 0 ? minPrice : undefined,
-        priceMax: maxPrice > 0 ? maxPrice : undefined,
-        limit: 50,
-      }),
-      Api.products.getBrands(category).catch(() => [] as string[]),
-    ])
-      .then(([res, brandsList]) => {
+    Api.products.getAll({
+      category,
+      search: debouncedSearch || undefined,
+      sort: sort !== 'name' ? sort : undefined,
+      brand: brand || undefined,
+      priceMin: debouncedMinPrice > 0 ? debouncedMinPrice : undefined,
+      priceMax: debouncedMaxPrice > 0 ? debouncedMaxPrice : undefined,
+      limit: 50,
+    })
+      .then((res) => {
         const mapped = res.items.map(Api.products.mapProduct);
         Api.productCache.set(mapped);
         setProducts(mapped);
-        setBrands(brandsList);
         if (res.items.length > 0 && initialLoad.current) {
           initialLoad.current = false;
           const prices = res.items.map((p) => p.price);
@@ -60,14 +72,14 @@ const CategoryProducts = () => {
           setGlobalMaxPrice(gMax);
           setMinPrice(gMin);
           setMaxPrice(gMax);
+          skipNextFetch.current = true;
         }
       })
       .catch(() => {
         setProducts([]);
-        setBrands([]);
       })
       .finally(() => setLoading(false));
-  }, [category, search, sort, brand, minPrice, maxPrice]);
+  }, [category, debouncedSearch, sort, brand, debouncedMinPrice, debouncedMaxPrice]);
 
   const handleBack = () => navigate('/');
 

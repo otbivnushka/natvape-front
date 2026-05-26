@@ -2,8 +2,9 @@ import React from 'react';
 import type { CartItem as CartItemType } from '../../types';
 import { useCartStore } from '../../store/useCartStore';
 import { formatPrice } from '../../utils/formatPrice';
+import { getCartItemTotal } from '../../utils/getCartItemTotal';
 import { X } from 'lucide-react';
-import { QuantityStepper } from '../ui';
+import { QuantityStepper, PriceDisplay } from '../ui';
 
 interface CartItemProps {
   item: CartItemType;
@@ -29,6 +30,7 @@ function getVariantStock(item: CartItemType): number {
 
 const CartItem: React.FC<CartItemProps> = ({ item }) => {
   const { increaseQty, decreaseQty, removeFromCart } = useCartStore();
+  const items = useCartStore((s) => s.items);
   const variantName = getVariantName(item);
   const maxQty = getVariantStock(item);
 
@@ -40,9 +42,11 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
         {variantName && (
           <div className="text-[12px] text-dim mt-0.5">{variantName}</div>
         )}
-        <div className="text-sm font-bold text-primary mt-1">{formatPrice(item.product.price)}</div>
+        <div className="mt-1">
+          <PriceDisplay price={item.product.price} doublePrice={item.product.doublePrice} />
+        </div>
         <div className="text-xs text-muted mt-0.5">
-          Сумма: {formatPrice(item.product.price * item.quantity)}
+          Сумма: {formatPrice(getCartItemTotal(item, items))}
         </div>
         <div className="mt-2">
           <QuantityStepper

@@ -5,7 +5,7 @@ import { Api } from '../api';
 import type { ApiCategoryInfo } from '../api/dto/category.dto';
 import type { CreateProductDto } from '../api/dto/admin.dto';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
-import { ImageUpload, Input } from '../components/ui';
+import { ImageUpload, Input, QuantityStepper } from '../components/ui';
 
 interface VariantForm {
   id?: number;
@@ -148,6 +148,33 @@ const AdminProduct = () => {
     }
   };
 
+  const handleVariantStockChange = async (variantId: number, newStock: number) => {
+    if (newStock < 0) return;
+    try {
+      await Api.admin.updateVariant(variantId, { stock: newStock });
+      setForm((prev) => ({
+        ...prev,
+        variants:
+          prev.variants?.map((v) => (v.id === variantId ? { ...v, stock: newStock } : v)) ?? [],
+      }));
+    } catch {
+      /* silent */
+    }
+  };
+
+  const handleColorStockChange = async (colorId: number, newStock: number) => {
+    if (newStock < 0) return;
+    try {
+      await Api.admin.updateColor(colorId, { stock: newStock });
+      setForm((prev) => ({
+        ...prev,
+        colors: prev.colors?.map((c) => (c.id === colorId ? { ...c, stock: newStock } : c)) ?? [],
+      }));
+    } catch {
+      /* silent */
+    }
+  };
+
   const handleAddColor = async () => {
     if (!newColor.name || !newColor.hex || productId == null) return;
     setColorAdding(true);
@@ -240,6 +267,7 @@ const AdminProduct = () => {
                 placeholder="Текст акции"
                 value={form.badge ?? ''}
                 onChange={(e) => setForm({ ...form, badge: e.target.value || null })}
+                className="w-25"
               />
             </div>
             <Input
@@ -274,7 +302,6 @@ const AdminProduct = () => {
               <h2 className="text-sm font-semibold text-muted mb-4">
                 Варианты ({form.variants?.length ?? 0})
               </h2>
-
               {form.variants && form.variants.length > 0 && (
                 <div className="flex flex-col gap-2 mb-4">
                   {(form.variants as (VariantForm & { id?: number })[]).map((v, i) => (
@@ -284,7 +311,17 @@ const AdminProduct = () => {
                     >
                       <span className="font-medium min-w-20">{v.name}</span>
                       <span className="text-muted min-w-20">{v.value}</span>
-                      <span className="text-dim">stock: {v.stock}</span>
+
+                      <QuantityStepper
+                        quantity={v.stock}
+                        onDecrement={() => {
+                          console.log(v);
+                          handleVariantStockChange(v.id!, v.stock - 1);
+                        }}
+                        onIncrement={() => handleVariantStockChange(v.id!, v.stock + 1)}
+                        size="sm"
+                      />
+
                       <button
                         onClick={() => v.id != null && handleDeleteVariant(v.id)}
                         className="ml-auto p-1 rounded text-muted cursor-pointer hover:text-red-500 transition-colors"
@@ -349,7 +386,16 @@ const AdminProduct = () => {
                       />
                       <span className="font-medium min-w-20">{c.name}</span>
                       <span className="text-muted">{c.hex}</span>
-                      <span className="text-dim">stock: {c.stock}</span>
+                      {c.id != null ? (
+                        <QuantityStepper
+                          quantity={c.stock}
+                          onDecrement={() => handleColorStockChange(c.id!, c.stock - 1)}
+                          onIncrement={() => handleColorStockChange(c.id!, c.stock + 1)}
+                          size="sm"
+                        />
+                      ) : (
+                        <span className="text-dim">stock: {c.stock}</span>
+                      )}
                       <button
                         onClick={() => c.id != null && handleDeleteColor(c.id)}
                         className="ml-auto p-1 rounded text-muted cursor-pointer hover:text-red-500 transition-colors"

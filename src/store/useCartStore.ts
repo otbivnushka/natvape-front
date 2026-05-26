@@ -4,6 +4,7 @@ import { useAuthStore } from './useAuthStore';
 import { Api } from '../api';
 import type { ApiCartItem } from '../api/dto/cart.dto';
 import type { Product, CartItem } from '../types';
+import { sortCartItems } from '../utils/sortCartItems';
 
 let localId = 0;
 const nextId = () => --localId;
@@ -26,7 +27,9 @@ function mapApiItem(i: ApiCartItem): CartItem {
     id: i.product.id,
     name: i.product.name,
     price: i.product.price,
+    doublePrice: i.product.doublePrice ?? null,
     image: i.product.image,
+    imageId: i.product.imageId ?? null,
     rating: 0,
     description: '',
     brand: i.product.brand,
@@ -49,7 +52,7 @@ export const useCartStore = create<CartState>()(
       syncFromServer: async () => {
         try {
           const res = await Api.cart.get();
-          set({ items: res.items.map(mapApiItem) });
+          set({ items: sortCartItems(res.items.map(mapApiItem)) });
         } catch {
           // Server not available — keep local state
         }
@@ -61,7 +64,7 @@ export const useCartStore = create<CartState>()(
         if (authed) {
           try {
             const res = await Api.cart.add(productId, quantity, variantKey);
-            set({ items: res.items.map(mapApiItem) });
+            set({ items: sortCartItems(res.items.map(mapApiItem)) });
             return;
           } catch {
             // fallback to local
@@ -75,16 +78,18 @@ export const useCartStore = create<CartState>()(
           );
           if (existing) {
             return {
-              items: state.items.map((i) =>
-                `${i.product.id}:${i.variantKey ?? ''}` === key
-                  ? { ...i, quantity: i.quantity + quantity }
-                  : i
+              items: sortCartItems(
+                state.items.map((i) =>
+                  `${i.product.id}:${i.variantKey ?? ''}` === key
+                    ? { ...i, quantity: i.quantity + quantity }
+                    : i
+                )
               ),
             };
           }
           const cached = Api.productCache.get(productId);
-          const product = cached ?? { id: productId, name: `Товар #${productId}`, price: 0, rating: 0, image: '', description: '', brand: '', category: 'liquids' } as Product;
-          return { items: [...state.items, { id: nextId(), product, quantity, variantKey }] };
+          const product = cached ?? { id: productId, name: `Товар #${productId}`, price: 0, doublePrice: null, rating: 0, image: '', description: '', brand: '', category: 'liquids' } as Product;
+          return { items: sortCartItems([...state.items, { id: nextId(), product, quantity, variantKey }]) };
         });
       },
 
@@ -94,7 +99,7 @@ export const useCartStore = create<CartState>()(
         if (authed) {
           try {
             const res = await Api.cart.remove(itemId);
-            set({ items: res.items.map(mapApiItem) });
+            set({ items: sortCartItems(res.items.map(mapApiItem)) });
             return;
           } catch {
             // fallback
@@ -102,7 +107,7 @@ export const useCartStore = create<CartState>()(
         }
 
         set((state) => ({
-          items: state.items.filter((i) => i.id !== itemId),
+          items: sortCartItems(state.items.filter((i) => i.id !== itemId)),
         }));
       },
 
@@ -114,7 +119,7 @@ export const useCartStore = create<CartState>()(
         if (authed) {
           try {
             const res = await Api.cart.updateQty(itemId, item.quantity + 1);
-            set({ items: res.items.map(mapApiItem) });
+            set({ items: sortCartItems(res.items.map(mapApiItem)) });
             return;
           } catch {
             // fallback
@@ -122,8 +127,10 @@ export const useCartStore = create<CartState>()(
         }
 
         set((state) => ({
-          items: state.items.map((i) =>
-            i.id === itemId ? { ...i, quantity: i.quantity + 1 } : i
+          items: sortCartItems(
+            state.items.map((i) =>
+              i.id === itemId ? { ...i, quantity: i.quantity + 1 } : i
+            )
           ),
         }));
       },
@@ -138,10 +145,10 @@ export const useCartStore = create<CartState>()(
             const nextQty = item.quantity - 1;
             if (nextQty <= 0) {
               const res = await Api.cart.remove(itemId);
-              set({ items: res.items.map(mapApiItem) });
+              set({ items: sortCartItems(res.items.map(mapApiItem)) });
             } else {
               const res = await Api.cart.updateQty(itemId, nextQty);
-              set({ items: res.items.map(mapApiItem) });
+              set({ items: sortCartItems(res.items.map(mapApiItem)) });
             }
             return;
           } catch {
@@ -150,13 +157,15 @@ export const useCartStore = create<CartState>()(
         }
 
         set((state) => ({
-          items: state.items
-            .map((i) =>
-              i.id === itemId
-                ? { ...i, quantity: i.quantity - 1 }
-                : i
-            )
-            .filter((i) => i.quantity > 0),
+          items: sortCartItems(
+            state.items
+              .map((i) =>
+                i.id === itemId
+                  ? { ...i, quantity: i.quantity - 1 }
+                  : i
+              )
+              .filter((i) => i.quantity > 0)
+          ),
         }));
       },
 
@@ -166,7 +175,7 @@ export const useCartStore = create<CartState>()(
         if (authed) {
           try {
             const res = await Api.cart.clear();
-            set({ items: res.items.map(mapApiItem) });
+            set({ items: sortCartItems(res.items.map(mapApiItem)) });
             return;
           } catch {
             // fallback
@@ -178,8 +187,30 @@ export const useCartStore = create<CartState>()(
 
       totalItems: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
 
-      subtotal: () =>
-        get().items.reduce((sum, i) => sum + (i.product.price ?? 0) * i.quantity, 0),
+      subtotal: () => {
+        const groups = new Map<number, { price: number; doublePrice: number | null; qty: number }>();
+        for (const item of get().items) {
+          const prev = groups.get(item.product.id);
+          if (prev) {
+            prev.qty += item.quantity;
+          } else {
+            groups.set(item.product.id, {
+              price: item.product.price ?? 0,
+              doublePrice: item.product.doublePrice ?? null,
+              qty: item.quantity,
+            });
+          }
+        }
+        let total = 0;
+        for (const { price, doublePrice, qty } of groups.values()) {
+          if (doublePrice != null) {
+            total += Math.floor(qty / 2) * doublePrice + (qty % 2) * price;
+          } else {
+            total += price * qty;
+          }
+        }
+        return total;
+      },
     }),
     { name: 'cart-storage' }
   )
