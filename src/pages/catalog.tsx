@@ -1,11 +1,12 @@
-import { useState, useEffect, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Api } from '../api';
-import type { ApiCategoryInfo } from '../api/dto/category.dto';
+
 import { LiquidIcon, EvaporatorIcon, CartridgeIcon, SnusIcon, PodIcon, DisposableIcon } from '../components/ui/icons';
 import { PageLayout } from '../components/shared';
 import { Skeleton } from '../components/ui';
 import { CatalogCard } from '../components/shared';
+import { useApiData } from '../hooks/useApiData';
+import { Api } from '../api';
 
 const SIZE_ICON = 120;
 
@@ -20,15 +21,7 @@ const categoryIcons: Record<string, ReactNode> = {
 
 const Catalog = () => {
   const navigate = useNavigate();
-  const [cats, setCats] = useState<ApiCategoryInfo[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    Api.categories.getAll()
-      .then(setCats)
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
+  const { data: cats, loading } = useApiData(() => Api.categories.getAll(), []);
 
   return (
     <PageLayout>
@@ -40,7 +33,7 @@ const Catalog = () => {
         </div>
       ) : (
         <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4">
-          {cats.map((cat, i) => (
+            {(cats ?? []).map((cat, i) => (
             <CatalogCard
               key={cat.key}
               cat={cat}

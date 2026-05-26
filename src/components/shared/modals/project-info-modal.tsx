@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { X } from 'lucide-react';
+import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
 
 interface ProjectInfoModalProps {
   open: boolean;
@@ -7,12 +8,7 @@ interface ProjectInfoModalProps {
 }
 
 const ProjectInfoModal: React.FC<ProjectInfoModalProps> = ({ open, onClose }) => {
-  useEffect(() => {
-    if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = prev; };
-  }, [open]);
+  useBodyScrollLock(open);
 
   if (!open) return null;
 

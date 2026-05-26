@@ -4,17 +4,19 @@ import { ShoppingCart, Loader2, Clock, RotateCcw } from 'lucide-react';
 import { Api } from '../api';
 import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
-import { useToastStore } from '../store/useToastStore';
 import { PrimaryButton } from '../components/ui';
 import { PageLayout, MapBlock, AddressBlock, OrderSummary, DeliveryMethodSelector } from '../components/shared';
 import type { Address } from '../types';
 import { LocalizationProvider, TimeClock } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { useToastStore } from '../store/useToastStore';
+import { useToastError } from '../hooks/useToastError';
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { items, subtotal, clearCart } = useCartStore();
+  const toastError = useToastError();
   const addToast = useToastStore((s) => s.addToast);
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
 
@@ -61,7 +63,7 @@ const Checkout = () => {
       setSelectedAddressId(newAddr.id);
       setIsAddingAddress(false);
     } catch {
-      addToast('Ошибка при сохранении адреса');
+      toastError('сохранении адреса');
     }
   };
 
@@ -83,7 +85,7 @@ const Checkout = () => {
         }
       }
     } catch {
-      addToast('Ошибка при удалении адреса');
+      toastError('удалении адреса');
     }
   };
 
@@ -111,7 +113,7 @@ const Checkout = () => {
       clearCart();
       navigate('/profile');
     } catch {
-      addToast('Ошибка при оформлении заказа');
+      toastError('оформлении заказа');
     } finally {
       setSubmitting(false);
     }

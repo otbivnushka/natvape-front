@@ -5,6 +5,7 @@ import { Api } from '../api';
 import type { ApiCartItem } from '../api/dto/cart.dto';
 import type { Product, CartItem } from '../types';
 import { sortCartItems } from '../utils/sortCartItems';
+import { calcCartSubtotal } from '../utils/cartTotals';
 
 let localId = 0;
 const nextId = () => --localId;
@@ -187,30 +188,7 @@ export const useCartStore = create<CartState>()(
 
       totalItems: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
 
-      subtotal: () => {
-        const groups = new Map<number, { price: number; doublePrice: number | null; qty: number }>();
-        for (const item of get().items) {
-          const prev = groups.get(item.product.id);
-          if (prev) {
-            prev.qty += item.quantity;
-          } else {
-            groups.set(item.product.id, {
-              price: item.product.price ?? 0,
-              doublePrice: item.product.doublePrice ?? null,
-              qty: item.quantity,
-            });
-          }
-        }
-        let total = 0;
-        for (const { price, doublePrice, qty } of groups.values()) {
-          if (doublePrice != null) {
-            total += Math.floor(qty / 2) * doublePrice + (qty % 2) * price;
-          } else {
-            total += price * qty;
-          }
-        }
-        return total;
-      },
+      subtotal: () => calcCartSubtotal(get().items),
     }),
     { name: 'cart-storage' }
   )

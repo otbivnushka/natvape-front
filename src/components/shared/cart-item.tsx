@@ -2,7 +2,7 @@ import React from 'react';
 import type { CartItem as CartItemType } from '../../types';
 import { useCartStore } from '../../store/useCartStore';
 import { formatPrice } from '../../utils/formatPrice';
-import { getCartItemTotal } from '../../utils/getCartItemTotal';
+import { calcCartItemTotal } from '../../utils/cartTotals';
 import { X } from 'lucide-react';
 import { QuantityStepper, PriceDisplay } from '../ui';
 
@@ -46,7 +46,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
           <PriceDisplay price={item.product.price} doublePrice={item.product.doublePrice} />
         </div>
         <div className="text-xs text-muted mt-0.5">
-          Сумма: {formatPrice(getCartItemTotal(item, items))}
+          Сумма: {formatPrice(calcCartItemTotal(item, items))}
         </div>
         <div className="mt-2">
           <QuantityStepper

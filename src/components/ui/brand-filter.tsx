@@ -1,5 +1,5 @@
 import React from 'react';
-import { CustomDropdown } from './custom-dropdown';
+import { Dropdown } from './dropdown';
 
 interface BrandFilterProps {
   value: string;
@@ -9,7 +9,7 @@ interface BrandFilterProps {
 
 const BrandFilter: React.FC<BrandFilterProps> = ({ value, options, onChange }) => {
   return (
-    <CustomDropdown
+    <Dropdown
       value={value}
       options={[
         { value: '', label: 'Все бренды' },

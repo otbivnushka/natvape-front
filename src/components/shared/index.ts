@@ -14,3 +14,9 @@ export { PageLayout } from './page-layout';
 export { ProductCard } from './product-card';
 export { ProjectInfoModal, OrderDetailModal } from './modals';
 export { VariantPicker } from './variant-picker';
+export { AdminProductsTable } from './admin-products-table';
+export { AdminOrdersTable } from './admin-orders-table';
+
+export { OrderedItemCard } from './ordered-item-card';
+export { AdminTabPickerButton } from './admin-tab-picker-button';
+export { AdminTabPicker } from './admin-tab-picker';

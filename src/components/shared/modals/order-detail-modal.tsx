@@ -3,17 +3,10 @@ import type { Order } from '../../../types';
 import { formatPrice } from '../../../utils/formatPrice';
 import { Api } from '../../../api';
 import { X, Loader2 } from 'lucide-react';
-import clsx from 'clsx';
-
-const statusLabels: Record<string, string> = {
-  sent: 'Отправлен',
-  end: 'Завершён',
-};
-
-const statusStyles: Record<string, string> = {
-  sent: 'bg-muted text-on-primary',
-  end: 'bg-primary text-on-primary',
-};
+import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
+import { StatusMark } from '../../ui/status-mark';
+import { OrderedItemCard } from '../ordered-item-card';
+import { MapBlock } from '..';
 
 interface OrderDetailModalProps {
   open: boolean;
@@ -26,14 +19,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ open, onClose, orde
   const [fetching, setFetching] = useState(false);
   const detail = fetchedOrder;
 
-  useEffect(() => {
-    if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, [open]);
+  useBodyScrollLock(open);
 
   useEffect(() => {
     if (!open) return;
@@ -85,42 +71,23 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ open, onClose, orde
               <span>Доставка: {detail.deliveryMethod === 'pickup' ? 'Самовывоз' : 'Доставка'}</span>
               {detail.deliveryTime && <span>Время: {detail.deliveryTime}</span>}
               <span>
-                Статус:{' '}
-                <span
-                  className={clsx(
-                    'inline-block px-1.5 py-0.5 rounded-full text-[11px] font-semibold',
-                    statusStyles[detail.status] || 'bg-surface text-primary border border-line',
-                  )}
-                >
-                  {statusLabels[detail.status]}
-                </span>
+                Статус: <StatusMark status={detail.status} />
               </span>
             </div>
+            {detail.address && (
+              <div className="flex flex-col gap-1 text-sm text-muted mb-4 pb-4 border-b border-line">
+                <MapBlock
+                  lat={detail.address.lat}
+                  lng={detail.address.lng}
+                  markerTitle={detail.address.label}
+                />
+              </div>
+            )}
 
             <div className="flex flex-col gap-2 mb-4">
               <h4 className="text-sm font-semibold text-body">Товары</h4>
               {detail.items.map((item) => (
-                <div key={item.id} className="flex gap-3 bg-page rounded-lg p-2.5">
-                  {item.productImage && (
-                    <img
-                      src={item.productImage}
-                      alt={item.productName}
-                      className="w-10 h-10 rounded-lg object-cover bg-surface shrink-0"
-                    />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-body truncate">{item.productName}</div>
-                    {item.variantName && (
-                      <div className="text-[12px] text-dim">{item.variantName}</div>
-                    )}
-                    <div className="text-[12px] text-muted mt-0.5">
-                      {formatPrice(item.price)} × {item.quantity}
-                    </div>
-                  </div>
-                  <div className="text-sm font-semibold text-body shrink-0">
-                    {formatPrice(item.price * item.quantity)}
-                  </div>
-                </div>
+                <OrderedItemCard key={item.id} item={item} />
               ))}
             </div>
 

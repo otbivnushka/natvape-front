@@ -154,7 +154,11 @@ const ProductDetail = () => {
 
       <div className="max-w-5xl mx-auto md:grid md:grid-cols-2 md:gap-10 md:items-start">
         <div className="flex justify-center mb-4 md:mb-0 md:sticky md:top-24">
-          <div className="w-full rounded-xl max-w-[350px] aspect-square bg-primary" />
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full rounded-xl max-w-87.5 aspect-square"
+          />
         </div>
 
         <div>

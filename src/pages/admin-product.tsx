@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuthStore } from '../store/useAuthStore';
 import { Api } from '../api';
-import type { ApiCategoryInfo } from '../api/dto/category.dto';
 import type { CreateProductDto } from '../api/dto/admin.dto';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
 import { ImageUpload, Input, QuantityStepper } from '../components/ui';
+import { useAdminGuard } from '../hooks/useAdminGuard';
+import { useCategories } from '../hooks/useCategories';
 
 interface VariantForm {
   id?: number;
@@ -30,17 +30,11 @@ interface ProductForm extends Omit<CreateProductDto, 'variants' | 'colors' | 'im
 const AdminProduct = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const isAdmin = useAuthStore((s) => s.isAdmin);
+  useAdminGuard();
   const isNew = id === 'new';
 
-  useEffect(() => {
-    if (!isAdmin()) {
-      navigate('/profile', { replace: true });
-    }
-  }, []);
-
   const [productId, setProductId] = useState<number | null>(isNew ? null : Number(id));
-  const [categories, setCategories] = useState<ApiCategoryInfo[]>([]);
+  const { categories, getByKey } = useCategories();
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
 
@@ -66,23 +60,17 @@ const AdminProduct = () => {
   const [colorAdding, setColorAdding] = useState(false);
 
   useEffect(() => {
-    Api.categories
-      .getAll()
-      .then((cats) => {
-        setCategories(cats);
-        if (isNew) {
-          setForm((prev) => ({ ...prev, categoryId: cats[0]?.id ?? 0 }));
-        }
-      })
-      .catch(() => {});
-  }, []);
+    if (isNew && categories.length > 0) {
+      setForm((prev) => ({ ...prev, categoryId: categories[0]?.id ?? 0 }));
+    }
+  }, [isNew, categories]);
 
   useEffect(() => {
     if (productId == null) return;
     setLoading(true);
     Promise.all([Api.products.getById(productId)])
       .then(([apiProduct]) => {
-        const cat = categories.find((c) => c.key === apiProduct.category.key);
+        const cat = getByKey(apiProduct.category.key);
         setForm({
           name: apiProduct.name,
           categoryId: cat?.id ?? 0,

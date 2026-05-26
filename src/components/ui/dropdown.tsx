@@ -7,7 +7,7 @@ interface Option<T extends string = string> {
   label: string;
 }
 
-interface CustomDropdownProps<T extends string> {
+interface DropdownProps<T extends string> {
   value: T;
   options: Option<T>[];
   onChange: (value: T) => void;
@@ -15,13 +15,13 @@ interface CustomDropdownProps<T extends string> {
   className?: string;
 }
 
-const CustomDropdown = <T extends string>({
+const Dropdown = <T extends string>({
   value,
   options,
   onChange,
   placeholder,
   className,
-}: CustomDropdownProps<T>) => {
+}: DropdownProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -58,7 +58,7 @@ const CustomDropdown = <T extends string>({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 z-50 min-w-full w-max bg-surface border-2 border-line rounded-xl shadow-lg overflow-hidden animate-[scaleIn_0.12s_ease]">
+        <div className="absolute top-full right-0 mt-1 z-50 min-w-full w-max bg-surface border-2 border-line rounded-xl shadow-lg overflow-hidden animate-[scaleIn_0.12s_ease]">
           {options.length === 0 ? (
             <div className="px-3 py-3 text-[12px] text-dim text-center">Нет вариантов</div>
           ) : (
@@ -94,4 +94,4 @@ const CustomDropdown = <T extends string>({
   );
 };
 
-export { CustomDropdown };
+export { Dropdown };

@@ -5,6 +5,7 @@ import L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+import clsx from 'clsx';
 
 interface MapBlockProps {
   lat?: number;
@@ -45,7 +46,12 @@ const MapBlock: React.FC<MapBlockProps> = ({
   onMapClick,
 }) => {
   return (
-    <div className={`h-[200px] w-full overflow-hidden rounded-2xl ${className}`}>
+    <div
+      className={clsx(
+        'h-50 w-full overflow-hidden rounded-2xl [&_.leaflet-right]:hidden!',
+        className,
+      )}
+    >
       <MapContainer
         center={[lat ?? 55.184217, lng ?? 30.202878]}
         zoom={zoom}

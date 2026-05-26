@@ -1,6 +1,6 @@
 import React from 'react';
 import type { SortOption } from '../../types';
-import { CustomDropdown } from './custom-dropdown';
+import { Dropdown } from './dropdown';
 
 interface SortSelectProps {
   value: SortOption;
@@ -15,9 +15,7 @@ const options: { value: SortOption; label: string }[] = [
 ];
 
 const SortSelect: React.FC<SortSelectProps> = ({ value, onChange }) => {
-  return (
-    <CustomDropdown value={value} options={options} onChange={onChange} />
-  );
+  return <Dropdown value={value} options={options} onChange={onChange} />;
 };
 
 export { SortSelect };

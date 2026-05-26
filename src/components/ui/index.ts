@@ -1,6 +1,6 @@
 export { Badge } from './badge';
 export { BrandFilter } from './brand-filter';
-export { CustomDropdown } from './custom-dropdown';
+export { Dropdown } from './dropdown';
 export { ImageUpload } from './image-upload';
 export { Input } from './input';
 export { PriceDisplay } from './price-display';
@@ -12,3 +12,4 @@ export { Skeleton } from './skeleton';
 export { SortSelect } from './sort-select';
 export { StarRating } from './star-rating';
 export { ToastContainer } from './toast';
+export { StatusMark } from './status-mark';
