@@ -1,26 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Store, Truck, ShoppingCart, Loader2, Clock, RotateCcw } from 'lucide-react';
+import { ShoppingCart, Loader2, Clock, RotateCcw } from 'lucide-react';
 import { Api } from '../api';
 import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { useToastStore } from '../store/useToastStore';
 import { PrimaryButton } from '../components/ui';
-import { PageLayout, MapBlock, AddressBlock } from '../components/shared';
+import { PageLayout, MapBlock, AddressBlock, OrderSummary, DeliveryMethodSelector } from '../components/shared';
 import type { Address } from '../types';
-import { formatPrice } from '../utils/formatPrice';
 import { LocalizationProvider, TimeClock } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import clsx from 'clsx';
-
-const deliveryOptions = [
-  { value: 'pickup', label: 'Самовывоз', icon: Store },
-  { value: 'delivery', label: 'Доставка (не халява)', icon: Truck },
-] as const;
-
-const radioBase =
-  'flex items-center gap-3 p-3.5 rounded-xl border-2 cursor-pointer transition-all duration-200';
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -143,48 +133,7 @@ const Checkout = () => {
     <PageLayout>
       <h1 className="text-2xl font-bold text-body mb-5">Оформление заказа</h1>
 
-      <div className="mb-5">
-        <h2 className="text-sm font-semibold text-muted mb-2.5">Способ получения</h2>
-        <div className="flex flex-col gap-2">
-          {deliveryOptions.map((opt) => {
-            const selected = delivery === opt.value;
-            return (
-              <label
-                key={opt.value}
-                className={clsx(
-                  radioBase,
-                  selected
-                    ? 'border-primary bg-primary/5'
-                    : 'border-line bg-surface hover:border-muted',
-                )}
-              >
-                <input
-                  type="radio"
-                  name="delivery"
-                  value={opt.value}
-                  checked={selected}
-                  onChange={() => setDelivery(opt.value)}
-                  className="sr-only"
-                />
-                <span
-                  className={clsx(
-                    'w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors duration-200',
-                    selected ? 'border-primary' : 'border-muted',
-                  )}
-                >
-                  {selected && <span className="w-2 h-2 rounded-full bg-primary" />}
-                </span>
-                <opt.icon size={18} className={selected ? 'text-primary' : 'text-dim'} />
-                <span
-                  className={clsx('text-sm font-medium', selected ? 'text-body' : 'text-muted')}
-                >
-                  {opt.label}
-                </span>
-              </label>
-            );
-          })}
-        </div>
-      </div>
+      <DeliveryMethodSelector value={delivery} onChange={setDelivery} />
 
       {delivery === 'delivery' && (
         <div className="mb-5">
@@ -284,30 +233,7 @@ const Checkout = () => {
         />
       </div>
 
-      <div className="mb-5 p-4 bg-surface rounded-xl">
-        <h2 className="text-sm font-semibold text-muted mb-3">Ваш заказ</h2>
-        <div className="flex flex-col gap-2">
-          {items.map((item) => (
-            <div
-              key={`${item.product.id}:${item.variantKey ?? ''}`}
-              className="flex justify-between text-[13px]"
-            >
-              <span className="text-muted truncate mr-2">
-                {item.product.name}
-                {item.variantKey && <span className="text-dim"> ({item.variantKey})</span>}
-                <span className="text-dim"> × {item.quantity}</span>
-              </span>
-              <span className="text-body font-medium whitespace-nowrap">
-                {formatPrice(item.product.price * item.quantity)}
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className="flex justify-between text-base font-semibold text-body mt-3 pt-3 border-t border-line">
-          <span>Итого</span>
-          <span>{formatPrice(total)}</span>
-        </div>
-      </div>
+      <OrderSummary items={items} total={total} />
 
       <PrimaryButton onClick={handleSubmit} disabled={submitting}>
         {submitting ? (

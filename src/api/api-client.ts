@@ -6,6 +6,8 @@ import * as wishlist from './wishlist';
 import * as orders from './orders';
 import * as profile from './profile';
 import * as addresses from './addresses';
+import * as admin from './admin';
+import * as images from './images';
 import { productCache } from './product-cache';
 
 export const Api = {
@@ -17,5 +19,7 @@ export const Api = {
   orders,
   profile,
   addresses,
+  admin,
+  images,
   productCache,
 };

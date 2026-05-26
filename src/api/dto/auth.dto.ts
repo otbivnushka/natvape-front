@@ -6,6 +6,7 @@ export interface ApiLoginResponse {
     email: string;
     avatar: string | null;
     phone: string | null;
+    isAdmin: boolean;
   };
 }
 

@@ -60,7 +60,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index = 0 }) => {
         <div className="text-sm font-semibold text-primary leading-tight line-clamp-2">{product.name}</div>
         <StarRating rating={product.rating} />
         <div className="mt-auto">
-          <PriceDisplay price={product.price} oldPrice={product.oldPrice} />
+          <PriceDisplay price={product.price} doublePrice={product.doublePrice} />
         </div>
         <PrimaryButton size="sm" className="mt-1" onClick={() => navigate(`/product/${product.id}`)}>
           Подробнее

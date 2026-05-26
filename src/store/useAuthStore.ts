@@ -8,6 +8,7 @@ interface AuthUser {
   email: string;
   avatar: string | null;
   phone: string | null;
+  isAdmin: boolean;
 }
 
 interface AuthState {
@@ -18,6 +19,7 @@ interface AuthState {
   logout: () => void;
   updateProfile: (data: Partial<Pick<AuthUser, 'name' | 'phone' | 'avatar'>>) => Promise<void>;
   isLoggedIn: () => boolean;
+  isAdmin: () => boolean;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -49,11 +51,14 @@ export const useAuthStore = create<AuthState>()(
             email: res.email,
             avatar: res.avatar,
             phone: res.phone,
+            isAdmin: res.isAdmin,
           },
         });
       },
 
       isLoggedIn: () => get().user !== null && get().token !== null,
+
+      isAdmin: () => get().user?.isAdmin ?? false,
     }),
     { name: 'auth-storage' }
   )

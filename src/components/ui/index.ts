@@ -1,6 +1,7 @@
 export { Badge } from './badge';
 export { BrandFilter } from './brand-filter';
 export { CustomDropdown } from './custom-dropdown';
+export { ImageUpload } from './image-upload';
 export { Input } from './input';
 export { PriceDisplay } from './price-display';
 export { PriceFilter } from './price-filter';

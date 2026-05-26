@@ -11,7 +11,6 @@ function mapOrder(o: ApiOrder): Order {
   return {
     ...o,
     items: (o.items ?? []).map(mapOrderItem),
-    date: o.createdAt.slice(0, 10),
   };
 }
 

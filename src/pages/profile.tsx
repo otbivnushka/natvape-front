@@ -1,14 +1,21 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
 import { useThemeStore } from '../store/useThemeStore';
 import { Api } from '../api';
 import type { Order } from '../types';
-import { Lock, Package, Sun, Moon, Loader2, Info } from 'lucide-react';
-import { EmptyState, PageLayout, ProjectInfoModal, FixedButton, OrderCard } from '../components/shared';
-import { formatPrice } from '../utils/formatPrice';
+import { Lock, Package, Sun, Moon, Loader2, Info, Shield } from 'lucide-react';
+import {
+  EmptyState,
+  PageLayout,
+  ProjectInfoModal,
+  FixedButton,
+  OrderCard,
+} from '../components/shared';
 
 const Profile = () => {
-  const { user, login, logout, isLoggedIn } = useAuthStore();
+  const navigate = useNavigate();
+  const { user, login, logout, isLoggedIn, isAdmin } = useAuthStore();
   const { name: userName, email: userEmail, avatar: userAvatar } = user ?? {};
   const { theme, toggle } = useThemeStore();
 
@@ -20,19 +27,18 @@ const Profile = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
-  const [totalSpent, setTotalSpent] = useState(0);
 
   useEffect(() => {
     if (!user) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrdersLoading(true);
-    Api.orders.getAll()
+    Api.orders
+      .getAll()
       .then(setOrders)
       .catch((err) => {
         console.log(err);
       })
       .finally(() => setOrdersLoading(false));
-    Api.profile.get().then((p) => setTotalSpent(p.totalSpent)).catch(() => {});
   }, [user]);
 
   const handleLogin = async () => {
@@ -147,13 +153,6 @@ const Profile = () => {
           </div>
         </div>
 
-        {orders.length > 0 && (
-          <div className="mb-6 p-4 bg-surface rounded-xl">
-            <div className="text-sm text-muted">Сумма выкупа</div>
-            <div className="text-xl font-bold text-primary mt-0.5">{formatPrice(totalSpent)}</div>
-          </div>
-        )}
-
         <div className="mb-12">
           <h2 className="text-lg font-semibold text-muted mb-3">История заказов</h2>
           {ordersLoading ? (
@@ -163,18 +162,33 @@ const Profile = () => {
           ) : orders.length === 0 ? (
             <EmptyState icon={<Package size={48} />} title="Нет заказов" />
           ) : (
-            orders.map((order) => (
-              <OrderCard key={order.id} order={order} />
-            ))
+            orders.map((order) => <OrderCard key={order.id} order={order} />)
           )}
         </div>
       </PageLayout>
-      <FixedButton
-        onClick={() => setInfoOpen(true)}
-        className="bottom-18 right-2 w-11 h-11 rounded-full bg-primary text-on-primary shadow-lg hover:scale-105"
-      >
-        <Info size={20} />
-      </FixedButton>
+      {isAdmin() ? (
+        <div className="fixed bottom-18 right-2 z-40 flex gap-3">
+          <FixedButton
+            onClick={() => setInfoOpen(true)}
+            className="relative w-11 h-11 rounded-full bg-primary text-on-primary shadow-lg hover:scale-105"
+          >
+            <Info size={20} />
+          </FixedButton>
+          <FixedButton
+            onClick={() => navigate('/admin')}
+            className="relative w-11 h-11 rounded-full bg-primary text-on-primary shadow-lg hover:scale-105"
+          >
+            <Shield size={20} />
+          </FixedButton>
+        </div>
+      ) : (
+        <FixedButton
+          onClick={() => setInfoOpen(true)}
+          className="bottom-18 right-2 w-11 h-11 rounded-full bg-primary text-on-primary shadow-lg hover:scale-105"
+        >
+          <Info size={20} />
+        </FixedButton>
+      )}
       <ProjectInfoModal open={infoOpen} onClose={() => setInfoOpen(false)} />
     </>
   );

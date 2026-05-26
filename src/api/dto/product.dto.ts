@@ -5,15 +5,16 @@ export interface ApiProduct {
   name: string;
   category: ApiCategoryInfo;
   price: number;
-  oldPrice?: number;
+  doublePrice: number | null;
   rating: number;
   image: string;
+  imageId: number | null;
   description: string;
-  badge?: 'NEW' | 'SALE';
+  badge: string | null;
   brand: string;
   variantLabel?: string;
-  variants?: { name: string; value: string; stock: number }[];
-  colors?: { name: string; hex: string; stock: number }[];
+  variants?: { id: number; name: string; value: string; stock: number }[];
+  colors?: { id: number; name: string; hex: string; stock: number }[];
 }
 
 export interface ApiProductsResponse {

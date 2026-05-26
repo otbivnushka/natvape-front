@@ -6,6 +6,8 @@ import Cart from './pages/cart';
 import Checkout from './pages/checkout';
 import Wishlist from './pages/wishlist';
 import Profile from './pages/profile';
+import Admin from './pages/admin';
+import AdminProduct from './pages/admin-product';
 import { BottomNav } from './components/shared';
 import { ToastContainer } from './components/ui';
 
@@ -21,6 +23,8 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/products/:id" element={<AdminProduct />} />
         </Routes>
         <BottomNav />
         <ToastContainer />

@@ -13,7 +13,7 @@ export interface ApiOrder {
   id: number;
   items: ApiOrderItem[];
   total: number;
-  status: 'processing' | 'shipping' | 'delivered';
+  status: 'sent' | 'end';
   deliveryMethod: 'pickup' | 'delivery';
   comment: string | null;
   createdAt: string;

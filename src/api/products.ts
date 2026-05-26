@@ -25,4 +25,6 @@ export const getBrands = async (category?: string): Promise<string[]> => {
 export const mapProduct = (api: ApiProduct): Product => ({
   ...api,
   category: api.category.key as Category,
+  doublePrice: api.doublePrice ?? null,
+  badge: api.badge ?? null,
 });

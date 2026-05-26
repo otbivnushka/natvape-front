@@ -23,11 +23,12 @@ export interface Product {
   name: string;
   category: Category;
   price: number;
-  oldPrice?: number;
+  doublePrice: number | null;
   rating: number;
   image: string;
+  imageId: number | null;
   description: string;
-  badge?: 'NEW' | 'SALE';
+  badge: string | null;
   brand: string;
   variantLabel?: string;
   variants?: ProductVariant[];
@@ -63,8 +64,7 @@ export interface Order {
   id: number;
   items: OrderItem[];
   total: number;
-  status: 'delivered' | 'shipping' | 'processing';
-  date: string;
+  status: 'sent' | 'end';
   deliveryMethod: 'pickup' | 'delivery';
   comment: string | null;
   createdAt: string;
@@ -78,6 +78,7 @@ export interface UserProfile {
   email: string;
   phone: string | null;
   avatar: string | null;
+  isAdmin: boolean;
   addresses: Address[];
   totalSpent: number;
   ordersCount: number;

@@ -6,7 +6,13 @@ import { useCartStore } from '../store/useCartStore';
 import { useToastStore } from '../store/useToastStore';
 import { formatPrice } from '../utils/formatPrice';
 import { ArrowLeft, HelpCircle } from 'lucide-react';
-import { StarRating, QuantityStepper, PriceDisplay, PrimaryButton, Skeleton } from '../components/ui';
+import {
+  StarRating,
+  QuantityStepper,
+  PriceDisplay,
+  PrimaryButton,
+  Skeleton,
+} from '../components/ui';
 import { PageLayout, FixedButton, ColorPicker, VariantPicker } from '../components/shared';
 import clsx from 'clsx';
 
@@ -16,7 +22,10 @@ const StarInput = ({ value, onChange }: { value: number; onChange: (v: number) =
       <button
         key={star}
         onClick={() => onChange(star)}
-        className={clsx('text-2xl leading-none bg-none border-none cursor-pointer transition-colors duration-150', star <= value ? 'text-primary' : 'text-muted')}
+        className={clsx(
+          'text-2xl leading-none bg-none border-none cursor-pointer transition-colors duration-150',
+          star <= value ? 'text-primary' : 'text-muted',
+        )}
       >
         ★
       </button>
@@ -42,7 +51,8 @@ const ProductDetail = () => {
     if (!id) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
-    Api.products.getById(Number(id))
+    Api.products
+      .getById(Number(id))
       .then((api) => {
         const p = Api.products.mapProduct(api);
         Api.productCache.setOne(p);
@@ -86,16 +96,20 @@ const ProductDetail = () => {
 
   const cartItems = useCartStore.getState().items;
   const disabledVariantValues = hasVariants
-    ? product.variants!.filter((v) => {
-        const ci = cartItems.find((i) => i.product.id === product.id && i.variantKey === v.value);
-        return (v.stock - (ci?.quantity ?? 0)) <= 0;
-      }).map((v) => v.value)
+    ? product
+        .variants!.filter((v) => {
+          const ci = cartItems.find((i) => i.product.id === product.id && i.variantKey === v.value);
+          return v.stock - (ci?.quantity ?? 0) <= 0;
+        })
+        .map((v) => v.value)
     : [];
   const disabledColorNames = hasColors
-    ? product.colors!.filter((c) => {
-        const ci = cartItems.find((i) => i.product.id === product.id && i.variantKey === c.name);
-        return (c.stock - (ci?.quantity ?? 0)) <= 0;
-      }).map((c) => c.name)
+    ? product
+        .colors!.filter((c) => {
+          const ci = cartItems.find((i) => i.product.id === product.id && i.variantKey === c.name);
+          return c.stock - (ci?.quantity ?? 0) <= 0;
+        })
+        .map((c) => c.name)
     : [];
 
   const variantStock = hasVariants
@@ -108,7 +122,9 @@ const ProductDetail = () => {
     : hasColors
       ? (() => {
           if (!selectedColor) return 0;
-          const ci = cartItems.find((i) => i.product.id === product.id && i.variantKey === selectedColor.name);
+          const ci = cartItems.find(
+            (i) => i.product.id === product.id && i.variantKey === selectedColor.name,
+          );
           return selectedColor.stock - (ci?.quantity ?? 0);
         })()
       : 0;
@@ -148,7 +164,7 @@ const ProductDetail = () => {
           </div>
 
           <div className="mb-3">
-            <PriceDisplay price={product.price} oldPrice={product.oldPrice} size="lg" />
+            <PriceDisplay price={product.price} doublePrice={product.doublePrice} size="lg" />
           </div>
 
           <div className="flex items-center gap-1 mb-4">
@@ -189,7 +205,12 @@ const ProductDetail = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="text-sm font-semibold text-muted">
                 {canAdd ? (
-                  <>Количество: <span className="text-[11px] font-normal text-dim">(доступно {maxQuantity})</span></>
+                  <>
+                    Количество:{' '}
+                    <span className="text-[11px] font-normal text-dim">
+                      (доступно {maxQuantity})
+                    </span>
+                  </>
                 ) : (
                   <>Количество</>
                 )}

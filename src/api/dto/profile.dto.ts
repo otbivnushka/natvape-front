@@ -6,6 +6,7 @@ export interface ApiProfile {
   email: string;
   phone: string | null;
   avatar: string | null;
+  isAdmin: boolean;
   addresses: Address[];
   totalSpent: number;
   ordersCount: number;
