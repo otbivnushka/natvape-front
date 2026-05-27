@@ -9,7 +9,12 @@ interface ColorPickerProps {
   disabledKeys?: string[];
 }
 
-const ColorPicker: React.FC<ColorPickerProps> = ({ colors, selectedColor, onSelect, disabledKeys = [] }) => {
+const ColorPicker: React.FC<ColorPickerProps> = ({
+  colors,
+  selectedColor,
+  onSelect,
+  disabledKeys = [],
+}) => {
   return (
     <div className="mb-4">
       <div className="text-sm font-semibold text-muted mb-2">Цвет:</div>
@@ -19,7 +24,9 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ colors, selectedColor, onSele
           return (
             <button
               key={c.name}
-              onClick={() => { if (!isOut) onSelect(c); }}
+              onClick={() => {
+                if (!isOut) onSelect(c);
+              }}
               disabled={isOut}
               className={clsx(
                 'relative w-10 h-10 rounded-full border-2 transition-all duration-150',

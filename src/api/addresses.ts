@@ -7,7 +7,11 @@ export const getAll = async (): Promise<Address[]> => {
   return data;
 };
 
-export const create = async (dto: { label: string; lat: number; lng: number }): Promise<Address> => {
+export const create = async (dto: {
+  label: string;
+  lat: number;
+  lng: number;
+}): Promise<Address> => {
   const { data } = await axiosInstance.post<Address>(ApiRoutes.ADDRESSES, dto);
   return data;
 };

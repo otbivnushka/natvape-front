@@ -12,18 +12,27 @@ export function useApiData<T>(
   const refetch = useCallback(() => {
     setLoading(true);
     fetcher()
-      .then((res) => { if (mounted.current) setData(res); })
-      .catch(() => { if (mounted.current) setData(null); })
-      .finally(() => { if (mounted.current) setLoading(false); });
+      .then((res) => {
+        if (mounted.current) setData(res);
+      })
+      .catch(() => {
+        if (mounted.current) setData(null);
+      })
+      .finally(() => {
+        if (mounted.current) setLoading(false);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/use-memo
   }, deps);
 
   useEffect(() => {
     if (options?.enabled === false) return;
     refetch();
-  }, [refetch]);
+  }, [refetch, options?.enabled]);
 
   useEffect(() => {
-    return () => { mounted.current = false; };
+    return () => {
+      mounted.current = false;
+    };
   }, []);
 
   return { data, loading, refetch };

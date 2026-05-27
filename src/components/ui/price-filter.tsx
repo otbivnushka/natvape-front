@@ -9,7 +9,14 @@ interface PriceFilterProps {
   globalMax?: number;
 }
 
-const PriceFilter: React.FC<PriceFilterProps> = ({ min, max, onMinChange, onMaxChange, globalMin = 0, globalMax = 120 }) => {
+const PriceFilter: React.FC<PriceFilterProps> = ({
+  min,
+  max,
+  onMinChange,
+  onMaxChange,
+  globalMin = 0,
+  globalMax = 120,
+}) => {
   const pct = (v: number) => {
     const range = globalMax - globalMin;
     if (range <= 0) return 0;
@@ -30,7 +37,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({ min, max, onMinChange, onMaxC
       <div className="flex items-center gap-2">
         <span className="text-[12px] text-muted whitespace-nowrap">Цена:</span>
 
-        <div className="relative w-[130px] h-5 flex items-center">
+        <div className="relative w-32.5 h-5 flex items-center">
           <div className="absolute inset-x-0 h-2 bg-line rounded-full" />
 
           <div
@@ -44,7 +51,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({ min, max, onMinChange, onMaxC
             max={globalMax}
             value={min}
             onChange={(e) => onMinChange(Math.min(Number(e.target.value), max - 1))}
-            className="rf-track absolute inset-x-0 w-full h-full appearance-none bg-transparent pointer-events-none z-[3] m-0 p-0"
+            className="rf-track absolute inset-x-0 w-full h-full appearance-none bg-transparent pointer-events-none z-3 m-0 p-0"
           />
 
           <input
@@ -53,11 +60,13 @@ const PriceFilter: React.FC<PriceFilterProps> = ({ min, max, onMinChange, onMaxC
             max={globalMax}
             value={max}
             onChange={(e) => onMaxChange(Math.max(Number(e.target.value), min + 1))}
-            className="rf-track absolute inset-x-0 w-full h-full appearance-none bg-transparent pointer-events-none z-[4] m-0 p-0"
+            className="rf-track absolute inset-x-0 w-full h-full appearance-none bg-transparent pointer-events-none z-4 m-0 p-0"
           />
         </div>
 
-        <span className="text-[12px] text-muted tabular-nums whitespace-nowrap">{min}–{max}</span>
+        <span className="text-[12px] text-muted tabular-nums whitespace-nowrap">
+          {min}–{max}
+        </span>
       </div>
     </>
   );

@@ -27,6 +27,7 @@ const Admin = () => {
 
   useEffect(() => {
     if (tab === 'products') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setProductsLoading(true);
       Api.products
         .getAll({ limit: 100 })

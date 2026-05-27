@@ -10,7 +10,13 @@ interface VariantPickerProps {
   disabledValues?: string[];
 }
 
-const VariantPicker: React.FC<VariantPickerProps> = ({ variants, variantLabel, selectedValue, onSelect, disabledValues = [] }) => {
+const VariantPicker: React.FC<VariantPickerProps> = ({
+  variants,
+  variantLabel,
+  selectedValue,
+  onSelect,
+  disabledValues = [],
+}) => {
   return (
     <div className="mb-4">
       <div className="text-sm font-semibold text-muted mb-2">{variantLabel}:</div>
@@ -20,7 +26,9 @@ const VariantPicker: React.FC<VariantPickerProps> = ({ variants, variantLabel, s
           return (
             <button
               key={v.value}
-              onClick={() => { if (!isOut) onSelect(v.value); }}
+              onClick={() => {
+                if (!isOut) onSelect(v.value);
+              }}
               disabled={isOut}
               className={clsx(
                 'py-1.5 px-3.5 rounded-lg border text-[13px] font-medium transition-all duration-150',

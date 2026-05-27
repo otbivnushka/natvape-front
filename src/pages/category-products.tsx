@@ -29,15 +29,19 @@ const CategoryProducts = () => {
   const debouncedMaxPrice = useDebounce(maxPrice, 300);
 
   useEffect(() => {
-    Api.categories.getAll().then((cats) => {
-      const found = cats.find((c) => c.key === category);
-      setCatInfo(found ?? null);
-    }).catch(() => {});
+    Api.categories
+      .getAll()
+      .then((cats) => {
+        const found = cats.find((c) => c.key === category);
+        setCatInfo(found ?? null);
+      })
+      .catch(() => {});
   }, [category]);
 
   useEffect(() => {
     if (!category) return;
-    Api.products.getBrands(category)
+    Api.products
+      .getBrands(category)
       .then(setBrands)
       .catch(() => setBrands([]));
   }, [category]);
@@ -48,17 +52,17 @@ const CategoryProducts = () => {
       skipNextFetch.current = false;
       return;
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
-    Api.products.getAll({
-      category,
-      search: debouncedSearch || undefined,
-      sort: sort !== 'name' ? sort : undefined,
-      brand: brand || undefined,
-      priceMin: debouncedMinPrice > 0 ? debouncedMinPrice : undefined,
-      priceMax: debouncedMaxPrice > 0 ? debouncedMaxPrice : undefined,
-      limit: 50,
-    })
+    Api.products
+      .getAll({
+        category,
+        search: debouncedSearch || undefined,
+        sort: sort !== 'name' ? sort : undefined,
+        brand: brand || undefined,
+        priceMin: debouncedMinPrice > 0 ? debouncedMinPrice : undefined,
+        priceMax: debouncedMaxPrice > 0 ? debouncedMaxPrice : undefined,
+        limit: 50,
+      })
       .then((res) => {
         const mapped = res.items.map(Api.products.mapProduct);
         Api.productCache.set(mapped);
@@ -124,11 +128,7 @@ const CategoryProducts = () => {
       {!loading && products.length > 0 && (
         <div className="text-[12px] text-dim mb-3">
           Найдено: {products.length}{' '}
-          {products.length === 1
-            ? 'товар'
-            : products.length < 5
-              ? 'товара'
-              : 'товаров'}
+          {products.length === 1 ? 'товар' : products.length < 5 ? 'товара' : 'товаров'}
         </div>
       )}
 

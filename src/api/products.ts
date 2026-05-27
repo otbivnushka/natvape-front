@@ -11,7 +11,9 @@ export const getAll = async (query?: ProductsQuery): Promise<ApiProductsResponse
 };
 
 export const getById = async (id: number): Promise<ApiProduct> => {
-  const { data } = await axiosInstance.get<ApiProduct>(ApiRoutes.PRODUCT_BY_ID.replace(':id', String(id)));
+  const { data } = await axiosInstance.get<ApiProduct>(
+    ApiRoutes.PRODUCT_BY_ID.replace(':id', String(id)),
+  );
   return data;
 };
 

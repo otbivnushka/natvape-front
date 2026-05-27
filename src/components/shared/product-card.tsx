@@ -21,9 +21,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index = 0 }) => {
   const handleWish = async () => {
     await toggleWishlist(product.id);
     addToast(
-      wishlisted
-        ? `${product.name} убран из избранного`
-        : `${product.name} добавлен в избранное`
+      wishlisted ? `${product.name} убран из избранного` : `${product.name} добавлен в избранное`,
     );
     if (!wishlisted) {
       const btn = document.activeElement as HTMLElement;
@@ -48,7 +46,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index = 0 }) => {
         <button
           className={clsx(
             'absolute top-2 right-2 bg-surface/80 backdrop-blur-sm border-none rounded-full w-8 h-8 flex items-center justify-center cursor-pointer z-2 transition-all duration-200 hover:scale-115 active:scale-90',
-            wishlisted ? 'text-primary' : 'text-muted hover:text-primary'
+            wishlisted ? 'text-primary' : 'text-muted hover:text-primary',
           )}
           onClick={handleWish}
           aria-label={wishlisted ? 'Убрать из избранного' : 'Добавить в избранное'}
@@ -57,12 +55,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index = 0 }) => {
         </button>
       </div>
       <div className="p-3 flex flex-col gap-1.5 flex-1">
-        <div className="text-sm font-semibold text-primary leading-tight line-clamp-2">{product.name}</div>
+        <div className="text-sm font-semibold text-primary leading-tight line-clamp-2">
+          {product.name}
+        </div>
         <StarRating rating={product.rating} />
         <div className="mt-auto">
           <PriceDisplay price={product.price} doublePrice={product.doublePrice} />
         </div>
-        <PrimaryButton size="sm" className="mt-1" onClick={() => navigate(`/product/${product.id}`)}>
+        <PrimaryButton
+          size="sm"
+          className="mt-1"
+          onClick={() => navigate(`/product/${product.id}`)}
+        >
           Подробнее
         </PrimaryButton>
       </div>

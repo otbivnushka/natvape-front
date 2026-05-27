@@ -16,12 +16,12 @@ import {
 const Profile = () => {
   const navigate = useNavigate();
   const { user, telegramAuth, isLoggedIn, isAdmin } = useAuthStore();
-  const { name: userName, avatar: userAvatar } = user ?? {};
+  const { name: userName } = user ?? {};
 
   const tg = window.Telegram?.WebApp;
   const tgUser = tg?.initDataUnsafe?.user;
   const displayName = [tgUser?.first_name, tgUser?.last_name].filter(Boolean).join(' ') || userName;
-  const displayAvatar = tgUser?.photo_url || userAvatar;
+  const displayAvatar = tgUser?.photo_url;
   const displayTelegram = tgUser?.username;
 
   const [orders, setOrders] = useState<Order[]>([]);
@@ -38,10 +38,12 @@ const Profile = () => {
     } catch {
       // not in Telegram WebApp
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (!user) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrdersLoading(true);
     Api.orders
       .getAll()

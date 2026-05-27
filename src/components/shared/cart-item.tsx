@@ -36,12 +36,14 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
 
   return (
     <div className="flex gap-3 p-3 bg-surface rounded-xl items-center">
-      <img className="w-[72px] h-[72px] rounded-lg object-cover bg-page shrink-0" src={item.product.image} alt={item.product.name} />
+      <img
+        className="w-18 h-18 rounded-lg object-cover bg-page shrink-0"
+        src={item.product.image}
+        alt={item.product.name}
+      />
       <div className="flex-1 min-w-0">
         <div className="text-sm font-semibold text-muted truncate">{item.product.name}</div>
-        {variantName && (
-          <div className="text-[12px] text-dim mt-0.5">{variantName}</div>
-        )}
+        {variantName && <div className="text-[12px] text-dim mt-0.5">{variantName}</div>}
         <div className="mt-1">
           <PriceDisplay price={item.product.price} doublePrice={item.product.doublePrice} />
         </div>

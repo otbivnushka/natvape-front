@@ -5,7 +5,13 @@ import { Api } from '../api';
 import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { PrimaryButton } from '../components/ui';
-import { PageLayout, MapBlock, AddressBlock, OrderSummary, DeliveryMethodSelector } from '../components/shared';
+import {
+  PageLayout,
+  MapBlock,
+  AddressBlock,
+  OrderSummary,
+  DeliveryMethodSelector,
+} from '../components/shared';
 import type { Address } from '../types';
 import { LocalizationProvider, TimeClock } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
@@ -29,7 +35,8 @@ const Checkout = () => {
   const selectedAddress = addresses.find((a) => a.id === selectedAddressId) ?? null;
 
   useEffect(() => {
-    Api.addresses.getAll()
+    Api.addresses
+      .getAll()
       .then((list) => {
         setAddresses(list);
         if (list.length > 0) setSelectedAddressId(list[0].id);
@@ -58,7 +65,11 @@ const Checkout = () => {
     const trimmed = pendingLabel.trim();
     if (!trimmed || pendingLat === null || pendingLng === null) return;
     try {
-      const newAddr = await Api.addresses.create({ label: trimmed, lat: pendingLat, lng: pendingLng });
+      const newAddr = await Api.addresses.create({
+        label: trimmed,
+        lat: pendingLat,
+        lng: pendingLng,
+      });
       setAddresses((prev) => [...prev, newAddr]);
       setSelectedAddressId(newAddr.id);
       setIsAddingAddress(false);
@@ -193,7 +204,7 @@ const Checkout = () => {
         </div>
       )}
 
-      <div className="[&_.MuiClock-root]:!bg-transparent [&_.MuiClock-root]:!border-line [&_.MuiClock-clock]:!bg-primary [&_.MuiClockPointer-root]:!bg-page [&_.MuiClock-pin]:!bg-page [&_.MuiClockNumber-root]:!text-page [&_.MuiClockNumber-selected]:!text-page [&_.MuiClockNumber-selected]:!bg-body [&_.MuiClockPointer-thumb]:!border-body [&_.MuiClockPointer-thumb]:!bg-white/5 [&_.MuiClockNumber-root]:font-bold">
+      <div className="[&_.MuiClock-root]:bg-transparent! [&_.MuiClock-root]:border-line! [&_.MuiClock-clock]:bg-primary! [&_.MuiClockPointer-root]:bg-page! [&_.MuiClock-pin]:bg-page! [&_.MuiClockNumber-root]:text-page! [&_.MuiClockNumber-selected]:text-page! [&_.MuiClockNumber-selected]:bg-body! [&_.MuiClockPointer-thumb]:border-body! [&_.MuiClockPointer-thumb]:bg-white/5! [&_.MuiClockNumber-root]:font-bold">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <TimeClock
             value={selectedTime}

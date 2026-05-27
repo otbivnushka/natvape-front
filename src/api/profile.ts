@@ -7,7 +7,7 @@ export const get = async (): Promise<ApiProfile> => {
   return data;
 };
 
-export const update = async (dto: Partial<Pick<ApiProfile, 'name' | 'phone' | 'avatar'>>): Promise<ApiProfile> => {
-  const { data } = await axiosInstance.patch<ApiProfile>(ApiRoutes.PROFILE, dto);
+export const update = async (dto: { name: string }): Promise<{ id: number; name: string }> => {
+  const { data } = await axiosInstance.patch<{ id: number; name: string }>(ApiRoutes.PROFILE, dto);
   return data;
 };

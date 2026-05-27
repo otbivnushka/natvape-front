@@ -4,7 +4,6 @@ export interface AdminOrderUser {
   id: number;
   name: string;
   telegramUsername: string | null;
-  phone: string;
 }
 
 export interface AdminOrderAddress {

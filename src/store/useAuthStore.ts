@@ -6,10 +6,7 @@ interface AuthUser {
   id: number;
   telegramId: number;
   telegramUsername: string | null;
-  telegramPhotoUrl: string | null;
   name: string;
-  phone: string | null;
-  avatar: string | null;
   isAdmin: boolean;
 }
 
@@ -17,7 +14,7 @@ interface AuthState {
   token: string | null;
   user: AuthUser | null;
   telegramAuth: (initDataRaw: string) => Promise<void>;
-  updateProfile: (data: Partial<Pick<AuthUser, 'name' | 'phone' | 'avatar'>>) => Promise<void>;
+  updateProfile: (data: { name: string }) => Promise<void>;
   isLoggedIn: () => boolean;
   isAdmin: () => boolean;
 }
@@ -35,24 +32,15 @@ export const useAuthStore = create<AuthState>()(
 
       updateProfile: async (data) => {
         const res = await Api.profile.update(data);
-        set({
-          user: {
-            id: res.id,
-            name: res.name,
-            telegramId: 0,
-            telegramUsername: res.telegramUsername,
-            telegramPhotoUrl: res.telegramPhotoUrl,
-            phone: res.phone,
-            avatar: res.avatar,
-            isAdmin: res.isAdmin,
-          },
-        });
+        set((state) => ({
+          user: state.user ? { ...state.user, name: res.name } : null,
+        }));
       },
 
       isLoggedIn: () => get().user !== null && get().token !== null,
 
       isAdmin: () => get().user?.isAdmin ?? false,
     }),
-    { name: 'auth-storage' }
-  )
+    { name: 'auth-storage' },
+  ),
 );

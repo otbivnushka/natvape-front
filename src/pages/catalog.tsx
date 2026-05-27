@@ -1,7 +1,14 @@
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { LiquidIcon, EvaporatorIcon, CartridgeIcon, SnusIcon, PodIcon, DisposableIcon } from '../components/ui/icons';
+import {
+  LiquidIcon,
+  EvaporatorIcon,
+  CartridgeIcon,
+  SnusIcon,
+  PodIcon,
+  DisposableIcon,
+} from '../components/ui/icons';
 import { PageLayout } from '../components/shared';
 import { Skeleton } from '../components/ui';
 import { CatalogCard } from '../components/shared';
@@ -33,7 +40,7 @@ const Catalog = () => {
         </div>
       ) : (
         <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4">
-            {(cats ?? []).map((cat, i) => (
+          {(cats ?? []).map((cat, i) => (
             <CatalogCard
               key={cat.key}
               cat={cat}

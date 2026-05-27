@@ -19,7 +19,8 @@ const Wishlist = () => {
       return;
     }
     setLoading(true);
-    Api.products.getAll({ limit: 100 })
+    Api.products
+      .getAll({ limit: 100 })
       .then((res) => {
         const all = res.items.map(Api.products.mapProduct);
         Api.productCache.set(all);

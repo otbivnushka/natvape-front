@@ -2,12 +2,12 @@
 
 ## Commands
 
-| Action | Command | Notes |
-|--------|---------|-------|
-| dev server | `npm run dev` | Vite + React HMR |
-| build | `npm run build` | runs `tsc -b` then `vite build` |
-| lint | `npm run lint` | ESLint flat config, v10 |
-| typecheck | `npx tsc -b --noEmit` | standalone (not in scripts) |
+| Action     | Command               | Notes                           |
+| ---------- | --------------------- | ------------------------------- |
+| dev server | `npm run dev`         | Vite + React HMR                |
+| build      | `npm run build`       | runs `tsc -b` then `vite build` |
+| lint       | `npm run lint`        | ESLint flat config, v10         |
+| typecheck  | `npx tsc -b --noEmit` | standalone (not in scripts)     |
 
 No test framework installed.
 
@@ -102,13 +102,13 @@ Page (useEffect) → Api.module.fn() → axios → DTO → mapProduct/mapApiItem
 
 ### File naming
 
-| Category | Convention | Example |
-|----------|-----------|---------|
-| Components | `kebab-case.tsx` | `primary-button.tsx` |
-| Pages | `kebab-case.tsx` | `category-products.tsx` |
-| Stores | `useXxxStore.ts` | `useCartStore.ts` |
-| API modules | `kebab-case.ts` | `product-cache.ts` |
-| DTO files | `{entity}.dto.ts` | `product.dto.ts` |
+| Category    | Convention        | Example                 |
+| ----------- | ----------------- | ----------------------- |
+| Components  | `kebab-case.tsx`  | `primary-button.tsx`    |
+| Pages       | `kebab-case.tsx`  | `category-products.tsx` |
+| Stores      | `useXxxStore.ts`  | `useCartStore.ts`       |
+| API modules | `kebab-case.ts`   | `product-cache.ts`      |
+| DTO files   | `{entity}.dto.ts` | `product.dto.ts`        |
 
 ## Known issues
 

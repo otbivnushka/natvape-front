@@ -61,12 +61,14 @@ const AdminProduct = () => {
 
   useEffect(() => {
     if (isNew && categories.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm((prev) => ({ ...prev, categoryId: categories[0]?.id ?? 0 }));
     }
   }, [isNew, categories]);
 
   useEffect(() => {
     if (productId == null) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     Promise.all([Api.products.getById(productId)])
       .then(([apiProduct]) => {
@@ -88,6 +90,7 @@ const AdminProduct = () => {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId, categories]);
 
   const handleSave = async () => {

@@ -24,19 +24,21 @@ interface CartState {
 
 function mapApiItem(i: ApiCartItem): CartItem {
   const cached = Api.productCache.get(i.product.id);
-  const product = cached ?? {
-    id: i.product.id,
-    name: i.product.name,
-    price: i.product.price,
-    doublePrice: i.product.doublePrice ?? null,
-    image: i.product.image,
-    imageId: i.product.imageId ?? null,
-    rating: 0,
-    description: '',
-    brand: i.product.brand,
-    badge: i.product.badge,
-    category: i.product.category.key as Product['category'],
-  } as Product;
+  const product =
+    cached ??
+    ({
+      id: i.product.id,
+      name: i.product.name,
+      price: i.product.price,
+      doublePrice: i.product.doublePrice ?? null,
+      image: i.product.image,
+      imageId: i.product.imageId ?? null,
+      rating: 0,
+      description: '',
+      brand: i.product.brand,
+      badge: i.product.badge,
+      category: i.product.category.key as Product['category'],
+    } as Product);
   return {
     id: i.id,
     product,
@@ -74,23 +76,35 @@ export const useCartStore = create<CartState>()(
 
         const key = `${productId}:${variantKey ?? ''}`;
         set((state) => {
-          const existing = state.items.find(
-            (i) => `${i.product.id}:${i.variantKey ?? ''}` === key
-          );
+          const existing = state.items.find((i) => `${i.product.id}:${i.variantKey ?? ''}` === key);
           if (existing) {
             return {
               items: sortCartItems(
                 state.items.map((i) =>
                   `${i.product.id}:${i.variantKey ?? ''}` === key
                     ? { ...i, quantity: i.quantity + quantity }
-                    : i
-                )
+                    : i,
+                ),
               ),
             };
           }
           const cached = Api.productCache.get(productId);
-          const product = cached ?? { id: productId, name: `Товар #${productId}`, price: 0, doublePrice: null, rating: 0, image: '', description: '', brand: '', category: 'liquids' } as Product;
-          return { items: sortCartItems([...state.items, { id: nextId(), product, quantity, variantKey }]) };
+          const product =
+            cached ??
+            ({
+              id: productId,
+              name: `Товар #${productId}`,
+              price: 0,
+              doublePrice: null,
+              rating: 0,
+              image: '',
+              description: '',
+              brand: '',
+              category: 'liquids',
+            } as Product);
+          return {
+            items: sortCartItems([...state.items, { id: nextId(), product, quantity, variantKey }]),
+          };
         });
       },
 
@@ -129,9 +143,7 @@ export const useCartStore = create<CartState>()(
 
         set((state) => ({
           items: sortCartItems(
-            state.items.map((i) =>
-              i.id === itemId ? { ...i, quantity: i.quantity + 1 } : i
-            )
+            state.items.map((i) => (i.id === itemId ? { ...i, quantity: i.quantity + 1 } : i)),
           ),
         }));
       },
@@ -160,12 +172,8 @@ export const useCartStore = create<CartState>()(
         set((state) => ({
           items: sortCartItems(
             state.items
-              .map((i) =>
-                i.id === itemId
-                  ? { ...i, quantity: i.quantity - 1 }
-                  : i
-              )
-              .filter((i) => i.quantity > 0)
+              .map((i) => (i.id === itemId ? { ...i, quantity: i.quantity - 1 } : i))
+              .filter((i) => i.quantity > 0),
           ),
         }));
       },
@@ -190,8 +198,8 @@ export const useCartStore = create<CartState>()(
 
       subtotal: () => calcCartSubtotal(get().items),
     }),
-    { name: 'cart-storage' }
-  )
+    { name: 'cart-storage' },
+  ),
 );
 
 // Auto-sync when auth state changes

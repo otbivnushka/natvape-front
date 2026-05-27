@@ -8,7 +8,7 @@ export function useCategories(): {
   getByKey: (key: string) => ApiCategoryInfo | undefined;
 } {
   const { data } = useApiData(() => Api.categories.getAll(), []);
-  const categories = data ?? [];
+  const categories = useMemo(() => data ?? [], [data]);
 
   const getByKey = useMemo(
     () => (key: string) => categories.find((c) => c.key === key),

@@ -4,7 +4,8 @@ import { useCartStore } from '../../store/useCartStore';
 import { LayoutPanelTop, ShoppingCart, Heart, User } from 'lucide-react';
 import clsx from 'clsx';
 
-const linkBase = 'flex flex-col items-center gap-0.5 bg-transparent border-none cursor-pointer text-[11px] font-medium px-3 py-1 transition-all duration-200 no-underline relative';
+const linkBase =
+  'flex flex-col items-center gap-0.5 bg-transparent border-none cursor-pointer text-[11px] font-medium px-3 py-1 transition-all duration-200 no-underline relative';
 
 interface NavLinkItemProps {
   to: string;
@@ -13,7 +14,13 @@ interface NavLinkItemProps {
 }
 
 const NavLinkItem: React.FC<NavLinkItemProps> = ({ to, end, children }) => (
-  <NavLink to={to} end={end} className={({ isActive }) => clsx(linkBase, isActive ? 'text-body font-semibold scale-105' : 'text-dim hover:text-body')}>
+  <NavLink
+    to={to}
+    end={end}
+    className={({ isActive }) =>
+      clsx(linkBase, isActive ? 'text-body font-semibold scale-105' : 'text-dim hover:text-body')
+    }
+  >
     {children}
   </NavLink>
 );
@@ -30,7 +37,11 @@ const BottomNav: React.FC = () => {
       <NavLinkItem to="/cart">
         <ShoppingCart size={18} />
         Корзина
-        {count > 0 && <span className="absolute -top-0.5 right-1 bg-primary text-on-primary text-[10px] font-bold rounded-full min-w-4 h-4 flex items-center justify-center px-1">{count}</span>}
+        {count > 0 && (
+          <span className="absolute -top-0.5 right-1 bg-primary text-on-primary text-[10px] font-bold rounded-full min-w-4 h-4 flex items-center justify-center px-1">
+            {count}
+          </span>
+        )}
       </NavLinkItem>
       <NavLinkItem to="/wishlist">
         <Heart size={18} />

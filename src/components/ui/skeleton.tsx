@@ -12,10 +12,19 @@ const Skeleton: React.FC<SkeletonProps> = ({ count = 6 }) => {
   return (
     <>
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className={`rounded-xl overflow-hidden flex flex-col ${shimmerLight} ${shimmerDark} ${anim}`}>
-          <div className={`w-full aspect-square rounded-none ${shimmerLight} ${shimmerDark} ${anim}`} />
-          <div className={`h-3.5 mx-3 mt-3 w-[70%] rounded-lg ${shimmerLight} ${shimmerDark} ${anim}`} />
-          <div className={`h-3.5 mx-3 mt-2 w-[40%] rounded-lg ${shimmerLight} ${shimmerDark} ${anim}`} />
+        <div
+          key={i}
+          className={`rounded-xl overflow-hidden flex flex-col ${shimmerLight} ${shimmerDark} ${anim}`}
+        >
+          <div
+            className={`w-full aspect-square rounded-none ${shimmerLight} ${shimmerDark} ${anim}`}
+          />
+          <div
+            className={`h-3.5 mx-3 mt-3 w-[70%] rounded-lg ${shimmerLight} ${shimmerDark} ${anim}`}
+          />
+          <div
+            className={`h-3.5 mx-3 mt-2 w-[40%] rounded-lg ${shimmerLight} ${shimmerDark} ${anim}`}
+          />
           <div className={`h-9 mx-3 my-3 rounded-lg ${shimmerLight} ${shimmerDark} ${anim}`} />
         </div>
       ))}

@@ -9,7 +9,13 @@ interface PrimaryButtonProps {
   className?: string;
 }
 
-const PrimaryButton: React.FC<PrimaryButtonProps> = ({ children, onClick, size = 'md', disabled, className }) => {
+const PrimaryButton: React.FC<PrimaryButtonProps> = ({
+  children,
+  onClick,
+  size = 'md',
+  disabled,
+  className,
+}) => {
   return (
     <button
       onClick={disabled ? undefined : onClick}

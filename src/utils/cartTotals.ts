@@ -32,16 +32,11 @@ export function calcCartSubtotal(items: CartItem[]): number {
   return total;
 }
 
-export function calcCartItemTotal(
-  item: CartItem,
-  allItems: CartItem[],
-): number {
+export function calcCartItemTotal(item: CartItem, allItems: CartItem[]): number {
   const { price, doublePrice } = item.product;
   if (doublePrice == null) return price * item.quantity;
 
-  const sameProduct = allItems.filter(
-    (i) => i.product.id === item.product.id,
-  );
+  const sameProduct = allItems.filter((i) => i.product.id === item.product.id);
   const totalQty = sameProduct.reduce((s, i) => s + i.quantity, 0);
 
   let priorQty = 0;

@@ -12,6 +12,7 @@ const Cart = () => {
 
   useEffect(() => {
     syncFromServer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const total = subtotal();

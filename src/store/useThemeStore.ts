@@ -8,8 +8,11 @@ interface ThemeState {
   setTheme: (theme: Theme) => void;
 }
 
-const stored = (typeof window !== 'undefined' ? localStorage.getItem('theme') : null) as Theme | null;
-const prefersDark = typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches;
+const stored = (
+  typeof window !== 'undefined' ? localStorage.getItem('theme') : null
+) as Theme | null;
+const prefersDark =
+  typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches;
 const initial: Theme = stored || (prefersDark ? 'dark' : 'light');
 
 if (initial === 'dark') {

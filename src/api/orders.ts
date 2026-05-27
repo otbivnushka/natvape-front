@@ -25,6 +25,8 @@ export const getAll = async (): Promise<Order[]> => {
 };
 
 export const getById = async (id: number): Promise<Order> => {
-  const { data } = await axiosInstance.get<ApiOrder>(ApiRoutes.ORDER_BY_ID.replace(':id', String(id)));
+  const { data } = await axiosInstance.get<ApiOrder>(
+    ApiRoutes.ORDER_BY_ID.replace(':id', String(id)),
+  );
   return mapOrder(data);
 };

@@ -15,7 +15,11 @@ const PodIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
         strokeLinecap="round"
       />
       <path d="M113 182.5L100 177" stroke="currentColor" strokeWidth={5} />
-      <path d="M47.5 96.5C53.8333 99.3333 72.8 103.3 98 96.5" stroke="currentColor" strokeWidth={5} />
+      <path
+        d="M47.5 96.5C53.8333 99.3333 72.8 103.3 98 96.5"
+        stroke="currentColor"
+        strokeWidth={5}
+      />
       <path d="M47 69C53.3333 71.8333 72.3 75.8 97.5 69" stroke="currentColor" strokeWidth={5} />
       <path d="M48 105C54.3333 107.833 73.3 111.8 98.5 105" stroke="currentColor" strokeWidth={5} />
       <rect x={52} y={127} width={42} height={27} rx={3} fill="currentColor" />

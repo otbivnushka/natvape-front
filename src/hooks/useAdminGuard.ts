@@ -4,11 +4,10 @@ import { useAuthStore } from '../store/useAuthStore';
 
 export function useAdminGuard(): void {
   const navigate = useNavigate();
-  const isAdmin = useAuthStore((s) => s.isAdmin);
 
   useEffect(() => {
-    if (!isAdmin()) {
+    if (!useAuthStore.getState().isAdmin()) {
       navigate('/profile', { replace: true });
     }
-  }, []);
+  }, [navigate]);
 }

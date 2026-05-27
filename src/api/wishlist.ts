@@ -13,6 +13,8 @@ export const add = async (productId: number): Promise<WishlistResponse> => {
 };
 
 export const remove = async (productId: number): Promise<WishlistResponse> => {
-  const { data } = await axiosInstance.delete<WishlistResponse>(ApiRoutes.WISHLIST_ITEM.replace(':productId', String(productId)));
+  const { data } = await axiosInstance.delete<WishlistResponse>(
+    ApiRoutes.WISHLIST_ITEM.replace(':productId', String(productId)),
+  );
   return data;
 };

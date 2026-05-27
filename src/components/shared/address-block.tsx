@@ -30,7 +30,9 @@ const AddressBlock: React.FC<AddressBlockProps> = ({
             key={addr.id}
             className={clsx(
               radioBase,
-              selected ? 'border-primary bg-primary/5' : 'border-line bg-surface hover:border-muted',
+              selected
+                ? 'border-primary bg-primary/5'
+                : 'border-line bg-surface hover:border-muted',
             )}
           >
             <input
@@ -50,7 +52,11 @@ const AddressBlock: React.FC<AddressBlockProps> = ({
               {selected && <span className="w-2 h-2 rounded-full bg-primary" />}
             </span>
             <span
-              className={clsx('text-sm font-medium', selected ? 'text-body' : 'text-muted', 'flex-1')}
+              className={clsx(
+                'text-sm font-medium',
+                selected ? 'text-body' : 'text-muted',
+                'flex-1',
+              )}
             >
               {addr.label}
             </span>

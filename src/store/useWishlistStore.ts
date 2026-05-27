@@ -67,8 +67,8 @@ export const useWishlistStore = create<WishlistState>()(
         set({ productIds: [] });
       },
     }),
-    { name: 'wishlist-storage' }
-  )
+    { name: 'wishlist-storage' },
+  ),
 );
 
 // Auto-sync when auth state changes

@@ -16,12 +16,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ value, previewUrl, onChange }
 
   useEffect(() => {
     if (previewUrl) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPreview(previewUrl);
       setStatus(value != null ? 'idle' : 'idle');
     } else if (value == null && !uploadedId) {
       setPreview('');
       setStatus('idle');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [previewUrl]);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
