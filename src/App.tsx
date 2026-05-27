@@ -8,6 +8,7 @@ import Wishlist from './pages/wishlist';
 import Profile from './pages/profile';
 import Admin from './pages/admin';
 import AdminProduct from './pages/admin-product';
+import AdminOrderPage from './pages/admin-order';
 import { BottomNav } from './components/shared';
 import { ToastContainer } from './components/ui';
 import { useEffect } from 'react';
@@ -45,6 +46,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/products/:id" element={<AdminProduct />} />
+          <Route path="/admin/order/:id" element={<AdminOrderPage />} />
         </Routes>
         <BottomNav />
         <ToastContainer />

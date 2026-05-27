@@ -1,7 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import type { AdminOrder } from '../../api/dto/admin.dto';
 import { Loader2, Check, Trash2, ShoppingBag, Info, Pen } from 'lucide-react';
-import { OrderDetailModal } from './modals';
 
 interface AdminOrdersTableProps {
   orders: AdminOrder[];
@@ -16,7 +16,6 @@ const AdminOrdersTable: React.FC<AdminOrdersTableProps> = ({
   onComplete,
   onDelete,
 }) => {
-  const [selectedOrderId, setSelectedOrderId] = React.useState<number | null>(null);
   return (
     <>
       {loading ? (
@@ -43,8 +42,7 @@ const AdminOrdersTable: React.FC<AdminOrdersTableProps> = ({
               </thead>
               <tbody>
                 {orders.map((o) => (
-                  <React.Fragment key={o.id}>
-                    <tr className="border-b border-line last:border-none text-body">
+                  <tr key={o.id} className="border-b border-line last:border-none text-body">
                       <td className="p-3 text-muted">{o.id}</td>
                       <td className="p-3 max-w-36 truncate">{o.user.name}</td>
                       <td className="p-3 font-medium">{o.total}</td>
@@ -59,12 +57,12 @@ const AdminOrdersTable: React.FC<AdminOrdersTableProps> = ({
                           >
                             <Pen size={12} />
                           </button>
-                          <button
-                            onClick={() => setSelectedOrderId(o.id)}
+                          <Link
+                            to={`/admin/order/${o.id}`}
                             className="flex items-center gap-1 py-1.5 px-2.5 border-none rounded-lg bg-primary text-on-accent text-[12px] font-semibold cursor-pointer hover:opacity-85 transition-all duration-200"
                           >
                             <Info size={12} />
-                          </button>
+                          </Link>
                           <button
                             onClick={() => onComplete(o.id)}
                             className="flex items-center gap-1 py-1.5 px-2.5 border-none rounded-lg bg-accent text-on-accent text-[12px] font-semibold cursor-pointer hover:opacity-85 transition-all duration-200"
@@ -81,14 +79,6 @@ const AdminOrdersTable: React.FC<AdminOrdersTableProps> = ({
                         </div>
                       </td>
                     </tr>
-                    {selectedOrderId === o.id && (
-                      <OrderDetailModal
-                        open
-                        onClose={() => setSelectedOrderId(null)}
-                        orderId={o.id}
-                      />
-                    )}
-                  </React.Fragment>
                 ))}
               </tbody>
             </table>
