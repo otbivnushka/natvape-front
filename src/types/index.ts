@@ -71,6 +71,7 @@ export interface Order {
   addressId?: number;
   address?: Address;
   deliveryTime?: string;
+  user: { telegramId: string; telegramUsername: string };
 }
 
 export interface UserProfile {

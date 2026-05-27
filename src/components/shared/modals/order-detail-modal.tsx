@@ -47,7 +47,17 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ open, onClose, orde
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-bold text-primary">Заказ #{orderId}</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-base font-bold text-primary">Заказ #{orderId}</h3>
+            {fetchedOrder && (
+              <a
+                className="inline-block text-sm text-muted bg-transparent border border-line rounded-lg px-2 py-0.5"
+                href={`tg://user?id=${fetchedOrder.user.telegramId}`}
+              >
+                @{fetchedOrder.user.telegramUsername}
+              </a>
+            )}
+          </div>
           <button
             type="button"
             onClick={() => {
