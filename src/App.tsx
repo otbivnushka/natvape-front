@@ -44,7 +44,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/:tab?" element={<Admin />} />
           <Route path="/admin/products/:id" element={<AdminProduct />} />
           <Route path="/admin/order/:id" element={<AdminOrderPage />} />
         </Routes>

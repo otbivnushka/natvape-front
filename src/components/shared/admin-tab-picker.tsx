@@ -5,7 +5,7 @@ export type AdminTab = 'products' | 'orders';
 
 interface AdminTabPickerProps {
   tab: string;
-  setTab: React.Dispatch<React.SetStateAction<AdminTab>>;
+  setTab: (tab: AdminTab) => void;
 }
 
 const AdminTabPicker: React.FC<AdminTabPickerProps> = ({ tab, setTab }) => {

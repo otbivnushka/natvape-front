@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Api } from '../api';
 import type { Product } from '../types';
 import type { AdminOrder } from '../api/dto/admin.dto';
+import type { AdminTab } from '../components/shared/admin-tab-picker';
 import { useAdminGuard } from '../hooks/useAdminGuard';
 import { useConfirmDialog } from '../hooks/useConfirmDialog';
 import { AdminTabPicker, AdminProductsTable, AdminOrdersTable } from '../components/shared';
@@ -10,8 +11,13 @@ import { AdminTabPicker, AdminProductsTable, AdminOrdersTable } from '../compone
 const Admin = () => {
   const navigate = useNavigate();
   useAdminGuard();
+  const { tab: tabParam } = useParams<{ tab: string }>();
+  const [tab, setTab] = useState<AdminTab>(tabParam === 'orders' ? 'orders' : 'products');
 
-  const [tab, setTab] = useState<'products' | 'orders'>('products');
+  const handleTabChange = (next: AdminTab) => {
+    setTab(next);
+    navigate(`/admin/${next}`, { replace: true });
+  };
 
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(false);
@@ -73,7 +79,7 @@ const Admin = () => {
           <h1 className="text-2xl font-bold text-primary">Панель администратора</h1>
         </div>
 
-        <AdminTabPicker tab={tab} setTab={setTab} />
+        <AdminTabPicker tab={tab} setTab={handleTabChange} />
 
         {tab === 'products' ? (
           <AdminProductsTable
