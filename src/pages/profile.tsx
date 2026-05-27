@@ -2,10 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { retrieveRawInitData } from '@telegram-apps/sdk';
 import { useAuthStore } from '../store/useAuthStore';
-import { useThemeStore } from '../store/useThemeStore';
 import { Api } from '../api';
 import type { Order } from '../types';
-import { Lock, Package, Sun, Moon, Loader2, Info, Shield } from 'lucide-react';
+import { Lock, Package, Loader2, Info, Shield } from 'lucide-react';
 import {
   EmptyState,
   PageLayout,
@@ -16,11 +15,14 @@ import {
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { user, telegramAuth, logout, isLoggedIn, isAdmin } = useAuthStore();
-  const { name: userName, telegramUsername: userTelegram, avatar: userAvatar } = user ?? {};
-  const { theme, toggle } = useThemeStore();
+  const { user, telegramAuth, isLoggedIn, isAdmin } = useAuthStore();
+  const { name: userName, avatar: userAvatar } = user ?? {};
 
-
+  const tg = window.Telegram?.WebApp;
+  const tgUser = tg?.initDataUnsafe?.user;
+  const displayName = [tgUser?.first_name, tgUser?.last_name].filter(Boolean).join(' ') || userName;
+  const displayAvatar = tgUser?.photo_url || userAvatar;
+  const displayTelegram = tgUser?.username;
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
@@ -50,11 +52,6 @@ const Profile = () => {
       .finally(() => setOrdersLoading(false));
   }, [user]);
 
-  const handleLogout = () => {
-    logout();
-    setOrders([]);
-  };
-
   if (!isLoggedIn()) {
     return (
       <>
@@ -81,40 +78,24 @@ const Profile = () => {
   return (
     <>
       <PageLayout>
-        <div className="flex items-center justify-between mb-5">
-          <h1 className="text-2xl font-bold text-primary">Профиль</h1>
-          <div className="flex gap-2">
-            <button
-              onClick={handleLogout}
-              className="py-1.5 px-3 border border-line rounded-lg bg-surface text-sm text-muted cursor-pointer hover:bg-page transition-colors"
-            >
-              Выйти
-            </button>
-            <button
-              onClick={toggle}
-              className="py-1.5 px-3 border border-line rounded-lg bg-surface text-sm text-muted cursor-pointer hover:bg-page transition-colors"
-            >
-              {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
-            </button>
-          </div>
-        </div>
+        <h1 className="text-2xl font-bold text-primary mb-5">Профиль</h1>
 
         <div className="flex items-center gap-4 p-4 bg-surface rounded-xl mb-6">
-          {userAvatar ? (
+          {displayAvatar ? (
             <img
               className="w-15 h-15 rounded-full object-cover"
-              src={userAvatar}
-              alt={userName ?? ''}
+              src={displayAvatar}
+              alt={displayName ?? ''}
             />
           ) : (
             <div className="w-15 h-15 rounded-full bg-surface flex items-center justify-center text-lg font-bold text-muted shrink-0">
-              {userName?.charAt(0) ?? '?'}
+              {displayName?.charAt(0) ?? '?'}
             </div>
           )}
           <div className="flex-1">
-            <div className="text-base font-semibold text-primary">{userName}</div>
-            {userTelegram && (
-              <div className="text-[13px] text-muted mt-0.5">@{userTelegram}</div>
+            <div className="text-base font-semibold text-primary">{displayName}</div>
+            {displayTelegram && (
+              <div className="text-[13px] text-muted mt-0.5">@{displayTelegram}</div>
             )}
           </div>
         </div>

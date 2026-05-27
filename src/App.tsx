@@ -10,8 +10,28 @@ import Admin from './pages/admin';
 import AdminProduct from './pages/admin-product';
 import { BottomNav } from './components/shared';
 import { ToastContainer } from './components/ui';
+import { useEffect } from 'react';
+import { useThemeStore } from './store/useThemeStore';
+
+declare global {
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Telegram: any;
+  }
+}
 
 function App() {
+  useEffect(() => {
+    try {
+      const tg = window.Telegram?.WebApp;
+      if (tg?.colorScheme) {
+        useThemeStore.getState().setTheme(tg.colorScheme);
+      }
+    } catch {
+      // not in Telegram WebApp
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-page">
