@@ -33,8 +33,8 @@ const Cart = () => {
       ) : (
         <>
           <div className="flex flex-col gap-2.5">
-            {items.map((item) => (
-              <CartItemComponent key={item.product.id} item={item} />
+            {items.map((item, i) => (
+              <CartItemComponent key={item.product.id + i * i} item={item} />
             ))}
           </div>
           <div className="mt-5 p-4 bg-surface rounded-xl">

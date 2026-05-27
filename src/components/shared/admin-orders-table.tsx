@@ -1,6 +1,7 @@
 import React from 'react';
 import type { AdminOrder } from '../../api/dto/admin.dto';
-import { Loader2, Check, Trash2, ShoppingBag, Info } from 'lucide-react';
+import { Loader2, Check, Trash2, ShoppingBag, Info, Pen } from 'lucide-react';
+import { OrderDetailModal } from './modals';
 
 interface AdminOrdersTableProps {
   orders: AdminOrder[];
@@ -15,6 +16,7 @@ const AdminOrdersTable: React.FC<AdminOrdersTableProps> = ({
   onComplete,
   onDelete,
 }) => {
+  const [selectedOrderId, setSelectedOrderId] = React.useState<number | null>(null);
   return (
     <>
       {loading ? (
@@ -41,37 +43,52 @@ const AdminOrdersTable: React.FC<AdminOrdersTableProps> = ({
               </thead>
               <tbody>
                 {orders.map((o) => (
-                  <tr key={o.id} className="border-b border-line last:border-none text-body">
-                    <td className="p-3 text-muted">{o.id}</td>
-                    <td className="p-3 max-w-36 truncate">{o.user.name}</td>
-                    <td className="p-3 font-medium">{o.total}</td>
-                    <td className="p-3 text-muted">
-                      {o.deliveryMethod === 'pickup' ? 'Самовывоз' : 'Доставка'}
-                    </td>
-                    <td className="p-3 text-right">
-                      <div className="flex gap-2 justify-end">
-                        <button
-                          onClick={() => o.id}
-                          className="flex items-center gap-1 py-1.5 px-2.5 border-none rounded-lg bg-primary text-on-accent text-[12px] font-semibold cursor-pointer hover:opacity-85 transition-all duration-200"
-                        >
-                          <Info size={12} />
-                        </button>
-                        <button
-                          onClick={() => onComplete(o.id)}
-                          className="flex items-center gap-1 py-1.5 px-2.5 border-none rounded-lg bg-accent text-on-accent text-[12px] font-semibold cursor-pointer hover:opacity-85 transition-all duration-200"
-                        >
-                          <Check size={12} />
-                        </button>
-                        <button
-                          onClick={() => onDelete(o.id)}
-                          className="p-1.5 border border-line rounded-lg text-muted cursor-pointer hover:text-red-500 hover:border-red-300 transition-colors"
-                          title="Удалить"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+                  <React.Fragment key={o.id}>
+                    <tr className="border-b border-line last:border-none text-body">
+                      <td className="p-3 text-muted">{o.id}</td>
+                      <td className="p-3 max-w-36 truncate">{o.user.name}</td>
+                      <td className="p-3 font-medium">{o.total}</td>
+                      <td className="p-3 text-muted">
+                        {o.deliveryMethod === 'pickup' ? 'Самовывоз' : 'Доставка'}
+                      </td>
+                      <td className="p-3 text-right">
+                        <div className="flex gap-2 justify-end">
+                          <button
+                            onClick={() => alert('write')}
+                            className="flex items-center gap-1 py-1.5 px-2.5 border-none rounded-lg bg-dim text-on-accent text-[12px] font-semibold cursor-pointer hover:opacity-85 transition-all duration-200"
+                          >
+                            <Pen size={12} />
+                          </button>
+                          <button
+                            onClick={() => setSelectedOrderId(o.id)}
+                            className="flex items-center gap-1 py-1.5 px-2.5 border-none rounded-lg bg-primary text-on-accent text-[12px] font-semibold cursor-pointer hover:opacity-85 transition-all duration-200"
+                          >
+                            <Info size={12} />
+                          </button>
+                          <button
+                            onClick={() => onComplete(o.id)}
+                            className="flex items-center gap-1 py-1.5 px-2.5 border-none rounded-lg bg-accent text-on-accent text-[12px] font-semibold cursor-pointer hover:opacity-85 transition-all duration-200"
+                          >
+                            <Check size={12} />
+                          </button>
+                          <button
+                            onClick={() => onDelete(o.id)}
+                            className="p-1.5 border border-line rounded-lg text-muted cursor-pointer hover:text-red-500 hover:border-red-300 transition-colors"
+                            title="Удалить"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    {selectedOrderId === o.id && (
+                      <OrderDetailModal
+                        open
+                        onClose={() => setSelectedOrderId(null)}
+                        orderId={o.id}
+                      />
+                    )}
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>

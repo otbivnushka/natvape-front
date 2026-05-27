@@ -105,7 +105,7 @@ const Profile = () => {
         </PageLayout>
         <FixedButton
           onClick={() => setInfoOpen(true)}
-          className="bottom-6 right-6 w-11 h-11 rounded-full bg-primary text-on-primary shadow-lg hover:scale-105"
+          className="bottom-6 right-6 w-11 h-11 rounded-full bg-primary text-on-primary hover:scale-105"
         >
           <Info size={20} />
         </FixedButton>
@@ -170,13 +170,13 @@ const Profile = () => {
         <div className="fixed bottom-18 right-2 z-40 flex gap-3">
           <FixedButton
             onClick={() => setInfoOpen(true)}
-            className="relative w-11 h-11 rounded-full bg-primary text-on-primary shadow-lg hover:scale-105"
+            className="relative w-11 h-11 hover:scale-105"
           >
             <Info size={20} />
           </FixedButton>
           <FixedButton
             onClick={() => navigate('/admin')}
-            className="relative w-11 h-11 rounded-full bg-primary text-on-primary shadow-lg hover:scale-105"
+            className="relative w-11 h-11 hover:scale-105"
           >
             <Shield size={20} />
           </FixedButton>
@@ -184,7 +184,7 @@ const Profile = () => {
       ) : (
         <FixedButton
           onClick={() => setInfoOpen(true)}
-          className="bottom-18 right-2 w-11 h-11 rounded-full bg-primary text-on-primary shadow-lg hover:scale-105"
+          className="bottom-18 right-2 relative w-11 h-11 hover:scale-105"
         >
           <Info size={20} />
         </FixedButton>

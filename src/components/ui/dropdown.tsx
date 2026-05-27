@@ -58,7 +58,7 @@ const Dropdown = <T extends string>({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-1 z-50 min-w-full w-max bg-surface border-2 border-line rounded-xl shadow-lg overflow-hidden animate-[scaleIn_0.12s_ease]">
+        <div className="absolute top-full right-0 mt-1 z-50 min-w-full w-max bg-surface border-2 border-line rounded-xl overflow-hidden animate-[scaleIn_0.12s_ease]">
           {options.length === 0 ? (
             <div className="px-3 py-3 text-[12px] text-dim text-center">Нет вариантов</div>
           ) : (

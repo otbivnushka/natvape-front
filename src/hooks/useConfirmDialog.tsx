@@ -32,7 +32,7 @@ export function useConfirmDialog<T = void>(): {
     if (!state) return null;
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-        <div className="bg-surface rounded-xl p-6 max-w-sm w-full mx-4 shadow-xl">
+        <div className="bg-surface rounded-xl p-6 max-w-sm w-full mx-4">
           <p className="text-sm text-body mb-5">{state.message}</p>
           <div className="flex gap-2 justify-end">
             <button

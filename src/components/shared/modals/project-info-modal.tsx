@@ -18,7 +18,7 @@ const ProjectInfoModal: React.FC<ProjectInfoModalProps> = ({ open, onClose }) =>
       onClick={onClose}
     >
       <div
-        className="bg-surface rounded-2xl p-6 max-w-sm w-full shadow-xl"
+        className="bg-surface rounded-2xl p-6 max-w-sm w-full"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">

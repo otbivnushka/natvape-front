@@ -43,7 +43,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ open, onClose, orde
       }}
     >
       <div
-        className="bg-surface rounded-xl p-5 w-full max-w-md max-h-[80vh] overflow-y-auto shadow-xl"
+        className="bg-surface rounded-xl p-5 w-full max-w-md max-h-[80vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
@@ -92,7 +92,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ open, onClose, orde
             </div>
 
             {detail.comment && (
-              <div className="text-sm text-muted mb-4 pb-4 border-b border-line">
+              <div className="text-sm text-muted mb-4 pb-4">
                 <span className="font-semibold text-body">Комментарий:</span> {detail.comment}
               </div>
             )}
