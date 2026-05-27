@@ -133,7 +133,7 @@ const Profile = () => {
       ) : (
         <FixedButton
           onClick={() => setInfoOpen(true)}
-          className="bottom-18 right-2 relative w-11 h-11 hover:scale-105"
+          className="bottom-18 right-2 w-11 h-11 hover:scale-105"
         >
           <Info size={20} />
         </FixedButton>
