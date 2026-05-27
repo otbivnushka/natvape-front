@@ -19,6 +19,10 @@ export interface ApiOrder {
   createdAt: string;
   addressId?: number;
   deliveryTime?: string;
+  user: {
+    telegramId: string;
+    telegramUsername: string;
+  };
 }
 
 export interface CreateOrderDto {
