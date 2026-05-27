@@ -3,7 +3,7 @@ import type { ApiOrderItem } from './order.dto';
 export interface AdminOrderUser {
   id: number;
   name: string;
-  email: string;
+  telegramUsername: string | null;
   phone: string;
 }
 

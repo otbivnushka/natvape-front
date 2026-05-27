@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { retrieveRawInitData } from '@telegram-apps/sdk';
 import { useAuthStore } from '../store/useAuthStore';
 import { useThemeStore } from '../store/useThemeStore';
 import { Api } from '../api';
@@ -15,22 +16,30 @@ import {
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { user, login, logout, isLoggedIn, isAdmin } = useAuthStore();
-  const { name: userName, email: userEmail, avatar: userAvatar } = user ?? {};
+  const { user, telegramAuth, logout, isLoggedIn, isAdmin } = useAuthStore();
+  const { name: userName, telegramUsername: userTelegram, avatar: userAvatar } = user ?? {};
   const { theme, toggle } = useThemeStore();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [authLoading, setAuthLoading] = useState(false);
-  const [authError, setAuthError] = useState('');
+
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
 
   useEffect(() => {
+    if (isLoggedIn()) return;
+    try {
+      const initData = retrieveRawInitData();
+      if (initData) {
+        telegramAuth(initData).catch(() => {});
+      }
+    } catch {
+      // not in Telegram WebApp
+    }
+  }, []);
+
+  useEffect(() => {
     if (!user) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrdersLoading(true);
     Api.orders
       .getAll()
@@ -40,18 +49,6 @@ const Profile = () => {
       })
       .finally(() => setOrdersLoading(false));
   }, [user]);
-
-  const handleLogin = async () => {
-    setAuthLoading(true);
-    setAuthError('');
-    try {
-      await login(email, password);
-    } catch (e) {
-      setAuthError((e as Error).message || 'Ошибка входа');
-    } finally {
-      setAuthLoading(false);
-    }
-  };
 
   const handleLogout = () => {
     logout();
@@ -66,40 +63,7 @@ const Profile = () => {
           <div className="max-w-sm mx-auto mt-8">
             <div className="flex flex-col items-center gap-2 mb-6">
               <Lock size={40} className="text-dim" />
-              <p className="text-sm text-muted">Войдите, чтобы увидеть профиль и заказы</p>
-            </div>
-
-            <div className="bg-surface rounded-xl p-5">
-              <div className="flex flex-col gap-3">
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-page border border-line rounded-lg px-3.5 py-2.5 text-sm text-body outline-none transition-colors duration-150 focus:border-primary placeholder:text-dim"
-                />
-                <input
-                  type="password"
-                  placeholder="Пароль"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
-                  className="w-full bg-page border border-line rounded-lg px-3.5 py-2.5 text-sm text-body outline-none transition-colors duration-150 focus:border-primary placeholder:text-dim"
-                />
-                {authError && <p className="text-[13px] text-red-500">{authError}</p>}
-                <button
-                  onClick={handleLogin}
-                  disabled={authLoading || !email || !password}
-                  className="w-full py-2.5 border-none rounded-lg bg-primary text-on-primary text-sm font-semibold cursor-pointer transition-all duration-150 hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  {authLoading ? <Loader2 size={16} className="animate-spin" /> : null}
-                  {authLoading ? 'Вход...' : 'Войти'}
-                </button>
-              </div>
-
-              <p className="text-[12px] text-dim text-center mt-4">
-                Тестовый: max@natvape.ru / password123
-              </p>
+              <p className="text-sm text-muted">Авторизация доступна только в Telegram</p>
             </div>
           </div>
         </PageLayout>
@@ -149,7 +113,9 @@ const Profile = () => {
           )}
           <div className="flex-1">
             <div className="text-base font-semibold text-primary">{userName}</div>
-            <div className="text-[13px] text-muted mt-0.5">{userEmail}</div>
+            {userTelegram && (
+              <div className="text-[13px] text-muted mt-0.5">@{userTelegram}</div>
+            )}
           </div>
         </div>
 

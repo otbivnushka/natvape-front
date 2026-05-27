@@ -1,18 +1,15 @@
-export interface ApiLoginResponse {
+export interface ApiTelegramAuthResponse {
   accessToken: string;
   user: {
     id: number;
+    telegramId: number;
+    telegramUsername: string | null;
+    telegramPhotoUrl: string | null;
     name: string;
-    email: string;
-    avatar: string | null;
     phone: string | null;
+    avatar: string | null;
     isAdmin: boolean;
+    createdAt: string;
+    updatedAt: string;
   };
-}
-
-export interface RegisterDto {
-  name: string;
-  email: string;
-  password: string;
-  phone?: string;
 }

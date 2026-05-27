@@ -10,29 +10,8 @@ import Admin from './pages/admin';
 import AdminProduct from './pages/admin-product';
 import { BottomNav } from './components/shared';
 import { ToastContainer } from './components/ui';
-import { useEffect } from 'react';
-
-declare global {
-  interface Window {
-    Telegram: any;
-  }
-}
 
 function App() {
-  useEffect(() => {
-    const tg = window.Telegram.WebApp;
-
-    fetch('https://r1n60fhm-3000.euw.devtunnels.ms/api/auth/telegram', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        initData: tg.initData,
-      }),
-    });
-  }, []);
-
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-page">

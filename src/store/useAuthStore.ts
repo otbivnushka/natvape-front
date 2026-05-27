@@ -4,18 +4,19 @@ import { Api } from '../api';
 
 interface AuthUser {
   id: number;
+  telegramId: number;
+  telegramUsername: string | null;
+  telegramPhotoUrl: string | null;
   name: string;
-  email: string;
-  avatar: string | null;
   phone: string | null;
+  avatar: string | null;
   isAdmin: boolean;
 }
 
 interface AuthState {
   token: string | null;
   user: AuthUser | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string, phone?: string) => Promise<void>;
+  telegramAuth: (initDataRaw: string) => Promise<void>;
   logout: () => void;
   updateProfile: (data: Partial<Pick<AuthUser, 'name' | 'phone' | 'avatar'>>) => Promise<void>;
   isLoggedIn: () => boolean;
@@ -28,17 +29,12 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       user: null,
 
-      login: async (email, password) => {
-        const res = await Api.auth.login(email, password);
+      telegramAuth: async (initDataRaw) => {
+        const res = await Api.auth.telegramAuth(initDataRaw);
         set({ token: res.accessToken, user: res.user });
       },
 
-      register: async (name, email, password, phone) => {
-        await Api.auth.register({ name, email, password, phone });
-      },
-
       logout: () => {
-        Api.auth.logout().catch(() => {});
         set({ token: null, user: null });
       },
 
@@ -48,9 +44,11 @@ export const useAuthStore = create<AuthState>()(
           user: {
             id: res.id,
             name: res.name,
-            email: res.email,
-            avatar: res.avatar,
+            telegramId: 0,
+            telegramUsername: res.telegramUsername,
+            telegramPhotoUrl: res.telegramPhotoUrl,
             phone: res.phone,
+            avatar: res.avatar,
             isAdmin: res.isAdmin,
           },
         });

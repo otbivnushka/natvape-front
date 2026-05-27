@@ -1,7 +1,5 @@
 export const ApiRoutes = {
-  LOGIN: '/auth/login',
-  REGISTER: '/auth/register',
-  LOGOUT: '/auth/logout',
+  TELEGRAM_AUTH: '/auth/telegram',
 
   CATEGORIES: '/categories',
 
