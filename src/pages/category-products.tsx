@@ -57,7 +57,7 @@ const CategoryProducts = () => {
       .getAll({
         category,
         search: debouncedSearch || undefined,
-        sort: sort !== 'name' ? sort : undefined,
+        sort: sort,
         brand: brand || undefined,
         priceMin: debouncedMinPrice > 0 ? debouncedMinPrice : undefined,
         priceMax: debouncedMaxPrice > 0 ? debouncedMaxPrice : undefined,
