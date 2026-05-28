@@ -187,20 +187,20 @@ const Checkout = () => {
                 </button>
               </div>
             </div>
-          ) : addresses.length > 0 && selectedAddress ? (
+          ) : (
             <>
               <div className="w-full rounded-xl flex items-center justify-center">
-                <MapBlock lat={selectedAddress.lat} lng={selectedAddress.lng} />
+                <MapBlock lat={selectedAddress?.lat} lng={selectedAddress?.lng} />
               </div>
               <AddressBlock
                 addresses={addresses}
-                selectedId={selectedAddressId!}
+                selectedId={selectedAddressId ?? -1}
                 onSelect={setSelectedAddressId}
                 onAddNew={handleAddNew}
                 onDelete={handleDeleteAddress}
               />
             </>
-          ) : null}
+          )}
         </div>
       )}
 
