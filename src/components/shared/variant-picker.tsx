@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { ProductVariant } from '../../types';
 import clsx from 'clsx';
 
@@ -8,6 +8,7 @@ interface VariantPickerProps {
   selectedValue: string;
   onSelect: (value: string) => void;
   disabledValues?: string[];
+  collapsible?: boolean;
 }
 
 const VariantPicker: React.FC<VariantPickerProps> = ({
@@ -16,12 +17,22 @@ const VariantPicker: React.FC<VariantPickerProps> = ({
   selectedValue,
   onSelect,
   disabledValues = [],
+  collapsible = true,
 }) => {
+  const [showAll, setShowAll] = useState(false);
+
+  const available = variants.filter((v) => !disabledValues.includes(v.value));
+  const disabled = variants.filter((v) => disabledValues.includes(v.value));
+  const sorted = [...available, ...disabled];
+  const hasHidden = collapsible && disabled.length > 0 && !showAll;
+
+  const visible = hasHidden ? available : sorted;
+
   return (
     <div className="mb-4">
       <div className="text-sm font-semibold text-muted mb-2">{variantLabel}:</div>
       <div className="flex gap-2 flex-wrap">
-        {variants.map((v) => {
+        {visible.map((v) => {
           const isOut = disabledValues.includes(v.value);
           return (
             <button
@@ -44,6 +55,14 @@ const VariantPicker: React.FC<VariantPickerProps> = ({
           );
         })}
       </div>
+      {hasHidden && (
+        <button
+          onClick={() => setShowAll(true)}
+          className="mt-2 text-xs text-muted bg-transparent border border-line rounded-lg px-3 py-1 cursor-pointer hover:text-primary hover:border-primary"
+        >
+          Ещё {disabled.length}
+        </button>
+      )}
     </div>
   );
 };

@@ -159,7 +159,7 @@ const ProductDetail = () => {
           <img
             src={product.image}
             alt={product.name}
-            className="w-full rounded-xl max-w-87.5 aspect-square"
+            className="w-full rounded-xl max-w-87.5 aspect-square object-cover"
           />
         </div>
 
