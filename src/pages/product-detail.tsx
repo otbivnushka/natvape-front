@@ -220,6 +220,14 @@ const ProductDetail = () => {
               {userRating > 0 && !ratingSubmitting && (
                 <span className="text-xs text-muted">{userRating}</span>
               )}
+              {userRating > 0 && (
+                <button
+                  className="text-xs text-muted border rounded-full bg-transparent"
+                  onClick={() => handleRate(0)}
+                >
+                  Убрать
+                </button>
+              )}
             </div>
           </div>
 

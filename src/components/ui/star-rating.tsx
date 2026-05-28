@@ -22,7 +22,7 @@ const StarRating: React.FC<StarRatingProps> = ({
           key={i}
           onClick={() => onChange?.(i)}
           className={clsx(
-            'text-[14px] leading-none bg-none border-none cursor-pointer p-0 transition-colors',
+            'text-2xl leading-none bg-none border-none cursor-pointer p-0 transition-colors',
             i <= rating ? 'text-primary' : 'text-muted',
           )}
         >
