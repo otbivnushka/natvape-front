@@ -30,7 +30,7 @@ const Admin = () => {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setProductsLoading(true);
       Api.products
-        .getAll({ limit: 100 })
+        .getAll()
         .then((res) => setProducts(res.items.map(Api.products.mapProduct)))
         .catch(() => {})
         .finally(() => setProductsLoading(false));

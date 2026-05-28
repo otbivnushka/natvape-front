@@ -61,7 +61,6 @@ const CategoryProducts = () => {
         brand: brand || undefined,
         priceMin: debouncedMinPrice > 0 ? debouncedMinPrice : undefined,
         priceMax: debouncedMaxPrice > 0 ? debouncedMaxPrice : undefined,
-        limit: 50,
       })
       .then((res) => {
         const mapped = res.items.map(Api.products.mapProduct);
