@@ -209,7 +209,7 @@ const ProductDetail = () => {
 
           <div className="mb-4">
             <div className="text-sm font-semibold text-muted mb-2">Ваша оценка:</div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 h-8">
               <StarRating
                 rating={userRating}
                 showValue={false}
@@ -222,7 +222,7 @@ const ProductDetail = () => {
               )}
               {userRating > 0 && (
                 <button
-                  className="text-xs text-muted border rounded-full bg-transparent"
+                  className="text-xs px-2 py-1 text-muted border rounded-full bg-transparent"
                   onClick={() => handleRate(0)}
                 >
                   Убрать
