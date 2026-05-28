@@ -10,9 +10,10 @@ export const getAll = async (query?: ProductsQuery): Promise<ApiProductsResponse
   return data;
 };
 
-export const getById = async (id: number): Promise<ApiProduct> => {
+export const getById = async (id: number, userId?: number): Promise<ApiProduct> => {
   const { data } = await axiosInstance.get<ApiProduct>(
     ApiRoutes.PRODUCT_BY_ID.replace(':id', String(id)),
+    { params: { userId } },
   );
   return data;
 };

@@ -15,6 +15,7 @@ export interface ApiProduct {
   variantLabel?: string;
   variants?: { id: number; name: string; value: string; stock: number }[];
   colors?: { id: number; name: string; hex: string; stock: number }[];
+  userRate?: number;
 }
 
 export interface ApiProductsResponse {

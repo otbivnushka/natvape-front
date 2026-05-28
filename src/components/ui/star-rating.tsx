@@ -1,14 +1,35 @@
 import React from 'react';
+import clsx from 'clsx';
 
 interface StarRatingProps {
   rating: number;
   showValue?: boolean;
+  interactive?: boolean;
+  onChange?: (value: number) => void;
 }
 
-const StarRating: React.FC<StarRatingProps> = ({ rating, showValue = true }) => {
+const StarRating: React.FC<StarRatingProps> = ({
+  rating,
+  showValue = true,
+  interactive = false,
+  onChange,
+}) => {
   const stars = [];
   for (let i = 1; i <= 5; i++) {
-    if (i <= Math.floor(rating)) {
+    if (interactive) {
+      stars.push(
+        <button
+          key={i}
+          onClick={() => onChange?.(i)}
+          className={clsx(
+            'text-[14px] leading-none bg-none border-none cursor-pointer p-0 transition-colors',
+            i <= rating ? 'text-primary' : 'text-muted',
+          )}
+        >
+          ★
+        </button>,
+      );
+    } else if (i <= Math.floor(rating)) {
       stars.push(
         <span key={i} className="text-[14px] leading-none text-primary">
           ★

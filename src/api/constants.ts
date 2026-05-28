@@ -34,6 +34,8 @@ export const ApiRoutes = {
   ADMIN_ORDER_STATUS: '/admin/orders/:id/status',
   ADMIN_ORDER_BY_ID: '/admin/orders/:id',
 
+  RATES: '/rates',
+
   IMAGES_UPLOAD: '/images/upload',
   IMAGES_BY_ID: '/images/:id',
 } as const;

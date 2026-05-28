@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Api } from '../api';
 import type { Product, ProductColor } from '../types';
 import { useCartStore } from '../store/useCartStore';
+import { useAuthStore } from '../store/useAuthStore';
 import { useToastStore } from '../store/useToastStore';
-import { ArrowLeft, HelpCircle } from 'lucide-react';
+import { ArrowLeft, HelpCircle, Loader2 } from 'lucide-react';
 import {
   StarRating,
   QuantityStepper,
@@ -13,29 +14,12 @@ import {
   Skeleton,
 } from '../components/ui';
 import { PageLayout, FixedButton, ColorPicker, VariantPicker } from '../components/shared';
-import clsx from 'clsx';
-
-const StarInput = ({ value, onChange }: { value: number; onChange: (v: number) => void }) => (
-  <div className="flex gap-1">
-    {[1, 2, 3, 4, 5].map((star) => (
-      <button
-        key={star}
-        onClick={() => onChange(star)}
-        className={clsx(
-          'text-2xl leading-none bg-none border-none cursor-pointer transition-colors duration-150',
-          star <= value ? 'text-primary' : 'text-muted',
-        )}
-      >
-        ★
-      </button>
-    ))}
-  </div>
-);
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addToCart } = useCartStore((s) => s);
+  const user = useAuthStore((s) => s.user);
   const addToast = useToastStore((s) => s.addToast);
 
   const [product, setProduct] = useState<Product | null>(null);
@@ -45,21 +29,39 @@ const ProductDetail = () => {
   const [selectedVariant, setSelectedVariant] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
   const [userRating, setUserRating] = useState(0);
+  const [ratingSubmitting, setRatingSubmitting] = useState(false);
 
   useEffect(() => {
     if (!id) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     Api.products
-      .getById(Number(id))
+      .getById(Number(id), user?.id)
       .then((api) => {
         const p = Api.products.mapProduct(api);
         Api.productCache.setOne(p);
         setProduct(p);
+        if (api.userRate) setUserRating(api.userRate);
       })
       .catch(() => setProduct(null))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, user?.id]);
+
+  const handleRate = useCallback(
+    async (value: number) => {
+      if (!user || !product || ratingSubmitting) return;
+      setRatingSubmitting(true);
+      setUserRating(value);
+      try {
+        await Api.rates.upsert(user.id, product.id, value);
+      } catch {
+        setUserRating(product.userRate ?? 0);
+      } finally {
+        setRatingSubmitting(false);
+      }
+    },
+    [user, product, ratingSubmitting],
+  );
 
   if (loading) {
     return (
@@ -206,8 +208,19 @@ const ProductDetail = () => {
           </div>
 
           <div className="mb-4">
-            <div className="text-sm font-semibold text-muted mb-2">Оцените товар:</div>
-            <StarInput value={userRating} onChange={setUserRating} />
+            <div className="text-sm font-semibold text-muted mb-2">Ваша оценка:</div>
+            <div className="flex items-center gap-2">
+              <StarRating
+                rating={userRating}
+                showValue={false}
+                interactive={!!user}
+                onChange={handleRate}
+              />
+              {ratingSubmitting && <Loader2 size={14} className="animate-spin text-muted" />}
+              {userRating > 0 && !ratingSubmitting && (
+                <span className="text-xs text-muted">{userRating}</span>
+              )}
+            </div>
           </div>
 
           <div className="bg-surface rounded-xl p-4 lg:p-5">

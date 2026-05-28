@@ -30,6 +30,7 @@ export interface Product {
   description: string;
   badge: string | null;
   brand: string;
+  userRate?: number;
   variantLabel?: string;
   variants?: ProductVariant[];
   colors?: ProductColor[];
