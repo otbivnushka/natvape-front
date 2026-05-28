@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { Product } from '../../types';
 import { formatPrice } from '../../utils/formatPrice';
-import { Plus, Loader2, Trash2, Pencil, Package } from 'lucide-react';
+import { Plus, Loader2, Trash2, Pencil, Package, Search } from 'lucide-react';
+import { Input } from '../ui';
 
 interface AdminProductsTableProps {
   products: Product[];
@@ -18,6 +19,10 @@ const AdminProductsTable: React.FC<AdminProductsTableProps> = ({
   onEdit,
   onDelete,
 }) => {
+  const [search, setSearch] = useState('');
+  const filtered = products.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase()),
+  );
   return (
     <>
       <button
@@ -28,11 +33,21 @@ const AdminProductsTable: React.FC<AdminProductsTableProps> = ({
         Создать товар
       </button>
 
+      <div className="relative mb-4">
+        <Search size={16} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-dim pointer-events-none" />
+        <Input
+          placeholder="Поиск по названию..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full pl-8"
+        />
+      </div>
+
       {loading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 size={24} className="animate-spin text-dim" />
         </div>
-      ) : products.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <div className="flex flex-col items-center py-12 text-dim gap-2">
           <Package size={48} className="opacity-50" />
           <span className="text-sm">Нет товаров</span>
@@ -53,7 +68,7 @@ const AdminProductsTable: React.FC<AdminProductsTableProps> = ({
                 </tr>
               </thead>
               <tbody>
-                {products.map((p) => (
+                {filtered.map((p) => (
                   <tr key={p.id} className="border-b border-line last:border-none text-body">
                     <td className="p-3 text-muted">{p.id}</td>
                     <td className="p-3 font-medium max-w-48 truncate">{p.name}</td>
