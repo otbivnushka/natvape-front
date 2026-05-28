@@ -174,7 +174,6 @@ const ProductDetail = () => {
 
           <div className="flex items-center gap-1 mb-4">
             <StarRating rating={product.rating} />
-            <span className="text-xs text-muted">({product.rating})</span>
           </div>
 
           {hasVariants && (
