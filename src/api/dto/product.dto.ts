@@ -16,6 +16,7 @@ export interface ApiProduct {
   variants?: { id: number; name: string; value: string; stock: number }[];
   colors?: { id: number; name: string; hex: string; stock: number }[];
   userRate?: number;
+  visible: boolean;
 }
 
 export interface ApiProductsResponse {

@@ -20,9 +20,11 @@ const AdminProductsTable: React.FC<AdminProductsTableProps> = ({
   onDelete,
 }) => {
   const [search, setSearch] = useState('');
-  const filtered = products.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase()),
-  );
+  const [visibleOnly, setVisibleOnly] = useState(false);
+  const filtered = products.filter((p) => {
+    if (visibleOnly && !p.visible) return false;
+    return p.name.toLowerCase().includes(search.toLowerCase());
+  });
   return (
     <>
       <button
@@ -33,14 +35,25 @@ const AdminProductsTable: React.FC<AdminProductsTableProps> = ({
         Создать товар
       </button>
 
-      <div className="relative mb-4">
-        <Search size={16} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-dim pointer-events-none" />
-        <Input
-          placeholder="Поиск по названию..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-8"
-        />
+      <div className="flex items-center gap-3 mb-4">
+        <label className="flex items-center gap-2 text-sm text-muted cursor-pointer shrink-0">
+          <input
+            type="checkbox"
+            checked={visibleOnly}
+            onChange={(e) => setVisibleOnly(e.target.checked)}
+            className="w-4 h-4 accent-primary"
+          />
+          Только видимые
+        </label>
+        <div className="relative flex-1">
+          <Search size={16} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-dim pointer-events-none" />
+          <Input
+            placeholder="Поиск по названию..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-8"
+          />
+        </div>
       </div>
 
       {loading ? (
