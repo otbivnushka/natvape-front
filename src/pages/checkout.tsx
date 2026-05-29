@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShoppingCart, Loader2, Clock, RotateCcw } from 'lucide-react';
 import { Api } from '../api';
@@ -113,6 +113,13 @@ const Checkout = () => {
 
   const [selectedTime, setSelectedTime] = useState(dayjs());
   const [focusedView, setFocusedView] = useState<'hours' | 'minutes'>('hours');
+  const viewTimerRef = useRef<number>(undefined);
+  const handleTimeChange = (newVal: dayjs.Dayjs | null) => {
+    if (!newVal) return;
+    setSelectedTime(newVal);
+    clearTimeout(viewTimerRef.current);
+    viewTimerRef.current = setTimeout(() => setFocusedView('minutes'), 400);
+  };
 
   const total = subtotal();
 
@@ -258,9 +265,7 @@ const Checkout = () => {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <TimeClock
             value={selectedTime}
-            onChange={(newVal) => {
-              if (newVal) setSelectedTime(newVal);
-            }}
+            onChange={handleTimeChange}
             ampm={false}
             view={focusedView}
           />
