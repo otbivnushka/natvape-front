@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 const deliveryOptions = [
   { value: 'pickup', label: 'Самовывоз', icon: Store },
-  { value: 'delivery', label: 'Доставка (не халява)', icon: Truck },
+  { value: 'delivery', label: 'Доставка', icon: Truck },
 ] as const;
 
 const radioBase =
