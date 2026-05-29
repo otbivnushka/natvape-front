@@ -4,15 +4,18 @@ import clsx from 'clsx';
 
 const deliveryOptions = [
   { value: 'pickup', label: 'Самовывоз', icon: Store },
-  { value: 'delivery', label: 'Доставка', icon: Truck },
+  { value: 'delivery_map', label: 'Доставка (карта)', icon: Truck },
+  { value: 'delivery_text', label: 'Доставка (ввод)', icon: Truck },
 ] as const;
+
+type DeliveryMethod = 'pickup' | 'delivery_map' | 'delivery_text';
 
 const radioBase =
   'flex items-center gap-3 p-3.5 rounded-xl border-2 cursor-pointer transition-all duration-200';
 
 interface DeliveryMethodSelectorProps {
-  value: 'pickup' | 'delivery';
-  onChange: (value: 'pickup' | 'delivery') => void;
+  value: DeliveryMethod;
+  onChange: (value: DeliveryMethod) => void;
 }
 
 const DeliveryMethodSelector: React.FC<DeliveryMethodSelectorProps> = ({ value, onChange }) => {
@@ -61,3 +64,4 @@ const DeliveryMethodSelector: React.FC<DeliveryMethodSelectorProps> = ({ value, 
 };
 
 export { DeliveryMethodSelector };
+export type { DeliveryMethod };

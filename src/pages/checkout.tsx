@@ -13,11 +13,20 @@ import {
   DeliveryMethodSelector,
 } from '../components/shared';
 import type { Address } from '../types';
+import type { DeliveryMethod } from '../components/shared/delivery-method-selector';
 import { LocalizationProvider, TimeClock } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useToastStore } from '../store/useToastStore';
 import { useToastError } from '../hooks/useToastError';
+
+const pickupPoints = [
+  'McDonalds',
+  'Трио',
+  'Зеленая гура',
+  'Континент',
+  'Марко',
+];
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -26,7 +35,9 @@ const Checkout = () => {
   const addToast = useToastStore((s) => s.addToast);
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
 
-  const [delivery, setDelivery] = useState<'pickup' | 'delivery'>('pickup');
+  const [delivery, setDelivery] = useState<DeliveryMethod>('pickup');
+  const [pickupPoint, setPickupPoint] = useState('');
+  const [deliveryText, setDeliveryText] = useState('');
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -112,12 +123,17 @@ const Checkout = () => {
       return;
     }
 
+    const extra: string[] = [];
+    if (delivery === 'pickup' && pickupPoint) extra.push(`Самовывоз: ${pickupPoint}`);
+    if (delivery === 'delivery_text' && deliveryText) extra.push(`Адрес: ${deliveryText}`);
+    const fullComment = [...extra, comment].filter(Boolean).join(' | ');
+
     setSubmitting(true);
     try {
       const order = await Api.orders.create({
-        deliveryMethod: delivery,
-        comment: comment || undefined,
-        addressId: delivery === 'delivery' ? (selectedAddressId ?? undefined) : undefined,
+        deliveryMethod: delivery === 'pickup' ? 'pickup' : 'delivery',
+        comment: fullComment || undefined,
+        addressId: delivery === 'delivery_map' ? (selectedAddressId ?? undefined) : undefined,
         deliveryTime: selectedTime.format('HH:mm'),
       });
       addToast(`Заказ #${order.id} оформлен! Спасибо за покупку!`);
@@ -148,7 +164,28 @@ const Checkout = () => {
 
       <DeliveryMethodSelector value={delivery} onChange={setDelivery} />
 
-      {delivery === 'delivery' && (
+      {delivery === 'pickup' && (
+        <div className="mb-5">
+          <h2 className="text-sm font-semibold text-muted mb-2.5">Точка самовывоза</h2>
+          <div className="flex flex-wrap gap-2">
+            {pickupPoints.map((p) => (
+              <button
+                key={p}
+                onClick={() => setPickupPoint(p)}
+                className={
+                  pickupPoint === p
+                    ? 'py-1.5 px-3.5 rounded-lg border border-primary bg-primary text-on-primary text-[13px] font-medium cursor-pointer'
+                    : 'py-1.5 px-3.5 rounded-lg border border-line bg-surface text-body text-[13px] font-medium cursor-pointer hover:border-muted'
+                }
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {delivery === 'delivery_map' && (
         <div className="mb-5">
           <h2 className="text-sm font-semibold text-muted mb-2.5">Адрес доставки</h2>
 
@@ -204,13 +241,25 @@ const Checkout = () => {
         </div>
       )}
 
+      {delivery === 'delivery_text' && (
+        <div className="mb-5">
+          <h2 className="text-sm font-semibold text-muted mb-2.5">Адрес доставки</h2>
+          <textarea
+            value={deliveryText}
+            onChange={(e) => setDeliveryText(e.target.value)}
+            placeholder="Введите адрес вручную"
+            rows={3}
+            className="w-full resize-none bg-surface border-2 border-line rounded-xl p-3 text-sm text-body outline-none transition-all duration-200 focus:border-primary placeholder:text-dim"
+          />
+        </div>
+      )}
+
       <div className="[&_.MuiClock-root]:bg-transparent! [&_.MuiClock-root]:border-line! [&_.MuiClock-clock]:bg-primary! [&_.MuiClockPointer-root]:bg-page! [&_.MuiClock-pin]:bg-page! [&_.MuiClockNumber-root]:text-page! [&_.MuiClockNumber-selected]:text-page! [&_.MuiClockNumber-selected]:bg-body! [&_.MuiClockPointer-thumb]:border-body! [&_.MuiClockPointer-thumb]:bg-white/5! [&_.MuiClockNumber-root]:font-bold">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <TimeClock
             value={selectedTime}
             onChange={(newVal) => {
               if (newVal) setSelectedTime(newVal);
-              setFocusedView('minutes');
             }}
             ampm={false}
             view={focusedView}
