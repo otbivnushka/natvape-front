@@ -67,9 +67,14 @@ const Checkout = () => {
     if (!trimmed) return;
     let { lat, lng } = pendingCoords ?? { lat: 0, lng: 0 };
     if (!pendingCoords) {
-      const coords = await geocodeAddress(trimmed);
-      lat = coords.lat;
-      lng = coords.lng;
+      try {
+        const coords = await geocodeAddress(trimmed);
+        lat = coords.lat;
+        lng = coords.lng;
+      } catch {
+        lat = 0;
+        lng = 0;
+      }
     }
     try {
       const newAddr = await Api.addresses.create({
