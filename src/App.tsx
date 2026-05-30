@@ -16,12 +16,36 @@ import { useThemeStore } from './store/useThemeStore';
 import { initAuthInterceptor } from './api/instance';
 import { useAuthStore } from './store/useAuthStore';
 import { retrieveRawInitData } from '@telegram-apps/sdk';
+import { useTelegramBackButton } from './hooks/useTelegramBackButton';
 
 declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Telegram: any;
   }
+}
+
+function AppContent() {
+  useTelegramBackButton();
+
+  return (
+    <div className="min-h-screen bg-page">
+      <Routes>
+        <Route path="/" element={<Catalog />} />
+        <Route path="/category/:category" element={<CategoryProducts />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/admin/:tab?" element={<Admin />} />
+        <Route path="/admin/products/:id" element={<AdminProduct />} />
+        <Route path="/admin/order/:id" element={<AdminOrderPage />} />
+      </Routes>
+      <BottomNav />
+      <ToastContainer />
+    </div>
+  );
 }
 
 function App() {
@@ -39,8 +63,11 @@ function App() {
   useEffect(() => {
     try {
       const tg = window.Telegram?.WebApp;
-      if (tg?.colorScheme) {
-        useThemeStore.getState().setTheme(tg.colorScheme);
+      if (tg) {
+        tg.enableClosingConfirmation();
+        if (tg.colorScheme) {
+          useThemeStore.getState().setTheme(tg.colorScheme);
+        }
       }
     } catch {
       // not in Telegram WebApp
@@ -49,22 +76,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-page">
-        <Routes>
-          <Route path="/" element={<Catalog />} />
-          <Route path="/category/:category" element={<CategoryProducts />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/admin/:tab?" element={<Admin />} />
-          <Route path="/admin/products/:id" element={<AdminProduct />} />
-          <Route path="/admin/order/:id" element={<AdminOrderPage />} />
-        </Routes>
-        <BottomNav />
-        <ToastContainer />
-      </div>
+      <AppContent />
     </BrowserRouter>
   );
 }
