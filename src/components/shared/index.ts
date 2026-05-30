@@ -3,6 +3,7 @@ export { BottomNav } from './bottom-nav';
 export { CartItem } from './cart-item';
 export { CatalogCard } from './catalog-card';
 export { ColorPicker } from './color-picker';
+export { DetailsSkeleton } from './details-skeleton';
 export { DeliveryMethodSelector } from './delivery-method-selector';
 export { EmptyState } from './empty-state';
 export { FixedButton } from './fixed-button';

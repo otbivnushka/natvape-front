@@ -4,6 +4,7 @@ import { HelpCircle } from 'lucide-react';
 import { Api } from '../api';
 import type { ApiCategoryInfo } from '../api/dto/category.dto';
 import type { SortOption, Product } from '../types';
+import { useScrollToTop } from '../hooks/useScrollToTop';
 import { useDebounce } from '@uidotdev/usehooks';
 import { SearchBar, SortSelect, PriceFilter, BrandFilter, Skeleton } from '../components/ui';
 import { EmptyState, PageLayout } from '../components/shared';
@@ -13,6 +14,7 @@ import { PageTitle } from '../components/shared/page-title';
 const CategoryProducts = () => {
   const { category } = useParams<{ category: string }>();
   const navigate = useNavigate();
+  useScrollToTop();
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<SortOption>('name');
   const [minPrice, setMinPrice] = useState(0);

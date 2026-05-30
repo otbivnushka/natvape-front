@@ -11,9 +11,9 @@ import {
   QuantityStepper,
   PriceDisplay,
   PrimaryButton,
-  Skeleton,
 } from '../components/ui';
-import { PageLayout, FixedButton, ColorPicker, VariantPicker } from '../components/shared';
+import { PageLayout, FixedButton, ColorPicker, VariantPicker, DetailsSkeleton } from '../components/shared';
+import { useScrollToTop } from '../hooks/useScrollToTop';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,6 +30,7 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [userRating, setUserRating] = useState(0);
   const [ratingSubmitting, setRatingSubmitting] = useState(false);
+  useScrollToTop();
 
   useEffect(() => {
     if (!id) return;
@@ -66,9 +67,7 @@ const ProductDetail = () => {
   if (loading) {
     return (
       <PageLayout>
-        <div className="max-w-5xl mx-auto">
-          <Skeleton className="h-12 w-full rounded-lg bg-primary" />
-        </div>
+        <DetailsSkeleton />
       </PageLayout>
     );
   }
@@ -154,7 +153,7 @@ const ProductDetail = () => {
         Назад
       </FixedButton>
 
-      <div className="max-w-5xl mx-auto md:grid md:grid-cols-2 md:gap-10 md:items-start">
+      <div className="max-w-5xl pt-12 md:pt-0 mx-auto md:grid md:grid-cols-2 md:gap-10 md:items-start">
         <div className="flex justify-center mb-4 md:mb-0 md:sticky md:top-24">
           <img
             src={product.image}

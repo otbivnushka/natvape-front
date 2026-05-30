@@ -118,7 +118,9 @@ const Checkout = () => {
     }
   };
 
-  const total = subtotal();
+  const totalQty = items.reduce((sum, i) => sum + i.quantity, 0);
+  const deliveryFee = delivery === 'delivery' && totalQty < 3 ? 3 : 0;
+  const total = subtotal() + deliveryFee;
 
   const handleSubmit = async () => {
     if (!isLoggedIn()) {
@@ -267,7 +269,7 @@ const Checkout = () => {
         />
       </div>
 
-      <OrderSummary items={items} total={total} />
+      <OrderSummary items={items} total={total} deliveryFee={deliveryFee} />
 
       <PrimaryButton onClick={handleSubmit} disabled={submitting}>
         {submitting ? (
