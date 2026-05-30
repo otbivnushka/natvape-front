@@ -13,22 +13,19 @@ import { BottomNav } from './components/shared';
 import { ToastContainer } from './components/ui';
 import { useEffect } from 'react';
 import { useThemeStore } from './store/useThemeStore';
+import { initAuthInterceptor } from './api/instance';
+import { useAuthStore } from './store/useAuthStore';
 
 declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Telegram: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    VConsole: any;
   }
 }
 
 function App() {
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://unpkg.com/vconsole@3/dist/vconsole.min.js';
-    script.onload = () => new window.VConsole();
-    document.body.appendChild(script);
+    initAuthInterceptor(() => useAuthStore.getState().token);
   }, []);
 
   useEffect(() => {
