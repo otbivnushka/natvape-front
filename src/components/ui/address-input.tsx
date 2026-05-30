@@ -73,7 +73,7 @@ const AddressInput: React.FC<AddressInputProps> = ({ value, onChange, onSelectAd
         type="text"
         value={value}
         onChange={(e) => handleInput(e.target.value)}
-        placeholder="Введите адрес"
+        placeholder="Введите точный адрес"
         className="w-full bg-surface border-2 border-line rounded-xl p-3 text-sm text-body outline-none transition-all duration-200 focus:border-primary placeholder:text-dim"
       />
       {isOpen && (

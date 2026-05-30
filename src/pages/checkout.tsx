@@ -127,7 +127,12 @@ const Checkout = () => {
         deliveryMethod: delivery,
         comment: comment || undefined,
         addressId: delivery === 'delivery' ? (selectedAddressId ?? undefined) : undefined,
-        deliveryTime: timeOption === 'soon' ? 'как можно скорее' : timeOption === 'whenever' ? 'неважно когда' : undefined,
+        deliveryTime:
+          timeOption === 'soon'
+            ? 'как можно скорее'
+            : timeOption === 'whenever'
+              ? 'неважно когда'
+              : undefined,
       });
       addToast(`Заказ #${order.id} оформлен! Спасибо за покупку!`);
       clearCart();
@@ -223,7 +228,7 @@ const Checkout = () => {
       )}
 
       <div className="mb-5">
-        <h2 className="text-sm font-semibold text-muted mb-2.5">Время доставки</h2>
+        <h2 className="text-sm font-semibold text-muted mb-2.5">Время</h2>
         <div className="flex gap-2 flex-wrap">
           {(['soon', 'whenever'] as const).map((opt) => (
             <button

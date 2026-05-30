@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import type { Order } from '../../../types';
+import type { Address, Order } from '../../../types';
 import { formatPrice } from '../../../utils/formatPrice';
 import { Api } from '../../../api';
 import { X, Loader2 } from 'lucide-react';
@@ -85,7 +85,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ open, onClose, orde
               <span>
                 Статус: <StatusMark status={detail.status} />
               </span>
-              {detail.address && (
+              {detail.address && isValidAddress(detail.address) ? (
                 <div
                   onClick={() =>
                     window.open(
@@ -96,12 +96,13 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ open, onClose, orde
                   }
                   className="cursor-pointer underline hover:text-body transition-colors"
                 >
-                  Адрес:
                   {detail.address?.label}
                 </div>
+              ) : (
+                <div>{detail.address?.label}</div>
               )}
             </div>
-            {detail.address && (detail.address!.lat !== 0 || detail.address!.lng !== 0) && (
+            {detail.address && isValidAddress(detail.address) && (
               <div className="flex flex-col gap-1 text-sm text-muted mb-4 pb-4 border-b border-line">
                 <MapBlock
                   lat={detail.address.lat}
@@ -134,5 +135,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ open, onClose, orde
     </div>
   );
 };
+
+const isValidAddress = (addr: Address) => +addr.lat !== 0 && +addr.lng !== 0;
 
 export { OrderDetailModal };
