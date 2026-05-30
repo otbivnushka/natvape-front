@@ -128,15 +128,19 @@ const Checkout = () => {
 
     setSubmitting(true);
     try {
+      const extras: string[] = [];
+      if (delivery === 'pickup' && pickupPoint) extras.push(`Самовывоз: ${pickupPoint}`);
+      if (comment) extras.push(comment);
+      const commentSend = extras.length > 0 ? extras.join(' | ') : undefined;
       const order = await Api.orders.create({
         deliveryMethod: delivery,
-        comment: comment || undefined,
+        comment: commentSend,
         addressId: delivery === 'delivery' ? (selectedAddressId ?? undefined) : undefined,
         deliveryTime:
           timeOption === 'soon'
             ? 'как можно скорее'
             : timeOption === 'whenever'
-              ? 'неважно когда'
+              ? 'не важно когда'
               : undefined,
       });
       addToast(`Заказ #${order.id} оформлен! Спасибо за покупку!`);
@@ -245,7 +249,7 @@ const Checkout = () => {
                   : 'py-1.5 px-3.5 rounded-lg border border-line bg-surface text-body text-[13px] font-medium cursor-pointer hover:border-muted'
               }
             >
-              {opt === 'soon' ? 'Как можно скорее' : 'Неважно когда'}
+              {opt === 'soon' ? 'Как можно скорее' : 'Не важно когда'}
             </button>
           ))}
         </div>

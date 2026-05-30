@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { HelpCircle, SearchX } from 'lucide-react';
+import { HelpCircle } from 'lucide-react';
 import { Api } from '../api';
 import type { ApiCategoryInfo } from '../api/dto/category.dto';
 import type { SortOption, Product } from '../types';
 import { useDebounce } from '@uidotdev/usehooks';
 import { SearchBar, SortSelect, PriceFilter, BrandFilter, Skeleton } from '../components/ui';
-import { ProductCard, EmptyState, PageLayout } from '../components/shared';
+import { EmptyState, PageLayout } from '../components/shared';
+import { ProductsContainer } from '../components/shared/products-container';
+import { PageTitle } from '../components/shared/page-title';
 
 const CategoryProducts = () => {
   const { category } = useParams<{ category: string }>();
@@ -106,7 +108,11 @@ const CategoryProducts = () => {
 
   return (
     <PageLayout>
-      <h1 className="text-2xl font-bold text-body mb-3">{catInfo?.label ?? category}</h1>
+      {catInfo ? (
+        <PageTitle>{catInfo.label}</PageTitle>
+      ) : (
+        <Skeleton className="h-8 mb-5 w-48 rounded-lg bg-primary" />
+      )}
 
       <div className="flex gap-1.5 items-center mb-4 flex-wrap">
         <div className="flex-1 min-w-30">
@@ -124,30 +130,7 @@ const CategoryProducts = () => {
         />
       </div>
 
-      {!loading && products.length > 0 && (
-        <div className="text-[12px] text-dim mb-3">
-          Найдено: {products.length}{' '}
-          {products.length === 1 ? 'товар' : products.length < 5 ? 'товара' : 'товаров'}
-        </div>
-      )}
-
-      {loading ? (
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
-          <Skeleton count={6} />
-        </div>
-      ) : products.length === 0 ? (
-        <EmptyState
-          icon={<SearchX size={48} />}
-          title="Ничего не найдено"
-          description="Попробуйте изменить фильтры или поисковый запрос"
-        />
-      ) : (
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
-          {products.map((product, i) => (
-            <ProductCard key={product.id} product={product} index={i} />
-          ))}
-        </div>
-      )}
+      <ProductsContainer products={products} loading={loading} />
     </PageLayout>
   );
 };

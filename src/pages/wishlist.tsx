@@ -3,8 +3,9 @@ import { Heart } from 'lucide-react';
 import { useWishlistStore } from '../store/useWishlistStore';
 import { Api } from '../api';
 import type { Product } from '../types';
-import { Skeleton } from '../components/ui';
 import { ProductCard, EmptyState, PageLayout } from '../components/shared';
+import { ProductSkeleton } from '../components/shared/product-skeleton';
+import { PageTitle } from '../components/shared/page-title';
 
 const Wishlist = () => {
   const productIds = useWishlistStore((s) => s.productIds);
@@ -32,11 +33,11 @@ const Wishlist = () => {
 
   return (
     <PageLayout>
-      <h1 className="text-2xl font-bold text-primary mb-4">Избранное</h1>
+      <PageTitle>Избранное</PageTitle>
 
       {loading ? (
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
-          <Skeleton count={4} />
+          <ProductSkeleton count={4} />
         </div>
       ) : products.length === 0 ? (
         <div className="mt-10">
