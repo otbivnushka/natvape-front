@@ -15,6 +15,7 @@ import { useEffect } from 'react';
 import { useThemeStore } from './store/useThemeStore';
 import { initAuthInterceptor } from './api/instance';
 import { useAuthStore } from './store/useAuthStore';
+import { retrieveRawInitData } from '@telegram-apps/sdk';
 
 declare global {
   interface Window {
@@ -26,6 +27,13 @@ declare global {
 function App() {
   useEffect(() => {
     initAuthInterceptor(() => useAuthStore.getState().token);
+  }, []);
+
+  useEffect(() => {
+    const initData = retrieveRawInitData();
+    if (initData) {
+      useAuthStore.getState().telegramAuth(initData).catch(() => {});
+    }
   }, []);
 
   useEffect(() => {
