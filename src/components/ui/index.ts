@@ -1,3 +1,4 @@
+export { AddressInput } from './address-input';
 export { Badge } from './badge';
 export { BrandFilter } from './brand-filter';
 export { Dropdown } from './dropdown';

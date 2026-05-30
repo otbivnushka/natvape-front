@@ -1,24 +1,21 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingCart, Loader2, Clock, RotateCcw } from 'lucide-react';
+import { ShoppingCart, Loader2 } from 'lucide-react';
 import { Api } from '../api';
 import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
-import { PrimaryButton } from '../components/ui';
+import { PrimaryButton, AddressInput } from '../components/ui';
 import {
   PageLayout,
-  MapBlock,
   AddressBlock,
   OrderSummary,
   DeliveryMethodSelector,
 } from '../components/shared';
 import type { Address } from '../types';
 import type { DeliveryMethod } from '../components/shared/delivery-method-selector';
-import { LocalizationProvider, TimeClock } from '@mui/x-date-pickers';
-import dayjs from 'dayjs';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useToastStore } from '../store/useToastStore';
 import { useToastError } from '../hooks/useToastError';
+import { geocodeAddress } from '../utils/geocode';
 
 const pickupPoints = [
   'McDonalds',
@@ -26,7 +23,7 @@ const pickupPoints = [
   'Зеленая гура',
   'Континент',
   'Марко',
-  'Правды 60а (Евроопт)'
+  'Правды 60а (Евроопт)',
 ];
 
 const Checkout = () => {
@@ -38,13 +35,11 @@ const Checkout = () => {
 
   const [delivery, setDelivery] = useState<DeliveryMethod>('pickup');
   const [pickupPoint, setPickupPoint] = useState('');
-  const [deliveryText, setDeliveryText] = useState('');
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
-  const selectedAddress = addresses.find((a) => a.id === selectedAddressId) ?? null;
 
   useEffect(() => {
     Api.addresses
@@ -56,31 +51,31 @@ const Checkout = () => {
       .catch(() => {});
   }, []);
 
+  const [timeOption, setTimeOption] = useState<'soon' | 'whenever' | null>(null);
   const [isAddingAddress, setIsAddingAddress] = useState(false);
-  const [pendingLat, setPendingLat] = useState<number | null>(null);
-  const [pendingLng, setPendingLng] = useState<number | null>(null);
-  const [pendingLabel, setPendingLabel] = useState('');
+  const [pendingAddressInput, setPendingAddressInput] = useState('');
+  const [pendingCoords, setPendingCoords] = useState<{ lat: number; lng: number } | null>(null);
 
   const handleAddNew = () => {
     setIsAddingAddress(true);
-    setPendingLat(null);
-    setPendingLng(null);
-    setPendingLabel('');
-  };
-
-  const handleMapClick = (lat: number, lng: number) => {
-    setPendingLat(lat);
-    setPendingLng(lng);
+    setPendingAddressInput('');
+    setPendingCoords(null);
   };
 
   const handleSaveAddress = async () => {
-    const trimmed = pendingLabel.trim();
-    if (!trimmed || pendingLat === null || pendingLng === null) return;
+    const trimmed = pendingAddressInput.trim();
+    if (!trimmed) return;
+    let { lat, lng } = pendingCoords ?? { lat: 0, lng: 0 };
+    if (!pendingCoords) {
+      const coords = await geocodeAddress(trimmed);
+      lat = coords.lat;
+      lng = coords.lng;
+    }
     try {
       const newAddr = await Api.addresses.create({
         label: trimmed,
-        lat: pendingLat,
-        lng: pendingLng,
+        lat,
+        lng,
       });
       setAddresses((prev) => [...prev, newAddr]);
       setSelectedAddressId(newAddr.id);
@@ -88,6 +83,11 @@ const Checkout = () => {
     } catch {
       toastError('сохранении адреса');
     }
+  };
+
+  const handleSelectAddress = (address: string, lat: number, lng: number) => {
+    setPendingAddressInput(address);
+    setPendingCoords({ lat, lng });
   };
 
   const handleCancelAdd = () => {
@@ -112,16 +112,6 @@ const Checkout = () => {
     }
   };
 
-  const [selectedTime, setSelectedTime] = useState(dayjs());
-  const [focusedView, setFocusedView] = useState<'hours' | 'minutes'>('hours');
-  const viewTimerRef = useRef<number>(undefined);
-  const handleTimeChange = (newVal: dayjs.Dayjs | null) => {
-    if (!newVal) return;
-    setSelectedTime(newVal);
-    clearTimeout(viewTimerRef.current);
-    viewTimerRef.current = setTimeout(() => setFocusedView('minutes'), 400);
-  };
-
   const total = subtotal();
 
   const handleSubmit = async () => {
@@ -131,18 +121,13 @@ const Checkout = () => {
       return;
     }
 
-    const extra: string[] = [];
-    if (delivery === 'pickup' && pickupPoint) extra.push(`Самовывоз: ${pickupPoint}`);
-    if (delivery === 'delivery_text' && deliveryText) extra.push(`Адрес: ${deliveryText}`);
-    const fullComment = [...extra, comment].filter(Boolean).join(' | ');
-
     setSubmitting(true);
     try {
       const order = await Api.orders.create({
-        deliveryMethod: delivery === 'pickup' ? 'pickup' : 'delivery',
-        comment: fullComment || undefined,
-        addressId: delivery === 'delivery_map' ? (selectedAddressId ?? undefined) : undefined,
-        deliveryTime: selectedTime.format('HH:mm'),
+        deliveryMethod: delivery,
+        comment: comment || undefined,
+        addressId: delivery === 'delivery' ? (selectedAddressId ?? undefined) : undefined,
+        deliveryTime: timeOption === 'soon' ? 'как можно скорее' : timeOption === 'whenever' ? 'неважно когда' : undefined,
       });
       addToast(`Заказ #${order.id} оформлен! Спасибо за покупку!`);
       clearCart();
@@ -193,26 +178,19 @@ const Checkout = () => {
         </div>
       )}
 
-      {delivery === 'delivery_map' && (
+      {delivery === 'delivery' && (
         <div className="mb-5">
           <h2 className="text-sm font-semibold text-muted mb-2.5">Адрес доставки</h2>
 
           {isAddingAddress ? (
             <div className="flex flex-col gap-3">
-              <div className="w-full rounded-xl flex items-center justify-center">
-                <MapBlock
-                  lat={pendingLat ?? undefined}
-                  lng={pendingLng ?? undefined}
-                  onMapClick={handleMapClick}
-                  markerTitle={pendingLabel}
-                />
-              </div>
-              <input
-                type="text"
-                value={pendingLabel}
-                onChange={(e) => setPendingLabel(e.target.value)}
-                placeholder="Название адреса"
-                className="w-full bg-surface border-2 border-line rounded-xl p-3 text-sm text-body outline-none transition-all duration-200 focus:border-primary placeholder:text-dim"
+              <AddressInput
+                value={pendingAddressInput}
+                onChange={(v) => {
+                  setPendingAddressInput(v);
+                  setPendingCoords(null);
+                }}
+                onSelectAddress={handleSelectAddress}
               />
               <div className="flex gap-2">
                 <button
@@ -225,7 +203,7 @@ const Checkout = () => {
                 <button
                   type="button"
                   onClick={handleSaveAddress}
-                  disabled={!pendingLabel.trim() || pendingLat === null}
+                  disabled={!pendingAddressInput.trim()}
                   className="flex-1 py-3 rounded-xl border-2 border-primary bg-primary text-sm font-medium text-on-primary hover:bg-primary-hover transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
                 >
                   Сохранить
@@ -233,61 +211,34 @@ const Checkout = () => {
               </div>
             </div>
           ) : (
-            <>
-              <div className="w-full rounded-xl flex items-center justify-center">
-                <MapBlock lat={selectedAddress?.lat} lng={selectedAddress?.lng} />
-              </div>
-              <AddressBlock
-                addresses={addresses}
-                selectedId={selectedAddressId ?? -1}
-                onSelect={setSelectedAddressId}
-                onAddNew={handleAddNew}
-                onDelete={handleDeleteAddress}
-              />
-            </>
+            <AddressBlock
+              addresses={addresses}
+              selectedId={selectedAddressId ?? -1}
+              onSelect={setSelectedAddressId}
+              onAddNew={handleAddNew}
+              onDelete={handleDeleteAddress}
+            />
           )}
         </div>
       )}
 
-      {delivery === 'delivery_text' && (
-        <div className="mb-5">
-          <h2 className="text-sm font-semibold text-muted mb-2.5">Адрес доставки</h2>
-          <textarea
-            value={deliveryText}
-            onChange={(e) => setDeliveryText(e.target.value)}
-            placeholder="Введите адрес вручную"
-            rows={3}
-            className="w-full resize-none bg-surface border-2 border-line rounded-xl p-3 text-sm text-body outline-none transition-all duration-200 focus:border-primary placeholder:text-dim"
-          />
+      <div className="mb-5">
+        <h2 className="text-sm font-semibold text-muted mb-2.5">Время доставки</h2>
+        <div className="flex gap-2 flex-wrap">
+          {(['soon', 'whenever'] as const).map((opt) => (
+            <button
+              key={opt}
+              onClick={() => setTimeOption(opt)}
+              className={
+                timeOption === opt
+                  ? 'py-1.5 px-3.5 rounded-lg border border-primary bg-primary text-on-primary text-[13px] font-medium cursor-pointer'
+                  : 'py-1.5 px-3.5 rounded-lg border border-line bg-surface text-body text-[13px] font-medium cursor-pointer hover:border-muted'
+              }
+            >
+              {opt === 'soon' ? 'Как можно скорее' : 'Неважно когда'}
+            </button>
+          ))}
         </div>
-      )}
-
-      <div className="[&_.MuiClock-root]:bg-transparent! [&_.MuiClock-root]:border-line! [&_.MuiClock-clock]:bg-primary! [&_.MuiClockPointer-root]:bg-page! [&_.MuiClock-pin]:bg-page! [&_.MuiClockNumber-root]:text-page! [&_.MuiClockNumber-selected]:text-page! [&_.MuiClockNumber-selected]:bg-body! [&_.MuiClockPointer-thumb]:border-body! [&_.MuiClockPointer-thumb]:bg-white/5! [&_.MuiClockNumber-root]:font-bold">
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <TimeClock
-            value={selectedTime}
-            onChange={handleTimeChange}
-            ampm={false}
-            view={focusedView}
-          />
-        </LocalizationProvider>
-      </div>
-      <div className="flex items-center justify-between mt-2 mb-5">
-        <span className="flex items-center gap-1.5 text-sm font-medium text-body">
-          <Clock size={14} />
-          {selectedTime.format('HH:mm')}
-        </span>
-        <button
-          type="button"
-          onClick={() => {
-            setSelectedTime(dayjs());
-            setFocusedView('hours');
-          }}
-          className="flex items-center gap-1 text-xs text-muted hover:text-body transition-colors duration-200 cursor-pointer"
-        >
-          <RotateCcw size={12} />
-          Сброс
-        </button>
       </div>
 
       <div className="mb-5">

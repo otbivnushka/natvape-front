@@ -4,11 +4,10 @@ import clsx from 'clsx';
 
 const deliveryOptions = [
   { value: 'pickup', label: 'Самовывоз', icon: Store },
-  { value: 'delivery_map', label: 'Доставка (карта)', icon: Truck },
-  { value: 'delivery_text', label: 'Доставка (ввод)', icon: Truck },
+  { value: 'delivery', label: 'Доставка', icon: Truck },
 ] as const;
 
-type DeliveryMethod = 'pickup' | 'delivery_map' | 'delivery_text';
+type DeliveryMethod = 'pickup' | 'delivery';
 
 const radioBase =
   'flex items-center gap-3 p-3.5 rounded-xl border-2 cursor-pointer transition-all duration-200';

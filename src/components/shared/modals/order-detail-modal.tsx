@@ -7,6 +7,7 @@ import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
 import { StatusMark } from '../../ui/status-mark';
 import { OrderedItemCard } from '../ordered-item-card';
 import { MapBlock } from '..';
+import { getYandexMapLink } from '../../../utils/getYandexMapsLink';
 
 interface OrderDetailModalProps {
   open: boolean;
@@ -84,8 +85,23 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ open, onClose, orde
               <span>
                 Статус: <StatusMark status={detail.status} />
               </span>
+              {detail.address && (
+                <div
+                  onClick={() =>
+                    window.open(
+                      getYandexMapLink(detail.address!.lat, detail.address!.lng),
+                      '_blank',
+                      'noopener,noreferrer',
+                    )
+                  }
+                  className="cursor-pointer underline hover:text-body transition-colors"
+                >
+                  Адрес:
+                  {detail.address?.label}
+                </div>
+              )}
             </div>
-            {detail.address && (
+            {detail.address && (detail.address!.lat !== 0 || detail.address!.lng !== 0) && (
               <div className="flex flex-col gap-1 text-sm text-muted mb-4 pb-4 border-b border-line">
                 <MapBlock
                   lat={detail.address.lat}
