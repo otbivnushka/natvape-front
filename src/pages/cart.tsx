@@ -5,6 +5,7 @@ import { PrimaryButton } from '../components/ui';
 import { CartItem as CartItemComponent, EmptyState, PageLayout } from '../components/shared';
 import { formatPrice } from '../utils/formatPrice';
 import { useEffect } from 'react';
+import { PageTitle } from '../components/shared/page-title';
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const Cart = () => {
 
   return (
     <PageLayout>
-      <h1 className="text-2xl font-bold text-primary mb-4">Корзина</h1>
+      <PageTitle>Корзина</PageTitle>
 
       {items.length === 0 ? (
         <div className="mt-10">

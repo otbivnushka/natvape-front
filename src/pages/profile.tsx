@@ -12,6 +12,7 @@ import {
   FixedButton,
   OrderCard,
 } from '../components/shared';
+import { PageTitle } from '../components/shared/page-title';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ const Profile = () => {
     return (
       <>
         <PageLayout>
-          <h1 className="text-2xl font-bold text-primary mb-5">Профиль</h1>
+          <PageTitle>Профиль</PageTitle>
           <div className="max-w-sm mx-auto mt-8">
             <div className="flex flex-col items-center gap-2 mb-6">
               <Lock size={40} className="text-dim" />

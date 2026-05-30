@@ -67,7 +67,7 @@ const ProductDetail = () => {
     return (
       <PageLayout>
         <div className="max-w-5xl mx-auto">
-          <Skeleton count={4} />
+          <Skeleton className="h-12 w-full rounded-lg bg-primary" />
         </div>
       </PageLayout>
     );

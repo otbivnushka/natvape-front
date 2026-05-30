@@ -16,6 +16,7 @@ import type { DeliveryMethod } from '../components/shared/delivery-method-select
 import { useToastStore } from '../store/useToastStore';
 import { useToastError } from '../hooks/useToastError';
 import { geocodeAddress } from '../utils/geocode';
+import { PageTitle } from '../components/shared/page-title';
 
 const pickupPoints = [
   'McDonalds',
@@ -167,7 +168,7 @@ const Checkout = () => {
 
   return (
     <PageLayout>
-      <h1 className="text-2xl font-bold text-body mb-5">Оформление заказа</h1>
+      <PageTitle>Оформление заказа</PageTitle>
 
       <DeliveryMethodSelector value={delivery} onChange={setDelivery} />
 
