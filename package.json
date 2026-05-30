@@ -11,15 +11,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@date-io/dayjs": "^3.2.0",
-    "@emotion/styled": "^11.14.1",
-    "@mui/x-date-pickers": "^9.3.0",
     "@tailwindcss/vite": "^4.3.0",
     "@telegram-apps/sdk": "^3.11.8",
     "@uidotdev/usehooks": "^2.4.1",
     "axios": "^1.16.1",
     "clsx": "^2.1.1",
-    "dayjs": "^1.11.20",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.16.0",
     "react": "^19.0.0-rc.1",

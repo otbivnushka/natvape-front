@@ -42,6 +42,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index = 0 }) => {
           src={product.image}
           alt={product.name}
           loading="lazy"
+          onClick={() => navigate(`/product/${product.id}`)}
         />
         <button
           className={clsx(
