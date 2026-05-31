@@ -6,6 +6,7 @@ import { Loader2, Plus, Trash2 } from 'lucide-react';
 import { ImageUpload, Input, QuantityStepper } from '../components/ui';
 import { useAdminGuard } from '../hooks/useAdminGuard';
 import { useCategories } from '../hooks/useCategories';
+import { transliterate } from '../utils/transliterate';
 
 interface VariantForm {
   id?: number;
@@ -328,7 +329,13 @@ const AdminProduct = () => {
                 <input
                   placeholder="Название"
                   value={newVariant.name}
-                  onChange={(e) => setNewVariant({ ...newVariant, name: e.target.value })}
+                  onChange={(e) =>
+                    setNewVariant({
+                      ...newVariant,
+                      name: e.target.value,
+                      value: transliterate(e.target.value),
+                    })
+                  }
                   className="flex-1 min-w-24 bg-page border border-line rounded-lg px-3 py-2 text-sm text-body outline-none transition-colors focus:border-primary placeholder:text-dim"
                 />
                 <input
