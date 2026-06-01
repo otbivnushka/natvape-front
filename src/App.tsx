@@ -50,14 +50,20 @@ function AppContent() {
 
 function App() {
   useEffect(() => {
-    initAuthInterceptor(() => useAuthStore.getState().token);
-  }, []);
-
-  useEffect(() => {
-    const initData = retrieveRawInitData();
-    if (initData) {
-      useAuthStore.getState().telegramAuth(initData).catch(() => {});
+    if (useAuthStore.getState().token === null) {
+      try {
+        const initData = retrieveRawInitData();
+        if (initData) {
+          useAuthStore
+            .getState()
+            .telegramAuth(initData)
+            .catch(() => {});
+        }
+      } catch {
+        // not in Telegram
+      }
     }
+    initAuthInterceptor(() => useAuthStore.getState().token);
   }, []);
 
   useEffect(() => {

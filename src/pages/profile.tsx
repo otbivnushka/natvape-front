@@ -1,26 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { retrieveRawInitData } from '@telegram-apps/sdk';
 import { useAuthStore } from '../store/useAuthStore';
 import { Api } from '../api';
 import type { Order } from '../types';
-import { Lock, Package, Loader2, Info, Shield } from 'lucide-react';
-import {
-  EmptyState,
-  PageLayout,
-  ProjectInfoModal,
-  FixedButton,
-  OrderCard,
-} from '../components/shared';
+import { Lock, Info, Shield } from 'lucide-react';
+import { PageLayout, ProjectInfoModal, FixedButton } from '../components/shared';
 import { PageTitle } from '../components/shared/page-title';
+import { UserInfo } from '../components/shared/user-info';
+import { OrdersContainer } from '../components/shared/orders-container';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { user, telegramAuth, isLoggedIn, isAdmin } = useAuthStore();
+  const { user, isLoggedIn, isAdmin } = useAuthStore();
   const { name: userName } = user ?? {};
 
   const tg = window.Telegram?.WebApp;
-  const tgUser = tg?.initDataUnsafe?.user;
+  const tgUser = tg.initDataUnsafe.user;
   const displayName = [tgUser?.first_name, tgUser?.last_name].filter(Boolean).join(' ') || userName;
   const displayAvatar = tgUser?.photo_url;
   const displayTelegram = tgUser?.username;
@@ -28,19 +23,6 @@ const Profile = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
-
-  useEffect(() => {
-    if (isLoggedIn()) return;
-    try {
-      const initData = retrieveRawInitData();
-      if (initData) {
-        telegramAuth(initData).catch(() => {});
-      }
-    } catch {
-      // not in Telegram WebApp
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -67,13 +49,6 @@ const Profile = () => {
             </div>
           </div>
         </PageLayout>
-        <FixedButton
-          onClick={() => setInfoOpen(true)}
-          className="bottom-6 right-6 w-11 h-11 rounded-full bg-primary text-on-primary hover:scale-105"
-        >
-          <Info size={20} />
-        </FixedButton>
-        <ProjectInfoModal open={infoOpen} onClose={() => setInfoOpen(false)} />
       </>
     );
   }
@@ -81,40 +56,15 @@ const Profile = () => {
   return (
     <>
       <PageLayout>
-        <h1 className="text-2xl font-bold text-primary mb-5">Профиль</h1>
+        <PageTitle>Профиль</PageTitle>
 
-        <div className="flex items-center gap-4 p-4 bg-surface rounded-xl mb-6">
-          {displayAvatar ? (
-            <img
-              className="w-15 h-15 rounded-full object-cover"
-              src={displayAvatar}
-              alt={displayName ?? ''}
-            />
-          ) : (
-            <div className="w-15 h-15 rounded-full bg-surface flex items-center justify-center text-lg font-bold text-muted shrink-0">
-              {displayName?.charAt(0) ?? '?'}
-            </div>
-          )}
-          <div className="flex-1">
-            <div className="text-base font-semibold text-primary">{displayName}</div>
-            {displayTelegram && (
-              <div className="text-[13px] text-muted mt-0.5">@{displayTelegram}</div>
-            )}
-          </div>
-        </div>
+        <UserInfo
+          displayName={displayName}
+          displayAvatar={displayAvatar}
+          displayTelegram={displayTelegram}
+        />
 
-        <div className="mb-12">
-          <h2 className="text-lg font-semibold text-muted mb-3">История заказов</h2>
-          {ordersLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 size={20} className="animate-spin text-dim" />
-            </div>
-          ) : orders.length === 0 ? (
-            <EmptyState icon={<Package size={48} />} title="Нет заказов" />
-          ) : (
-            orders.map((order) => <OrderCard key={order.id} order={order} />)
-          )}
-        </div>
+        <OrdersContainer orders={orders} ordersLoading={ordersLoading} />
       </PageLayout>
       {isAdmin() ? (
         <div className="fixed bottom-18 right-2 z-40 flex gap-3">

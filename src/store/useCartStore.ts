@@ -202,13 +202,12 @@ export const useCartStore = create<CartState>()(
   ),
 );
 
-// Auto-sync when auth state changes
 const unsub = useAuthStore.subscribe((state) => {
   if (state.token) {
     useCartStore.getState().syncFromServer();
   }
 });
-// Keep reference for cleanup (won't actually be called in practice)
+
 if (import.meta.hot) {
   import.meta.hot.dispose(() => unsub());
 }

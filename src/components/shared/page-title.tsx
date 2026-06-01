@@ -42,7 +42,14 @@ const PageTitle: React.FC<PageTitleProps> = ({ children, className }) => {
   }, [children]);
 
   return (
-    <h1 className={clsx('min-h-8 text-2xl font-bold text-primary mb-5', className)}>{text}</h1>
+    <h1
+      className={clsx(
+        'flex gap-3 items-center min-h-8 text-2xl font-bold text-primary mb-5',
+        className,
+      )}
+    >
+      {text}
+    </h1>
   );
 };
 

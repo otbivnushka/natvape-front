@@ -14,7 +14,6 @@ interface AuthState {
   token: string | null;
   user: AuthUser | null;
   telegramAuth: (initDataRaw: string) => Promise<void>;
-  updateProfile: (data: { name: string }) => Promise<void>;
   isLoggedIn: () => boolean;
   isAdmin: () => boolean;
 }
@@ -28,13 +27,6 @@ export const useAuthStore = create<AuthState>()(
       telegramAuth: async (initDataRaw) => {
         const res = await Api.auth.telegramAuth(initDataRaw);
         set({ token: res.accessToken, user: res.user });
-      },
-
-      updateProfile: async (data) => {
-        const res = await Api.profile.update(data);
-        set((state) => ({
-          user: state.user ? { ...state.user, name: res.name } : null,
-        }));
       },
 
       isLoggedIn: () => get().user !== null && get().token !== null,
