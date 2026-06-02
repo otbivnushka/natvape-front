@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import type { AdminOrder } from '../../api/dto/admin.dto';
-import { Loader2, Check, Trash2, ShoppingBag, Info, Pen } from 'lucide-react';
+import { Check, Trash2, ShoppingBag, Info, Pen } from 'lucide-react';
+import { Spinner } from '../ui';
 
 interface AdminOrdersTableProps {
   orders: AdminOrder[];
@@ -19,9 +20,7 @@ const AdminOrdersTable: React.FC<AdminOrdersTableProps> = ({
   return (
     <>
       {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 size={24} className="animate-spin text-dim" />
-        </div>
+        <Spinner />
       ) : orders.length === 0 ? (
         <div className="flex flex-col items-center py-12 text-dim gap-2">
           <ShoppingBag size={48} className="opacity-50" />

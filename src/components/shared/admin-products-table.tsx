@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import type { Product } from '../../types';
 import { formatPrice } from '../../utils/formatPrice';
-import { Plus, Loader2, Trash2, Pencil, Package, Search } from 'lucide-react';
-import { Input } from '../ui';
+import { Plus, Trash2, Pencil, Package, Search } from 'lucide-react';
+import { Input, Spinner } from '../ui';
 
 interface AdminProductsTableProps {
   products: Product[];
@@ -46,7 +46,10 @@ const AdminProductsTable: React.FC<AdminProductsTableProps> = ({
           Только видимые
         </label>
         <div className="relative flex-1">
-          <Search size={16} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-dim pointer-events-none" />
+          <Search
+            size={16}
+            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-dim pointer-events-none"
+          />
           <Input
             placeholder="Поиск по названию..."
             value={search}
@@ -57,9 +60,7 @@ const AdminProductsTable: React.FC<AdminProductsTableProps> = ({
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 size={24} className="animate-spin text-dim" />
-        </div>
+        <Spinner />
       ) : filtered.length === 0 ? (
         <div className="flex flex-col items-center py-12 text-dim gap-2">
           <Package size={48} className="opacity-50" />

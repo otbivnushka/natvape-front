@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import type { Address, Order } from '../../../types';
 import { formatPrice } from '../../../utils/formatPrice';
 import { Api } from '../../../api';
-import { X, Loader2 } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
 import { StatusMark } from '../../ui/status-mark';
 import { OrderedItemCard } from '../ordered-item-card';
 import { MapBlock } from '..';
 import { getYandexMapLink } from '../../../utils/getYandexMapsLink';
+import { Spinner } from '../../ui';
 
 interface OrderDetailModalProps {
   open: boolean;
@@ -73,9 +74,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ open, onClose, orde
         </div>
 
         {fetching ? (
-          <div className="flex items-center justify-center py-8">
-            <Loader2 size={20} className="animate-spin text-dim" />
-          </div>
+          <Spinner />
         ) : detail ? (
           <>
             <div className="flex flex-col gap-1 text-sm text-muted mb-4 pb-4 border-b border-line">

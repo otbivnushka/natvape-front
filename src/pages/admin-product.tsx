@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Api } from '../api';
 import type { CreateProductDto } from '../api/dto/admin.dto';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
-import { ImageUpload, Input, QuantityStepper } from '../components/ui';
+import { ImageUpload, Input, QuantityStepper, Spinner } from '../components/ui';
 import { useAdminGuard } from '../hooks/useAdminGuard';
 import { useCategories } from '../hooks/useCategories';
 import { transliterate } from '../utils/transliterate';
@@ -197,11 +197,7 @@ const AdminProduct = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-page flex items-center justify-center">
-        <Loader2 size={24} className="animate-spin text-dim" />
-      </div>
-    );
+    return <Spinner />;
   }
 
   return (

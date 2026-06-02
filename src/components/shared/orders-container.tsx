@@ -1,9 +1,10 @@
 import clsx from 'clsx';
 import React from 'react';
 import type { Order } from '../../types';
-import { Loader2, Package } from 'lucide-react';
+import { Package } from 'lucide-react';
 import { EmptyState } from './empty-state';
 import { OrderCard } from './order-card';
+import { Spinner } from '../ui';
 
 interface OrdersContainerProps {
   className?: string;
@@ -16,9 +17,7 @@ const OrdersContainer: React.FC<OrdersContainerProps> = ({ className, orders, or
     <div className={clsx('mb-12', className)}>
       <h2 className="text-lg font-semibold text-muted mb-3">История заказов</h2>
       {ordersLoading ? (
-        <div className="flex items-center justify-center py-8">
-          <Loader2 size={20} className="animate-spin text-dim" />
-        </div>
+        <Spinner />
       ) : orders.length === 0 ? (
         <EmptyState icon={<Package size={48} />} title="Нет заказов" />
       ) : (

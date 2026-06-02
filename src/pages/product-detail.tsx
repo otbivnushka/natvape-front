@@ -4,30 +4,28 @@ import { Api } from '../api';
 import type { Product, ProductColor } from '../types';
 import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
-import { useToastStore } from '../store/useToastStore';
 import { ArrowLeft, HelpCircle, Loader2 } from 'lucide-react';
+import { StarRating, PriceDisplay } from '../components/ui';
 import {
-  StarRating,
-  QuantityStepper,
-  PriceDisplay,
-  PrimaryButton,
-} from '../components/ui';
-import { PageLayout, FixedButton, ColorPicker, VariantPicker, DetailsSkeleton } from '../components/shared';
+  PageLayout,
+  FixedButton,
+  ColorPicker,
+  VariantPicker,
+  DetailsSkeleton,
+} from '../components/shared';
 import { useScrollToTop } from '../hooks/useScrollToTop';
+import { AddProductWidget } from '../components/shared/add-product-widget';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { addToCart } = useCartStore((s) => s);
   const user = useAuthStore((s) => s.user);
-  const addToast = useToastStore((s) => s.addToast);
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
 
   const [selectedColor, setSelectedColor] = useState<ProductColor | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<string>('');
-  const [quantity, setQuantity] = useState(1);
   const [userRating, setUserRating] = useState(0);
   const [ratingSubmitting, setRatingSubmitting] = useState(false);
   useScrollToTop();
@@ -92,7 +90,6 @@ const ProductDetail = () => {
 
   const hasVariants = product.variants && product.variants.length > 0;
   const hasColors = product.colors && product.colors.length > 0;
-  const canAdd = hasVariants ? selectedVariant !== '' : hasColors ? selectedColor !== null : true;
 
   const cartItems = useCartStore.getState().items;
   const disabledVariantValues = hasVariants
@@ -111,37 +108,6 @@ const ProductDetail = () => {
         })
         .map((c) => c.name)
     : [];
-
-  const variantStock = hasVariants
-    ? (() => {
-        const v = product.variants!.find((v) => v.value === selectedVariant);
-        if (!v) return 0;
-        const ci = cartItems.find((i) => i.product.id === product.id && i.variantKey === v.value);
-        return v.stock - (ci?.quantity ?? 0);
-      })()
-    : hasColors
-      ? (() => {
-          if (!selectedColor) return 0;
-          const ci = cartItems.find(
-            (i) => i.product.id === product.id && i.variantKey === selectedColor.name,
-          );
-          return selectedColor.stock - (ci?.quantity ?? 0);
-        })()
-      : 0;
-
-  const maxQuantity = canAdd ? variantStock : 0;
-  const increment = () => setQuantity((q) => Math.min(q + 1, maxQuantity));
-  const decrement = () => setQuantity((q) => Math.max(1, q - 1));
-
-  const handleAddToCart = () => {
-    const variantKey = selectedVariant || selectedColor?.name || undefined;
-    if (!variantKey && !canAdd) return;
-    addToCart(product.id, variantKey, quantity);
-    const label = selectedVariant
-      ? product.variants?.find((v) => v.value === selectedVariant)?.name
-      : selectedColor?.name;
-    addToast(`${product.name}${label ? ` — ${label}` : ''} добавлен в корзину (${quantity} шт.)`);
-  };
 
   return (
     <PageLayout>
@@ -182,7 +148,6 @@ const ProductDetail = () => {
               selectedValue={selectedVariant}
               onSelect={(obj) => {
                 setSelectedVariant(obj);
-                setQuantity(1);
               }}
               disabledValues={disabledVariantValues}
             />
@@ -194,7 +159,6 @@ const ProductDetail = () => {
               selectedColor={selectedColor}
               onSelect={(obj) => {
                 setSelectedColor(obj);
-                setQuantity(1);
               }}
               disabledKeys={disabledColorNames}
             />
@@ -229,32 +193,7 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <div className="bg-surface rounded-xl p-4 lg:p-5">
-            <div className="flex items-center justify-between mb-4">
-              <div className="text-sm font-semibold text-muted">
-                {canAdd ? (
-                  <>
-                    Количество:{' '}
-                    <span className="text-[11px] font-normal text-dim">
-                      (доступно {maxQuantity})
-                    </span>
-                  </>
-                ) : (
-                  <>Количество</>
-                )}
-              </div>
-              <QuantityStepper
-                quantity={quantity}
-                onDecrement={decrement}
-                onIncrement={increment}
-                max={maxQuantity}
-              />
-            </div>
-
-            <PrimaryButton onClick={handleAddToCart} disabled={!canAdd || maxQuantity === 0}>
-              {!canAdd ? 'Выберите вариант' : `В корзину — ${quantity} шт.`}
-            </PrimaryButton>
-          </div>
+          <AddProductWidget product={product} selected={selectedColor?.name || selectedVariant} />
         </div>
       </div>
     </PageLayout>
