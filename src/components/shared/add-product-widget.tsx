@@ -53,9 +53,7 @@ const AddProductWidget: React.FC<AddProductWidgetProps> = ({ product, selected }
     const newQuantity = (variantStock < quantity ? variantStock : quantity) || 1;
     setQuantity(newQuantity);
   }, [selected, variantStock]);
-  useEffect(() => {
-    console.log(quantity);
-  });
+
   return (
     <div className="bg-surface rounded-xl p-4 lg:p-5">
       <div className="flex items-center justify-between mb-4">

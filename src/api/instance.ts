@@ -1,4 +1,8 @@
+import { retrieveRawInitData } from '@telegram-apps/sdk';
 import axios from 'axios';
+import { useAuthStore } from '../store/useAuthStore';
+import { useToastStore } from '../store/useToastStore';
+import { errorCodes } from './constants';
 
 let getToken: (() => string | null) | null = null;
 
@@ -16,4 +20,25 @@ axiosInstance.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
+});
+
+axiosInstance.interceptors.response.use(null, (error) => {
+  if (error.status !== 401) return Promise.reject(error);
+  useToastStore.getState().addToast('Попытка авторизации...');
+  const initData = retrieveRawInitData();
+  if (initData) {
+    useAuthStore
+      .getState()
+      .telegramAuth(initData)
+      .then(() => {
+        useToastStore.getState().addToast('Всё хорошо');
+      })
+      .catch(() => {});
+  }
+  return Promise.reject(error);
+});
+
+axiosInstance.interceptors.response.use(null, (error) => {
+  useToastStore.getState().addToast(errorCodes[error.status]);
+  return Promise.reject(error);
 });

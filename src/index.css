@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-@custom-variant dark (&:where(.dark, .dark *));
+/* @custom-variant dark (&:where(.dark, .dark *)); */
 
 @theme {
   --color-page: #f5f5f5;
@@ -18,7 +18,7 @@
 }
 
 .dark {
-  --color-page: #0a0a0a;
+  --color-page: var(--tg-theme-secondary-bg-color);
   --color-surface: #161616;
   --color-primary: #f0f0f0;
   --color-on-primary: #0a0a0a;
