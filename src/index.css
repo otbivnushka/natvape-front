@@ -18,7 +18,7 @@
 }
 
 .dark {
-  --color-page: var(--tg-theme-secondary-bg-color);
+  --color-page: #0a0a0a;
   --color-surface: #161616;
   --color-primary: #f0f0f0;
   --color-on-primary: #0a0a0a;
