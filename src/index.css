@@ -138,3 +138,22 @@ body::before {
 .dark body::before {
   opacity: 0.06;
 }
+
+.scrollbar-horizontal {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-surface) transparent;
+  overflow-x: auto;
+}
+
+.scrollbar-horizontal::-webkit-scrollbar {
+  height: 3px;
+}
+
+.scrollbar-horizontal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-horizontal::-webkit-scrollbar-thumb {
+  background-color: var(--color-surface);
+  border-radius: 99px;
+}

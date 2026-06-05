@@ -21,3 +21,6 @@ export { AdminOrdersTable } from './admin-orders-table';
 export { OrderedItemCard } from './ordered-item-card';
 export { AdminTabPickerButton } from './admin-tab-picker-button';
 export { AdminTabPicker } from './admin-tab-picker';
+
+export { StoriesContainer } from './stories-container';
+export { StoriesItem } from './stories-item';

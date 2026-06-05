@@ -4,7 +4,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import { Api } from '../api';
 import type { Order } from '../types';
 import { Lock, Info, Shield } from 'lucide-react';
-import { PageLayout, ProjectInfoModal, FixedButton } from '../components/shared';
+import { PageLayout, ProjectInfoModal, FixedButton, StoriesContainer } from '../components/shared';
 import { PageTitle } from '../components/shared/page-title';
 import { UserInfo } from '../components/shared/user-info';
 import { OrdersContainer } from '../components/shared/orders-container';
@@ -64,31 +64,25 @@ const Profile = () => {
           displayTelegram={displayTelegram}
         />
 
+        <StoriesContainer />
+
         <OrdersContainer orders={orders} ordersLoading={ordersLoading} />
       </PageLayout>
-      {isAdmin() ? (
-        <div className="fixed bottom-18 right-2 z-40 flex gap-3">
-          <FixedButton
-            onClick={() => setInfoOpen(true)}
-            className="relative w-11 h-11 hover:scale-105"
-          >
-            <Info size={20} />
-          </FixedButton>
-          <FixedButton
-            onClick={() => navigate('/admin')}
-            className="relative w-11 h-11 hover:scale-105"
-          >
-            <Shield size={20} />
-          </FixedButton>
-        </div>
-      ) : (
+      {isAdmin() && (
         <FixedButton
-          onClick={() => setInfoOpen(true)}
-          className="bottom-18 right-2 w-11 h-11 hover:scale-105"
+          onClick={() => navigate('/admin')}
+          className="bottom-19 right-18 w-11 h-11 hover:scale-105"
         >
-          <Info size={20} />
+          <Shield size={20} />
         </FixedButton>
       )}
+      <FixedButton
+        onClick={() => setInfoOpen(true)}
+        className="bottom-19 right-4 w-11 h-11 hover:scale-105"
+      >
+        <Info size={20} />
+      </FixedButton>
+
       <ProjectInfoModal open={infoOpen} onClose={() => setInfoOpen(false)} />
     </>
   );
