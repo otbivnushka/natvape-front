@@ -1,7 +1,7 @@
 import React from 'react';
 import { AdminTabPickerButton } from './admin-tab-picker-button';
 
-export type AdminTab = 'products' | 'orders';
+export type AdminTab = 'products' | 'orders' | 'stories';
 
 interface AdminTabPickerProps {
   tab: string;
@@ -20,6 +20,11 @@ const AdminTabPicker: React.FC<AdminTabPickerProps> = ({ tab, setTab }) => {
         onClick={() => setTab('orders')}
         isActive={tab === 'orders'}
         text="Заказы"
+      />
+      <AdminTabPickerButton
+        onClick={() => setTab('stories')}
+        isActive={tab === 'stories'}
+        text="Сторис"
       />
     </div>
   );

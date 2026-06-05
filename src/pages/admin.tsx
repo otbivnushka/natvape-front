@@ -82,7 +82,7 @@ const Admin = () => {
 
         <AdminTabPicker tab={tab} setTab={handleTabChange} />
 
-        {tab === 'products' ? (
+        {tab === 'products' && (
           <AdminProductsTable
             products={products}
             loading={productsLoading}
@@ -90,7 +90,8 @@ const Admin = () => {
             onEdit={(id: number) => navigate(`/admin/products/${id}`)}
             onDelete={(id: number) => handleDelete('product', id)}
           />
-        ) : (
+        )}
+        {tab === 'orders' && (
           <AdminOrdersTable
             orders={orders}
             loading={ordersLoading}
@@ -98,6 +99,7 @@ const Admin = () => {
             onDelete={(id: number) => handleDelete('order', id)}
           />
         )}
+        {tab === 'stories' && <div>Stories</div>}
       </div>
 
       <ConfirmDialog />

@@ -1,35 +1,45 @@
+import { useState } from 'react';
 import clsx from 'clsx';
-import React from 'react';
 import { StoriesItem } from './stories-item';
-import Stories from 'react-insta-stories';
-import type { Story } from 'react-insta-stories/dist/interfaces';
+import Stories from '../../lib/stories';
+import { storySets } from '../../data/stories';
 
 interface StoriesContainerProps {
   className?: string;
 }
 
-const stories: Story[] = [
-  {
-    url: 'https://placehold.co/600x400',
-  },
-  {
-    url: 'https://placehold.co/600x400',
-  },
-];
-
 const StoriesContainer: React.FC<StoriesContainerProps> = ({ className }) => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
   return (
     <div className={clsx('mb-6', className)}>
       <h2 className="text-lg font-semibold text-muted mb-3">Информация</h2>
 
       <div className="flex gap-2 overflow-x-auto scrollbar-horizontal">
-        <StoriesItem title="Информация" image="https://placehold.co/600x400" />
-        <StoriesItem title="Информация" image="https://placehold.co/600x400" />
-        <StoriesItem title="Информация" image="https://placehold.co/600x400" />
-        <StoriesItem title="Информация" image="https://placehold.co/600x400" />
-        <StoriesItem title="Информация" image="https://placehold.co/600x400" />
-        <Stories stories={stories} defaultInterval={1500} width={432} height={768} />
+        {storySets.map((set, i) => (
+          <StoriesItem
+            key={i}
+            title={set.title}
+            image={set.image}
+            onClick={() => setOpenIndex(i)}
+          />
+        ))}
       </div>
+
+      {openIndex !== null && (
+        <div className="fixed inset-0 z-150 bg-black/90 flex items-center justify-center">
+          <div className="relative w-full max-w-108 h-dvh max-h-192">
+
+            <Stories
+              stories={storySets[openIndex].stories}
+              defaultInterval={3000}
+              width="100%"
+              height="100%"
+              onAllStoriesEnd={() => setOpenIndex(null)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

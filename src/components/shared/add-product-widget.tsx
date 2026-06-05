@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { PrimaryButton, QuantityStepper } from '../ui';
 import type { Product } from '../../types';
 import { useCartStore } from '../../store/useCartStore';
@@ -39,20 +39,17 @@ const AddProductWidget: React.FC<AddProductWidgetProps> = ({ product, selected }
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCartStore((s) => s);
 
+  const effectiveQuantity = maxQuantity > 0 && quantity > maxQuantity ? maxQuantity : quantity;
+
   const handleAddToCart = () => {
     const variantKey = selected || undefined;
     if (!variantKey && !canAdd) return;
-    addToCart(product.id, variantKey, quantity);
+    addToCart(product.id, variantKey, effectiveQuantity);
     const label = selected ? product.variants?.find((v) => v.value === selected)?.name : selected;
-    addToast(`${product.name}${label ? ` — ${label}` : ''} добавлен в корзину (${quantity} шт.)`);
+    addToast(`${product.name}${label ? ` — ${label}` : ''} добавлен в корзину (${effectiveQuantity} шт.)`);
   };
   const increment = () => setQuantity((q) => Math.min(q + 1, maxQuantity!));
   const decrement = () => setQuantity((q) => Math.max(1, q - 1));
-
-  useEffect(() => {
-    const newQuantity = (variantStock < quantity ? variantStock : quantity) || 1;
-    setQuantity(newQuantity);
-  }, [selected, variantStock]);
 
   return (
     <div className="bg-surface rounded-xl p-4 lg:p-5">
@@ -68,7 +65,7 @@ const AddProductWidget: React.FC<AddProductWidgetProps> = ({ product, selected }
           )}
         </div>
         <QuantityStepper
-          quantity={quantity}
+          quantity={effectiveQuantity}
           onDecrement={decrement}
           onIncrement={increment}
           max={maxQuantity}
@@ -76,7 +73,7 @@ const AddProductWidget: React.FC<AddProductWidgetProps> = ({ product, selected }
       </div>
 
       <PrimaryButton onClick={handleAddToCart} disabled={!canAdd || maxQuantity === 0}>
-        {!canAdd ? 'Выберите вариант' : `В корзину — ${quantity} шт.`}
+        {!canAdd ? 'Выберите вариант' : `В корзину — ${effectiveQuantity} шт.`}
       </PrimaryButton>
     </div>
   );
