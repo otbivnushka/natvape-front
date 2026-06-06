@@ -1,8 +1,9 @@
 import clsx from 'clsx';
 import React from 'react';
-import { ImageUpload, Input, Textarea } from '../ui';
+import { ImageUpload, Input, PrimaryButton, Textarea } from '../ui';
 import { useCategories } from '@/hooks/useCategories';
 import type { ProductForm } from '@/types';
+import { generateProductDescription } from '@/utils/generateProductDescription';
 
 interface AdminProductAddInfoProps {
   form: ProductForm;
@@ -80,6 +81,11 @@ const AdminProductAddInfo: React.FC<AdminProductAddInfoProps> = ({
           value={form.description}
           onChange={(e) => setForm({ ...form, description: e.target.value })}
         />
+        <PrimaryButton
+          onClick={() => setForm({ ...form, description: generateProductDescription(form) })}
+        >
+          Авто генерейт
+        </PrimaryButton>
         <Input
           placeholder="Название варианта (напр. Вкус)"
           value={form.variantLabel ?? ''}

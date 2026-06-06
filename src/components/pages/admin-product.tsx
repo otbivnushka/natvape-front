@@ -5,7 +5,11 @@ import { Loader2 } from 'lucide-react';
 import { PrimaryButton, Spinner } from '@/components/ui';
 import { useAdminGuard } from '@/hooks/useAdminGuard';
 import { useCategories } from '@/hooks/useCategories';
-import { AdminProductAddColors, AdminProductAddInfo, AdminProductAddVariants } from '@/components/widgets';
+import {
+  AdminProductAddColors,
+  AdminProductAddInfo,
+  AdminProductAddVariants,
+} from '@/components/widgets';
 import type { ProductForm } from '@/types';
 
 const AdminProduct = () => {
@@ -105,24 +109,38 @@ const AdminProduct = () => {
           </button>
         </div>
 
-        <AdminProductAddInfo form={form} setForm={setForm} previewUrl={previewUrl} className="mb-6" />
-
-        {productId != null && (
-          <>
-            <AdminProductAddVariants productId={productId} form={form} setForm={setForm} className="mb-6" />
-
-            <AdminProductAddColors productId={productId} form={form} setForm={setForm} className="mb-6" />
-          </>
-        )}
+        <AdminProductAddInfo
+          form={form}
+          setForm={setForm}
+          previewUrl={previewUrl}
+          className="mb-6"
+        />
 
         <PrimaryButton
           onClick={handleSave}
           disabled={saving || !form.name || !form.price}
-          className="w-full py-3 border-none rounded-xl bg-primary text-on-primary text-sm font-semibold cursor-pointer hover:opacity-85 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="mb-6 w-full py-3 border-none rounded-xl bg-primary text-on-primary text-sm font-semibold cursor-pointer hover:opacity-85 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {saving ? <Loader2 size={16} className="animate-spin" /> : null}
           {saving ? 'Сохранение...' : productId != null ? 'Сохранить изменения' : 'Создать товар'}
         </PrimaryButton>
+
+        {productId != null && (
+          <>
+            <AdminProductAddVariants
+              productId={productId}
+              form={form}
+              setForm={setForm}
+              className="mb-6"
+            />
+
+            <AdminProductAddColors
+              productId={productId}
+              form={form}
+              setForm={setForm}
+            />
+          </>
+        )}
       </div>
     </div>
   );

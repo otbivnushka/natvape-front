@@ -9,6 +9,7 @@ import {
   VariantPicker,
   DetailsSkeleton,
   AddProductWidget,
+  Seo,
 } from '@/components/shared';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 
@@ -63,95 +64,98 @@ const ProductDetail = () => {
   const hasColors = product.colors && product.colors.length > 0;
 
   return (
-    <PageLayout>
-      <FixedButton
-        onClick={() => navigate(-1)}
-        className="top-3 left-4 z-10 gap-1.5 py-2 pl-3 pr-4 rounded-full bg-surface/80 backdrop-blur-md border border-line text-sm text-body hover:-translate-x-0.5"
-      >
-        <ArrowLeft size={16} />
-        Назад
-      </FixedButton>
-      <FixedButton
-        onClick={handleShare}
-        className="top-3 left-30 z-10 p-2.5 rounded-full bg-surface/80 backdrop-blur-md border border-line text-sm text-body hover:scale-105"
-      >
-        <Share2 size={16} />
-      </FixedButton>
+    <>
+      <Seo title={product.name} description={product.description} image={product.image} />
+      <PageLayout>
+        <FixedButton
+          onClick={() => navigate(-1)}
+          className="top-3 left-4 z-10 gap-1.5 py-2 pl-3 pr-4 rounded-full bg-surface/80 backdrop-blur-md border border-line text-sm text-body hover:-translate-x-0.5"
+        >
+          <ArrowLeft size={16} />
+          Назад
+        </FixedButton>
+        <FixedButton
+          onClick={handleShare}
+          className="top-3 left-30 z-10 p-2.5 rounded-full bg-surface/80 backdrop-blur-md border border-line text-sm text-body hover:scale-105"
+        >
+          <Share2 size={16} />
+        </FixedButton>
 
-      <div className="max-w-5xl pt-12 md:pt-0 mx-auto md:grid md:grid-cols-2 md:gap-10 md:items-start">
-        <div className="flex justify-center mb-4 md:mb-0 md:sticky md:top-24">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full rounded-xl max-w-87.5 aspect-square object-cover"
-          />
-        </div>
-
-        <div>
-          <div className="flex items-start justify-between mb-1">
-            <h1 className="text-xl font-bold text-primary">{product.name}</h1>
-          </div>
-
-          <div className="mb-3">
-            <PriceDisplay price={product.price} doublePrice={product.doublePrice} size="lg" />
-          </div>
-
-          <div className="flex items-center gap-1 mb-4">
-            <StarRating rating={product.rating} />
-          </div>
-
-          {hasVariants && (
-            <VariantPicker
-              variants={product.variants!}
-              variantLabel={product.variantLabel!}
-              selectedValue={selectedVariant}
-              onSelect={(obj) => setSelectedVariant(obj)}
-              disabledValues={disabledVariantValues}
+        <div className="max-w-5xl pt-12 md:pt-0 mx-auto md:grid md:grid-cols-2 md:gap-10 md:items-start">
+          <div className="flex justify-center mb-4 md:mb-0 md:sticky md:top-24">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-full rounded-xl max-w-87.5 aspect-square object-cover"
             />
-          )}
-
-          {hasColors && (
-            <ColorPicker
-              colors={product.colors!}
-              selectedColor={selectedColor}
-              onSelect={(obj) => setSelectedColor(obj)}
-              disabledKeys={disabledColorNames}
-            />
-          )}
-
-          <div className="mb-4">
-            <div className="text-sm font-semibold text-muted mb-2">Описание:</div>
-            <p className="text-sm text-muted leading-relaxed">{product.description}</p>
           </div>
 
-          <div className="mb-4">
-            <div className="text-sm font-semibold text-muted mb-2">Ваша оценка:</div>
-            <div className="flex items-center gap-2 h-8">
-              <StarRating
-                rating={userRating}
-                showValue={false}
-                interactive={!!user}
-                onChange={handleRate}
-              />
-              {ratingSubmitting && <Loader2 size={14} className="animate-spin text-muted" />}
-              {userRating > 0 && !ratingSubmitting && (
-                <span className="text-xs text-muted">{userRating}</span>
-              )}
-              {userRating > 0 && (
-                <button
-                  className="text-xs px-2 py-1 text-muted border rounded-full bg-transparent"
-                  onClick={() => handleRate(0)}
-                >
-                  Убрать
-                </button>
-              )}
+          <div>
+            <div className="flex items-start justify-between mb-1">
+              <h1 className="text-xl font-bold text-primary">{product.name}</h1>
             </div>
-          </div>
 
-          <AddProductWidget product={product} selected={selectedColor?.name || selectedVariant} />
+            <div className="mb-3">
+              <PriceDisplay price={product.price} doublePrice={product.doublePrice} size="lg" />
+            </div>
+
+            <div className="flex items-center gap-1 mb-4">
+              <StarRating rating={product.rating} />
+            </div>
+
+            {hasVariants && (
+              <VariantPicker
+                variants={product.variants!}
+                variantLabel={product.variantLabel!}
+                selectedValue={selectedVariant}
+                onSelect={(obj) => setSelectedVariant(obj)}
+                disabledValues={disabledVariantValues}
+              />
+            )}
+
+            {hasColors && (
+              <ColorPicker
+                colors={product.colors!}
+                selectedColor={selectedColor}
+                onSelect={(obj) => setSelectedColor(obj)}
+                disabledKeys={disabledColorNames}
+              />
+            )}
+
+            <div className="mb-4">
+              <div className="text-sm font-semibold text-muted mb-2">Описание:</div>
+              <p className="text-sm text-muted leading-relaxed">{product.description}</p>
+            </div>
+
+            <div className="mb-4">
+              <div className="text-sm font-semibold text-muted mb-2">Ваша оценка:</div>
+              <div className="flex items-center gap-2 h-8">
+                <StarRating
+                  rating={userRating}
+                  showValue={false}
+                  interactive={!!user}
+                  onChange={handleRate}
+                />
+                {ratingSubmitting && <Loader2 size={14} className="animate-spin text-muted" />}
+                {userRating > 0 && !ratingSubmitting && (
+                  <span className="text-xs text-muted">{userRating}</span>
+                )}
+                {userRating > 0 && (
+                  <button
+                    className="text-xs px-2 py-1 text-muted border rounded-full bg-transparent"
+                    onClick={() => handleRate(0)}
+                  >
+                    Убрать
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <AddProductWidget product={product} selected={selectedColor?.name || selectedVariant} />
+          </div>
         </div>
-      </div>
-    </PageLayout>
+      </PageLayout>
+    </>
   );
 };
 

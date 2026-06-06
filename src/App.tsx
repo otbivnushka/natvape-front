@@ -3,7 +3,20 @@ import { BottomNav } from '@/components/shared';
 import { ToastContainer } from '@/components/ui';
 import { useTelegramBackButton } from '@/hooks/useTelegramBackButton';
 import { useInit } from '@/hooks/useInit';
-import { Admin, AdminOrderPage, AdminProduct, AdminStory, Cart, Catalog, CategoryProducts, Checkout, ProductDetail, Profile, Wishlist } from '@/components/pages';
+import {
+  Admin,
+  AdminOrderPage,
+  AdminProduct,
+  AdminStory,
+  Cart,
+  Catalog,
+  CategoryProducts,
+  Checkout,
+  ProductDetail,
+  Profile,
+  Wishlist,
+} from '@/components/pages';
+import { HelmetProvider } from 'react-helmet-async';
 
 function AppContent() {
   useTelegramBackButton();
@@ -33,9 +46,11 @@ function App() {
   useInit();
 
   return (
-    <BrowserRouter>
-      <AppContent />
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }
 

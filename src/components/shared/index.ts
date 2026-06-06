@@ -21,3 +21,4 @@ export { AddProductWidget } from './add-product-widget';
 export { StoriesItem } from './stories-item';
 export { TimeSelector } from './time-selector';
 export { VariantPicker } from './variant-picker';
+export { Seo } from './seo';
