@@ -19,7 +19,7 @@ const StoriesModal: React.FC<StoriesModalProps> = ({ stories, onClose }) => {
       onClick={() => onClose()}
     >
       <FixedButton
-        className="flex gap-2 items-center bottom-4 left-4 z-9999 py-2 px-3"
+        className="flex gap-2 items-center bottom-4 left-4 right-4 z-9999 py-2 px-3"
         onClick={() => onClose()}
       >
         <SquareArrowRightExit />

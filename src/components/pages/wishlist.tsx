@@ -25,7 +25,7 @@ const Wishlist = () => {
     }
     setLoading(true);
     Api.products
-      .getAll({ limit: 100 })
+      .getAll({ limit: 999 })
       .then((res) => {
         const all = res.items.map(Api.products.mapProduct);
         Api.productCache.set(all);
