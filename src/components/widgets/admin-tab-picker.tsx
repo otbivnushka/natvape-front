@@ -1,5 +1,5 @@
 import React from 'react';
-import { AdminTabPickerButton } from './admin-tab-picker-button';
+import { AdminTabPickerButton } from '@/components/shared/admin-tab-picker-button';
 
 export type AdminTab = 'products' | 'orders' | 'stories';
 

@@ -1,10 +1,10 @@
 import React from 'react';
-import type { CartItem as CartItemType } from '../../types';
-import { useCartStore } from '../../store/useCartStore';
-import { formatPrice } from '../../utils/formatPrice';
-import { calcCartItemTotal } from '../../utils/cartTotals';
+import type { CartItem as CartItemType } from '@/types';
+import { useCartStore } from '@/store/useCartStore';
+import { formatPrice } from '@/utils/formatPrice';
+import { calcCartItemTotal } from '@/utils/cartTotals';
 import { X } from 'lucide-react';
-import { QuantityStepper, PriceDisplay } from '../ui';
+import { QuantityStepper, PriceDisplay } from '@/components/ui';
 
 interface CartItemProps {
   item: CartItemType;

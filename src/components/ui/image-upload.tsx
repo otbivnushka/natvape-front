@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Api } from '../../api';
+import { Api } from '@/api';
 import { Upload, Trash2, Loader2 } from 'lucide-react';
 
 interface ImageUploadProps {

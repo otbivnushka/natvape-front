@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import type { Address, Order } from '../../../types';
-import { formatPrice } from '../../../utils/formatPrice';
-import { Api } from '../../../api';
+import type { Address, Order } from '@/types';
+import { formatPrice } from '@/utils/formatPrice';
+import { Api } from '@/api';
 import { X } from 'lucide-react';
-import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
-import { StatusMark } from '../../ui/status-mark';
-import { OrderedItemCard } from '../ordered-item-card';
-import { MapBlock } from '..';
-import { getYandexMapLink } from '../../../utils/getYandexMapsLink';
-import { Spinner } from '../../ui';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { StatusMark } from '@/components/ui/status-mark';
+import { OrderedItemCard } from '@/components/shared/ordered-item-card';
+import { MapBlock } from '@/components/shared';
+import { getYandexMapLink } from '@/utils/getYandexMapsLink';
+import { Spinner } from '@/components/ui';
 
 interface OrderDetailModalProps {
   open: boolean;

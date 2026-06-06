@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { formatPrice } from '../../utils/formatPrice';
+import { formatPrice } from '@/utils/formatPrice';
 
 interface PriceDisplayProps {
   price: number;

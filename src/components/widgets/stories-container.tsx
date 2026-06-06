@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import clsx from 'clsx';
-import { StoriesItem } from './stories-item';
-import { StoriesModal } from './modals';
-import { useStoriesStore } from '../../store/useStoriesStore';
+import { StoriesItem } from '@/components/shared/stories-item';
+import { StoriesModal } from '@/components/widgets/modals';
+import { useStoriesStore } from '@/store/useStoriesStore';
 
 interface StoriesContainerProps {
   className?: string;
 }
 
 const StoriesContainer: React.FC<StoriesContainerProps> = ({ className }) => {
-  const {storySets} = useStoriesStore();
+  const { storySets } = useStoriesStore();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   if (storySets.length === 0) return null;
@@ -30,10 +30,7 @@ const StoriesContainer: React.FC<StoriesContainerProps> = ({ className }) => {
       </div>
 
       {openIndex !== null && (
-        <StoriesModal
-          stories={storySets[openIndex].stories}
-          onClose={() => setOpenIndex(null)}
-        />
+        <StoriesModal stories={storySets[openIndex].stories} onClose={() => setOpenIndex(null)} />
       )}
     </div>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Skeleton } from '../ui';
+import { Skeleton } from '@/components/ui';
 
 const DetailsSkeleton: React.FC = () => {
   return (

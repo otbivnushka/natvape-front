@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import type { AdminOrder } from '../../api/dto/admin.dto';
+import type { AdminOrder } from '@/api/dto/admin.dto';
 import { Check, Trash2, ShoppingBag, Info, Pen } from 'lucide-react';
-import { Spinner } from '../ui';
+import { Spinner } from '@/components/ui';
 
 interface AdminOrdersTableProps {
   orders: AdminOrder[];

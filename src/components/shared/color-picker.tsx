@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { ProductColor } from '../../types';
+import type { ProductColor } from '@/types';
 import clsx from 'clsx';
 
 interface ColorPickerProps {

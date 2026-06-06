@@ -1,20 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Catalog from './pages/catalog';
-import CategoryProducts from './pages/category-products';
-import ProductDetail from './pages/product-detail';
-import Cart from './pages/cart';
-import Checkout from './pages/checkout';
-import Wishlist from './pages/wishlist';
-import Profile from './pages/profile';
-import Admin from './pages/admin';
-import AdminStory from './pages/admin-story';
-import AdminProduct from './pages/admin-product';
-import AdminOrderPage from './pages/admin-order';
-import { BottomNav } from './components/shared';
-import { ToastContainer } from './components/ui';
-import { useTelegramBackButton } from './hooks/useTelegramBackButton';
-import { useInit } from './hooks/useInit';
-
+import { BottomNav } from '@/components/shared';
+import { ToastContainer } from '@/components/ui';
+import { useTelegramBackButton } from '@/hooks/useTelegramBackButton';
+import { useInit } from '@/hooks/useInit';
+import { Admin, AdminOrderPage, AdminProduct, AdminStory, Cart, Catalog, CategoryProducts, Checkout, ProductDetail, Profile, Wishlist } from '@/components/pages';
 
 function AppContent() {
   useTelegramBackButton();

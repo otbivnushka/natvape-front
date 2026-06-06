@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Api } from '../api';
+import { Api } from '../../api';
 import { ArrowLeft, Plus, Trash2, Loader2 } from 'lucide-react';
-import { Input, ImageUpload } from '../components/ui';
-import { useAdminGuard } from '../hooks/useAdminGuard';
+import { Input, ImageUpload } from '@/components/ui';
+import { useAdminGuard } from '../../hooks/useAdminGuard';
 
 interface SlideForm {
   imageId: number | null;
@@ -77,11 +77,7 @@ const AdminStory = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
-            <ImageUpload
-              value={imageId}
-              previewUrl=""
-              onChange={setImageId}
-            />
+            <ImageUpload value={imageId} previewUrl="" onChange={setImageId} />
           </div>
         </div>
 
@@ -126,7 +122,9 @@ const AdminStory = () => {
                   />
 
                   <div className="border-t border-line pt-3 mt-1">
-                    <p className="text-[11px] font-semibold text-dim mb-2">Заголовок (опционально)</p>
+                    <p className="text-[11px] font-semibold text-dim mb-2">
+                      Заголовок (опционально)
+                    </p>
                     <div className="flex flex-col gap-2">
                       <Input
                         placeholder="Заголовок"
@@ -159,4 +157,4 @@ const AdminStory = () => {
   );
 };
 
-export default AdminStory;
+export { AdminStory };

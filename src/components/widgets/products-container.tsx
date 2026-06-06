@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 import React from 'react';
-import type { Product } from '../../types';
-import { EmptyState } from './empty-state';
+import type { Product } from '@/types';
+import { EmptyState } from '@/components/shared/empty-state';
 import { SearchX } from 'lucide-react';
-import { ProductCard } from './product-card';
-import { ProductSkeleton } from './product-skeleton';
-import { Skeleton } from '../ui';
+import { ProductCard } from '@/components/shared/product-card';
+import { ProductSkeleton } from '@/components/shared/product-skeleton';
+import { Skeleton } from '@/components/ui';
 
 interface ProductsContainerProps {
   products: Product[];

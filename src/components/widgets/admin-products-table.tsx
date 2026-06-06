@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import type { Product } from '../../types';
-import { formatPrice } from '../../utils/formatPrice';
+import type { Product } from '@/types';
+import { formatPrice } from '@/utils/formatPrice';
 import { Plus, Trash2, Pencil, Package, Search } from 'lucide-react';
-import { Input, Spinner } from '../ui';
+import { Input, Spinner } from '@/components/ui';
 
 interface AdminProductsTableProps {
   products: Product[];

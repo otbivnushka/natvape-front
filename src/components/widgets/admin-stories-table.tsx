@@ -1,7 +1,7 @@
 import React from 'react';
-import type { StorySet } from '../../api/stories';
+import type { StorySet } from '@/api/stories';
 import { Plus, Trash2, BookOpen } from 'lucide-react';
-import { Spinner } from '../ui';
+import { Spinner } from '@/components/ui';
 
 interface AdminStoriesTableProps {
   storySets: StorySet[];

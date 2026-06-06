@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Product } from '../../types';
-import { useWishlistStore } from '../../store/useWishlistStore';
-import { useToastStore } from '../../store/useToastStore';
+import type { Product } from '@/types';
+import { useWishlistStore } from '@/store/useWishlistStore';
+import { useToastStore } from '@/store/useToastStore';
 import { Heart } from 'lucide-react';
-import { StarRating, Badge, PriceDisplay, PrimaryButton } from '../ui';
+import { StarRating, Badge, PriceDisplay, PrimaryButton } from '@/components/ui';
 import clsx from 'clsx';
 
 interface ProductCardProps {

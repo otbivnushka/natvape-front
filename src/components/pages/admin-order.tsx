@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { OrderDetailModal } from '../components/shared/modals';
+import { OrderDetailModal } from '@/components/widgets/modals';
 
 const AdminOrderPage = () => {
   const navigate = useNavigate();
@@ -8,4 +8,4 @@ const AdminOrderPage = () => {
   return <OrderDetailModal open onClose={() => navigate('/admin/orders')} orderId={Number(id)} />;
 };
 
-export default AdminOrderPage;
+export { AdminOrderPage };

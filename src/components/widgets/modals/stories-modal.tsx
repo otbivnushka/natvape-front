@@ -1,7 +1,7 @@
 import React from 'react';
-import Stories from '../../../lib/stories';
-import type { Story } from '../../../lib/stories';
-import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
+import Stories from '@/lib/stories';
+import type { Story } from '@/lib/stories';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 
 interface StoriesModalProps {
   stories: Story[];

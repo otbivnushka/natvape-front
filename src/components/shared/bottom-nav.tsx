@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { useCartStore } from '../../store/useCartStore';
+import { useCartStore } from '@/store/useCartStore';
 import { LayoutPanelTop, ShoppingCart, Heart, User } from 'lucide-react';
 import clsx from 'clsx';
 

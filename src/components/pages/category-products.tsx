@@ -1,15 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { HelpCircle } from 'lucide-react';
-import { Api } from '../api';
-import type { ApiCategoryInfo } from '../api/dto/category.dto';
-import type { SortOption, Product } from '../types';
-import { useScrollToTop } from '../hooks/useScrollToTop';
+import { Api } from '@/api';
+import type { ApiCategoryInfo } from '@/api/dto/category.dto';
+import type { SortOption, Product } from '@/types';
+import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { useDebounce } from '@uidotdev/usehooks';
-import { SearchBar, SortSelect, PriceFilter, BrandFilter, Skeleton } from '../components/ui';
-import { EmptyState, PageLayout } from '../components/shared';
-import { ProductsContainer } from '../components/shared/products-container';
-import { PageTitle } from '../components/shared/page-title';
+import { SearchBar, SortSelect, PriceFilter, BrandFilter, Skeleton } from '@/components/ui';
+import { EmptyState, PageLayout, PageTitle } from '@/components/shared';
+import { ProductsContainer } from '@/components/widgets';
 
 const CategoryProducts = () => {
   const { category } = useParams<{ category: string }>();
@@ -137,4 +136,4 @@ const CategoryProducts = () => {
   );
 };
 
-export default CategoryProducts;
+export { CategoryProducts };

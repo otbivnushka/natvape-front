@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import type { Order } from '../../types';
-import { formatPrice } from '../../utils/formatPrice';
+import type { Order } from '@/types';
+import { formatPrice } from '@/utils/formatPrice';
 import { Info } from 'lucide-react';
-import { OrderDetailModal } from './modals';
-import { StatusMark } from '../ui/status-mark';
+import { OrderDetailModal } from '@/components/widgets/modals';
+import { StatusMark } from '@/components/ui/status-mark';
 
 interface OrderCardProps {
   order: Order;

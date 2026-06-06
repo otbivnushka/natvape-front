@@ -1,20 +1,20 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Api } from '../api';
-import type { Product, ProductColor } from '../types';
-import { useCartStore } from '../store/useCartStore';
-import { useAuthStore } from '../store/useAuthStore';
+import { Api } from '../../api';
+import type { Product, ProductColor } from '../../types';
+import { useCartStore } from '../../store/useCartStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import { ArrowLeft, HelpCircle, Loader2 } from 'lucide-react';
-import { StarRating, PriceDisplay } from '../components/ui';
+import { StarRating, PriceDisplay } from '@/components/ui';
 import {
   PageLayout,
   FixedButton,
   ColorPicker,
   VariantPicker,
   DetailsSkeleton,
-} from '../components/shared';
-import { useScrollToTop } from '../hooks/useScrollToTop';
-import { AddProductWidget } from '../components/shared/add-product-widget';
+  AddProductWidget,
+} from '@/components/shared';
+import { useScrollToTop } from '../../hooks/useScrollToTop';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -200,4 +200,4 @@ const ProductDetail = () => {
   );
 };
 
-export default ProductDetail;
+export { ProductDetail };

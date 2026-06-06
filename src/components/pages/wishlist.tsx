@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Heart } from 'lucide-react';
-import { useWishlistStore } from '../store/useWishlistStore';
-import { Api } from '../api';
-import type { Product } from '../types';
-import { ProductCard, EmptyState, PageLayout } from '../components/shared';
-import { ProductSkeleton } from '../components/shared/product-skeleton';
-import { PageTitle } from '../components/shared/page-title';
+import { useWishlistStore } from '../../store/useWishlistStore';
+import { Api } from '../../api';
+import type { Product } from '../../types';
+import {
+  ProductCard,
+  EmptyState,
+  PageLayout,
+  PageTitle,
+  ProductSkeleton,
+} from '@/components/shared';
 
 const Wishlist = () => {
   const productIds = useWishlistStore((s) => s.productIds);
@@ -58,4 +62,4 @@ const Wishlist = () => {
   );
 };
 
-export default Wishlist;
+export { Wishlist };

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Api } from '../api';
-import type { CreateProductDto } from '../api/dto/admin.dto';
+import { Api } from '../../api';
+import type { CreateProductDto } from '../../api/dto/admin.dto';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
-import { ImageUpload, Input, QuantityStepper, Spinner } from '../components/ui';
-import { useAdminGuard } from '../hooks/useAdminGuard';
-import { useCategories } from '../hooks/useCategories';
-import { transliterate } from '../utils/transliterate';
+import { ImageUpload, Input, QuantityStepper, Spinner } from '@/components/ui';
+import { useAdminGuard } from '../../hooks/useAdminGuard';
+import { useCategories } from '../../hooks/useCategories';
+import { transliterate } from '../../utils/transliterate';
 
 interface VariantForm {
   id?: number;
@@ -451,4 +451,4 @@ const AdminProduct = () => {
   );
 };
 
-export default AdminProduct;
+export { AdminProduct };

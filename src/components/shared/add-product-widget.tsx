@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { PrimaryButton, QuantityStepper } from '../ui';
-import type { Product } from '../../types';
-import { useCartStore } from '../../store/useCartStore';
-import { useToastStore } from '../../store/useToastStore';
+import { PrimaryButton, QuantityStepper } from '@/components/ui';
+import type { Product } from '@/types';
+import { useCartStore } from '@/store/useCartStore';
+import { useToastStore } from '@/store/useToastStore';
 
 interface AddProductWidgetProps {
   product: Product;
@@ -46,7 +46,9 @@ const AddProductWidget: React.FC<AddProductWidgetProps> = ({ product, selected }
     if (!variantKey && !canAdd) return;
     addToCart(product.id, variantKey, effectiveQuantity);
     const label = selected ? product.variants?.find((v) => v.value === selected)?.name : selected;
-    addToast(`${product.name}${label ? ` — ${label}` : ''} добавлен в корзину (${effectiveQuantity} шт.)`);
+    addToast(
+      `${product.name}${label ? ` — ${label}` : ''} добавлен в корзину (${effectiveQuantity} шт.)`,
+    );
   };
   const increment = () => setQuantity((q) => Math.min(q + 1, maxQuantity!));
   const decrement = () => setQuantity((q) => Math.max(1, q - 1));

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { ProductVariant } from '../../types';
+import type { ProductVariant } from '@/types';
 import clsx from 'clsx';
 
 interface VariantPickerProps {

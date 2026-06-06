@@ -1,23 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShoppingCart, Loader2 } from 'lucide-react';
-import { Api } from '../api';
-import { useCartStore } from '../store/useCartStore';
-import { useAuthStore } from '../store/useAuthStore';
-import { PrimaryButton, AddressInput, Textarea } from '../components/ui';
+import { Api } from '@/api';
+import { useCartStore } from '@/store/useCartStore';
+import { useAuthStore } from '@/store/useAuthStore';
+import { PrimaryButton, AddressInput, Textarea } from '@/components/ui';
 import {
   PageLayout,
   AddressBlock,
-  OrderSummary,
   DeliveryMethodSelector,
-} from '../components/shared';
-import type { Address } from '../types';
-import type { DeliveryMethod } from '../components/shared/delivery-method-selector';
-import { useToastStore } from '../store/useToastStore';
-import { useToastError } from '../hooks/useToastError';
-import { geocodeAddress } from '../utils/geocode';
-import { PageTitle } from '../components/shared/page-title';
-import { TimeSelector } from '../components/shared/time-selector';
+  PageTitle,
+  TimeSelector,
+} from '@/components/shared';
+import { OrderSummary } from '@/components/widgets';
+import type { Address } from '@/types';
+import type { DeliveryMethod } from '@/components/shared/delivery-method-selector';
+import { useToastStore } from '@/store/useToastStore';
+import { useToastError } from '@/hooks/useToastError';
+import { geocodeAddress } from '@/utils/geocode';
 
 const pickupPoints = [
   'McDonalds',
@@ -244,10 +244,7 @@ const Checkout = () => {
 
       <div className="mb-5">
         <h2 className="text-sm font-semibold text-muted mb-2.5">Комментарий к заказу</h2>
-        <Textarea
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-        />
+        <Textarea value={comment} onChange={(e) => setComment(e.target.value)} />
       </div>
 
       <OrderSummary items={items} total={total} deliveryFee={deliveryFee} />
@@ -266,4 +263,4 @@ const Checkout = () => {
   );
 };
 
-export default Checkout;
+export { Checkout };

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React, { type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { ApiCategoryInfo } from '../../api/dto/category.dto';
+import type { ApiCategoryInfo } from '@/api/dto/category.dto';
 import {
   CartridgeIcon,
   DisposableIcon,
@@ -9,8 +9,8 @@ import {
   LiquidIcon,
   PodIcon,
   SnusIcon,
-} from '../ui/icons';
-import { CatalogCard } from './catalog-card';
+} from '@/components/ui/icons';
+import { CatalogCard } from '@/components/shared/catalog-card';
 
 const SIZE_ICON = 120;
 

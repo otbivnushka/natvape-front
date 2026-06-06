@@ -1,7 +1,7 @@
 import React from 'react';
-import type { CartItem } from '../../types';
-import { formatPrice } from '../../utils/formatPrice';
-import { OrderSummaryItem } from './order-summary-item';
+import type { CartItem } from '@/types';
+import { formatPrice } from '@/utils/formatPrice';
+import { OrderSummaryItem } from '@/components/shared/order-summary-item';
 
 interface OrderSummaryProps {
   items: CartItem[];

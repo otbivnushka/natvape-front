@@ -1,6 +1,6 @@
 import React from 'react';
-import { formatPrice } from '../../utils/formatPrice';
-import type { OrderItem } from '../../types';
+import { formatPrice } from '@/utils/formatPrice';
+import type { OrderItem } from '@/types';
 import clsx from 'clsx';
 
 interface OrderedItemCardProps {

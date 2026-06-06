@@ -1,5 +1,5 @@
 import React from 'react';
-import type { SortOption } from '../../types';
+import type { SortOption } from '@/types';
 import { Dropdown } from './dropdown';
 
 interface SortSelectProps {

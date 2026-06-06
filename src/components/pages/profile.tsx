@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../store/useAuthStore';
-import { Api } from '../api';
-import type { Order } from '../types';
+import { useAuthStore } from '@/store/useAuthStore';
+import { Api } from '@/api';
+import type { Order } from '@/types';
 import { Lock, Info, Shield } from 'lucide-react';
-import { PageLayout, ProjectInfoModal, FixedButton, StoriesContainer } from '../components/shared';
-import { PageTitle } from '../components/shared/page-title';
-import { UserInfo } from '../components/shared/user-info';
-import { OrdersContainer } from '../components/shared/orders-container';
+import { PageLayout, FixedButton, PageTitle } from '@/components/shared';
+import { StoriesContainer, UserInfo, OrdersContainer } from '@/components/widgets';
+import { ProjectInfoModal } from '@/components/widgets/modals';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -69,17 +68,11 @@ const Profile = () => {
         <OrdersContainer orders={orders} ordersLoading={ordersLoading} />
       </PageLayout>
       {isAdmin() && (
-        <FixedButton
-          onClick={() => navigate('/admin')}
-          className="bottom-19 right-18 w-11 h-11"
-        >
+        <FixedButton onClick={() => navigate('/admin')} className="bottom-19 right-18 w-11 h-11">
           <Shield size={20} />
         </FixedButton>
       )}
-      <FixedButton
-        onClick={() => setInfoOpen(true)}
-        className="bottom-19 right-4 w-11 h-11"
-      >
+      <FixedButton onClick={() => setInfoOpen(true)} className="bottom-19 right-4 w-11 h-11">
         <Info size={20} />
       </FixedButton>
 
@@ -88,4 +81,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export { Profile };

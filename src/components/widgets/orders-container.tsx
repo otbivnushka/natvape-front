@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 import React from 'react';
-import type { Order } from '../../types';
+import type { Order } from '@/types';
 import { Package } from 'lucide-react';
-import { EmptyState } from './empty-state';
-import { OrderCard } from './order-card';
-import { Spinner } from '../ui';
+import { EmptyState } from '@/components/shared/empty-state';
+import { OrderCard } from '@/components/shared/order-card';
+import { Spinner } from '@/components/ui';
 
 interface OrdersContainerProps {
   className?: string;
@@ -21,7 +21,6 @@ const OrdersContainer: React.FC<OrdersContainerProps> = ({ className, orders, or
       ) : orders.length === 0 ? (
         <EmptyState icon={<Package size={48} />} title="Нет заказов" />
       ) : (
-        
         orders.map((order) => <OrderCard key={order.id} order={order} />)
       )}
     </div>

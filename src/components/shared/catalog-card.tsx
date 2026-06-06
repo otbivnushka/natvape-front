@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ApiCategoryInfo } from '../../api/dto/category.dto';
+import type { ApiCategoryInfo } from '@/api/dto/category.dto';
 
 interface CatalogCardProps {
   cat: ApiCategoryInfo;

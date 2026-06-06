@@ -1,6 +1,6 @@
 import React from 'react';
 import { Plus, Trash } from 'lucide-react';
-import type { Address } from '../../types';
+import type { Address } from '@/types';
 import clsx from 'clsx';
 
 interface AddressBlockProps {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
-import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 
 interface ProjectInfoModalProps {
   open: boolean;

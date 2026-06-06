@@ -1,11 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react';
-import { useCartStore } from '../store/useCartStore';
-import { PrimaryButton } from '../components/ui';
-import { CartItem as CartItemComponent, EmptyState, PageLayout } from '../components/shared';
-import { formatPrice } from '../utils/formatPrice';
+import { useCartStore } from '../../store/useCartStore';
+import { PrimaryButton } from '@/components/ui';
+import {
+  CartItem as CartItemComponent,
+  EmptyState,
+  PageLayout,
+  PageTitle,
+} from '@/components/shared';
+import { formatPrice } from '../../utils/formatPrice';
 import { useEffect } from 'react';
-import { PageTitle } from '../components/shared/page-title';
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -54,4 +58,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export { Cart };

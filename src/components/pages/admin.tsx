@@ -1,13 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Api } from '../api';
-import type { Product } from '../types';
-import type { AdminOrder } from '../api/dto/admin.dto';
-import type { AdminTab } from '../components/shared/admin-tab-picker';
-import type { StorySet } from '../api/stories';
-import { useAdminGuard } from '../hooks/useAdminGuard';
-import { useConfirmDialog } from '../hooks/useConfirmDialog';
-import { AdminTabPicker, AdminProductsTable, AdminOrdersTable, AdminStoriesTable } from '../components/shared';
+import { Api } from '@/api';
+import type { Product } from '@/types';
+import type { AdminOrder } from '@/api/dto/admin.dto';
+import type { AdminTab } from '@/components/widgets/admin-tab-picker';
+import type { StorySet } from '@/api/stories';
+import { useAdminGuard } from '@/hooks/useAdminGuard';
+import { useConfirmDialog } from '@/hooks/useConfirmDialog';
+import {
+  AdminTabPicker,
+  AdminProductsTable,
+  AdminOrdersTable,
+  AdminStoriesTable,
+} from '@/components/widgets';
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -26,7 +31,10 @@ const Admin = () => {
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [stories, setStories] = useState<StorySet[]>([]);
   const [storiesLoading, setStoriesLoading] = useState(false);
-  const { confirm, ConfirmDialog } = useConfirmDialog<{ type: 'product' | 'order' | 'story'; id: number }>();
+  const { confirm, ConfirmDialog } = useConfirmDialog<{
+    type: 'product' | 'order' | 'story';
+    id: number;
+  }>();
 
   useEffect(() => {
     if (tab === 'products') {
@@ -129,4 +137,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export { Admin };
