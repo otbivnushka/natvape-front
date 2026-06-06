@@ -10,10 +10,12 @@ import {
   DetailsSkeleton,
   AddProductWidget,
 } from '@/components/shared';
+import { useScrollToTop } from '@/hooks/useScrollToTop';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  useScrollToTop();
 
   const {
     product,
