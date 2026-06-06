@@ -38,6 +38,12 @@ export const ApiRoutes = {
 
   IMAGES_UPLOAD: '/images/upload',
   IMAGES_BY_ID: '/images/:id',
+
+  STORIES: '/stories',
+  ADMIN_STORY_SETS: '/admin/story-sets',
+  ADMIN_STORY_SET_BY_ID: '/admin/story-sets/:id',
+  ADMIN_STORIES: '/admin/story-sets/:id/stories',
+  ADMIN_STORY_BY_ID: '/admin/stories/:id',
 } as const;
 
 export const errorCodes: Record<number, string> = {

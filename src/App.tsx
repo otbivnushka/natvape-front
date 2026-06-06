@@ -8,6 +8,7 @@ import Wishlist from './pages/wishlist';
 import Profile from './pages/profile';
 import Admin from './pages/admin';
 import AdminProduct from './pages/admin-product';
+import AdminStory from './pages/admin-story';
 import AdminOrderPage from './pages/admin-order';
 import { BottomNav } from './components/shared';
 import { ToastContainer } from './components/ui';
@@ -40,6 +41,7 @@ function AppContent() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin/:tab?" element={<Admin />} />
         <Route path="/admin/products/:id" element={<AdminProduct />} />
+        <Route path="/admin/stories/:id" element={<AdminStory />} />
         <Route path="/admin/order/:id" element={<AdminOrderPage />} />
       </Routes>
       <BottomNav />

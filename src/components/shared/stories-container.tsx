@@ -1,15 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import clsx from 'clsx';
+import { Api } from '../../api';
+import type { StorySet } from '../../api/stories';
 import { StoriesItem } from './stories-item';
-import Stories from '../../lib/stories';
-import { storySets } from '../../data/stories';
+import { StoriesModal } from './modals';
 
 interface StoriesContainerProps {
   className?: string;
 }
 
 const StoriesContainer: React.FC<StoriesContainerProps> = ({ className }) => {
+  const [storySets, setStorySets] = useState<StorySet[]>([]);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    Api.stories
+      .getAll()
+      .then(setStorySets)
+      .catch(() => {});
+  }, []);
+
+  if (storySets.length === 0) return null;
 
   return (
     <div className={clsx('mb-6', className)}>
@@ -18,7 +29,7 @@ const StoriesContainer: React.FC<StoriesContainerProps> = ({ className }) => {
       <div className="flex gap-2 overflow-x-auto scrollbar-horizontal">
         {storySets.map((set, i) => (
           <StoriesItem
-            key={i}
+            key={set.id}
             title={set.title}
             image={set.image}
             onClick={() => setOpenIndex(i)}
@@ -27,18 +38,10 @@ const StoriesContainer: React.FC<StoriesContainerProps> = ({ className }) => {
       </div>
 
       {openIndex !== null && (
-        <div className="fixed inset-0 z-150 bg-black/90 flex items-center justify-center">
-          <div className="relative w-full max-w-108 h-dvh max-h-192">
-
-            <Stories
-              stories={storySets[openIndex].stories}
-              defaultInterval={3000}
-              width="100%"
-              height="100%"
-              onAllStoriesEnd={() => setOpenIndex(null)}
-            />
-          </div>
-        </div>
+        <StoriesModal
+          stories={storySets[openIndex].stories}
+          onClose={() => setOpenIndex(null)}
+        />
       )}
     </div>
   );

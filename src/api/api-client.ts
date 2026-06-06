@@ -9,6 +9,7 @@ import * as addresses from './addresses';
 import * as admin from './admin';
 import * as images from './images';
 import * as rates from './rates';
+import * as stories from './stories';
 import { productCache } from './product-cache';
 
 export const Api = {
@@ -23,5 +24,6 @@ export const Api = {
   admin,
   images,
   rates,
+  stories,
   productCache,
 };

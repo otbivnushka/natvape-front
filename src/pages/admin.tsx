@@ -4,9 +4,10 @@ import { Api } from '../api';
 import type { Product } from '../types';
 import type { AdminOrder } from '../api/dto/admin.dto';
 import type { AdminTab } from '../components/shared/admin-tab-picker';
+import type { StorySet } from '../api/stories';
 import { useAdminGuard } from '../hooks/useAdminGuard';
 import { useConfirmDialog } from '../hooks/useConfirmDialog';
-import { AdminTabPicker, AdminProductsTable, AdminOrdersTable } from '../components/shared';
+import { AdminTabPicker, AdminProductsTable, AdminOrdersTable, AdminStoriesTable } from '../components/shared';
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -23,7 +24,9 @@ const Admin = () => {
   const [productsLoading, setProductsLoading] = useState(false);
   const [orders, setOrders] = useState<AdminOrder[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
-  const { confirm, ConfirmDialog } = useConfirmDialog<{ type: 'product' | 'order'; id: number }>();
+  const [stories, setStories] = useState<StorySet[]>([]);
+  const [storiesLoading, setStoriesLoading] = useState(false);
+  const { confirm, ConfirmDialog } = useConfirmDialog<{ type: 'product' | 'order' | 'story'; id: number }>();
 
   useEffect(() => {
     if (tab === 'products') {
@@ -34,30 +37,42 @@ const Admin = () => {
         .then((res) => setProducts(res.items.map(Api.products.mapProduct)))
         .catch(() => {})
         .finally(() => setProductsLoading(false));
-    } else {
+    } else if (tab === 'orders') {
       setOrdersLoading(true);
       Api.admin
         .getSentOrders()
         .then(setOrders)
         .catch(() => {})
         .finally(() => setOrdersLoading(false));
+    } else {
+      setStoriesLoading(true);
+      Api.stories
+        .getAll()
+        .then(setStories)
+        .catch(() => {})
+        .finally(() => setStoriesLoading(false));
     }
   }, [tab]);
 
-  const handleDelete = async (type: 'product' | 'order', id: number) => {
+  const handleDelete = async (type: 'product' | 'order' | 'story', id: number) => {
     const msg =
       type === 'product'
         ? 'Вы уверены, что хотите удалить этот товар?'
-        : 'Вы уверены, что хотите удалить этот заказ?';
+        : type === 'order'
+          ? 'Вы уверены, что хотите удалить этот заказ?'
+          : 'Вы уверены, что хотите удалить эту историю?';
     const ok = await confirm({ type, id }, msg);
     if (!ok) return;
     try {
       if (type === 'product') {
         await Api.admin.deleteProduct(id);
         setProducts((prev) => prev.filter((p) => p.id !== id));
-      } else {
+      } else if (type === 'order') {
         await Api.admin.deleteOrder(id);
         setOrders((prev) => prev.filter((o) => o.id !== id));
+      } else {
+        await Api.admin.deleteStorySet(id);
+        setStories((prev) => prev.filter((s) => s.id !== id));
       }
     } catch {
       /* silent */
@@ -99,7 +114,15 @@ const Admin = () => {
             onDelete={(id: number) => handleDelete('order', id)}
           />
         )}
-        {tab === 'stories' && <div>Stories</div>}
+        {tab === 'stories' && (
+          <AdminStoriesTable
+            storySets={stories}
+            loading={storiesLoading}
+            onCreate={() => navigate('/admin/stories/new')}
+            onEdit={(id: number) => navigate(`/admin/stories/${id}`)}
+            onDelete={(id: number) => handleDelete('story', id)}
+          />
+        )}
       </div>
 
       <ConfirmDialog />

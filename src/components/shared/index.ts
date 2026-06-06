@@ -19,6 +19,7 @@ export { AdminProductsTable } from './admin-products-table';
 export { AdminOrdersTable } from './admin-orders-table';
 
 export { OrderedItemCard } from './ordered-item-card';
+export { AdminStoriesTable } from './admin-stories-table';
 export { AdminTabPickerButton } from './admin-tab-picker-button';
 export { AdminTabPicker } from './admin-tab-picker';
 
