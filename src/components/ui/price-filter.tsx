@@ -28,10 +28,8 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
       <style>{`
         .rf-track::-webkit-slider-runnable-track { -webkit-appearance: none; background: transparent; pointer-events: none; height: 8px; }
         .rf-track::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--color-primary, #000); border: 3px solid var(--color-surface, #fff); cursor: pointer; pointer-events: auto; transition: transform 0.15s; margin-top: -5px; }
-        .rf-track::-webkit-slider-thumb:hover { transform: scale(1.12); }
         .rf-track::-moz-range-track { background: transparent; pointer-events: none; height: 8px; }
         .rf-track::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--color-primary, #000); border: 3px solid var(--color-surface, #fff); cursor: pointer; pointer-events: auto; margin-top: -5px; }
-        .rf-track::-moz-range-thumb:hover { transform: scale(1.12); }
       `}</style>
 
       <div className="flex items-center gap-2">

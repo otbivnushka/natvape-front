@@ -38,7 +38,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index = 0 }) => {
       <div className="relative w-full aspect-square bg-page overflow-hidden">
         {product.badge && <Badge type={product.badge} />}
         <img
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-500 cursor-pointer"
           src={product.image}
           alt={product.name}
           loading="lazy"
@@ -46,7 +46,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index = 0 }) => {
         />
         <button
           className={clsx(
-            'absolute top-2 right-2 bg-surface/80 backdrop-blur-sm border-none rounded-full w-8 h-8 flex items-center justify-center cursor-pointer z-2 transition-all duration-200 hover:scale-115 active:scale-90',
+            'absolute top-2 right-2 bg-surface/80 backdrop-blur-sm border-none rounded-full w-8 h-8 flex items-center justify-center cursor-pointer z-2 transition-all duration-200',
             wishlisted ? 'text-primary' : 'text-muted hover:text-primary',
           )}
           onClick={handleWish}

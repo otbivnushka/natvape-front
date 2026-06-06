@@ -11,8 +11,7 @@ export interface ApiStory {
   url: string;
   image_id: number;
   duration: number;
-  title: string | null;
-  subtitle: string | null;
+  header?: { heading?: string; subheading?: string; profileImage?: string };
   story_set_id: number;
 }
 

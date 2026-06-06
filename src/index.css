@@ -139,6 +139,10 @@ body::before {
   opacity: 0.06;
 }
 
+html {
+  scrollbar-width: none;
+}
+
 .scrollbar-horizontal {
   scrollbar-width: thin;
   scrollbar-color: var(--color-surface) transparent;

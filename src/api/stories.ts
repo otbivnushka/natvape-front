@@ -20,8 +20,8 @@ function mapStorySet(api: ApiStorySet): StorySet {
     stories: api.stories.map((s) => ({
       url: s.url,
       duration: s.duration,
-      ...(s.title || s.subtitle
-        ? { header: { heading: s.title ?? '', subheading: s.subtitle ?? '', profileImage: '' } }
+      ...(s.header?.heading || s.header?.subheading
+        ? { header: { heading: s.header.heading ?? '', subheading: s.header.subheading ?? '', profileImage: s.header.profileImage ?? '' } }
         : {}),
     })),
   };

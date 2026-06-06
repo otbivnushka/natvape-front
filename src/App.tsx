@@ -7,24 +7,14 @@ import Checkout from './pages/checkout';
 import Wishlist from './pages/wishlist';
 import Profile from './pages/profile';
 import Admin from './pages/admin';
-import AdminProduct from './pages/admin-product';
 import AdminStory from './pages/admin-story';
+import AdminProduct from './pages/admin-product';
 import AdminOrderPage from './pages/admin-order';
 import { BottomNav } from './components/shared';
 import { ToastContainer } from './components/ui';
-import { useEffect } from 'react';
-import { useThemeStore } from './store/useThemeStore';
-import { initAuthInterceptor } from './api/instance';
-import { useAuthStore } from './store/useAuthStore';
-import { retrieveRawInitData } from '@telegram-apps/sdk';
 import { useTelegramBackButton } from './hooks/useTelegramBackButton';
+import { useInit } from './hooks/useInit';
 
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Telegram: any;
-  }
-}
 
 function AppContent() {
   useTelegramBackButton();
@@ -40,8 +30,8 @@ function AppContent() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin/:tab?" element={<Admin />} />
+        <Route path="/admin/stories/new" element={<AdminStory />} />
         <Route path="/admin/products/:id" element={<AdminProduct />} />
-        <Route path="/admin/stories/:id" element={<AdminStory />} />
         <Route path="/admin/order/:id" element={<AdminOrderPage />} />
       </Routes>
       <BottomNav />
@@ -51,36 +41,7 @@ function AppContent() {
 }
 
 function App() {
-  useEffect(() => {
-    if (useAuthStore.getState().token === null) {
-      try {
-        const initData = retrieveRawInitData();
-        if (initData) {
-          useAuthStore
-            .getState()
-            .telegramAuth(initData)
-            .catch(() => {});
-        }
-      } catch {
-        // not in Telegram
-      }
-    }
-    initAuthInterceptor(() => useAuthStore.getState().token);
-  }, []);
-
-  useEffect(() => {
-    try {
-      const tg = window.Telegram?.WebApp;
-      if (tg) {
-        tg.enableClosingConfirmation();
-        if (tg.colorScheme) {
-          useThemeStore.getState().setTheme(tg.colorScheme);
-        }
-      }
-    } catch {
-      // not in Telegram WebApp
-    }
-  }, []);
+  useInit();
 
   return (
     <BrowserRouter>

@@ -11,7 +11,6 @@ import {
   SnusIcon,
 } from '../ui/icons';
 import { CatalogCard } from './catalog-card';
-import { CatalogSkeleton } from './catalog-skeleton';
 
 const SIZE_ICON = 120;
 
@@ -30,16 +29,12 @@ interface CatalogContainerProps {
   className?: string;
 }
 
-const CatalogContainer: React.FC<CatalogContainerProps> = ({ loading, cats, className }) => {
+const CatalogContainer: React.FC<CatalogContainerProps> = ({ cats, className }) => {
   const navigate = useNavigate();
 
   return (
     <div className={clsx(className)}>
-      {loading ? (
-        <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4">
-          <CatalogSkeleton count={6} />
-        </div>
-      ) : (
+      {cats && (
         <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4">
           {(cats ?? []).map((cat, i) => (
             <CatalogCard

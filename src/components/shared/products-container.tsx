@@ -22,7 +22,7 @@ const ProductsContainer: React.FC<ProductsContainerProps> = ({ products, loading
           {products.length === 1 ? 'товар' : products.length < 5 ? 'товара' : 'товаров'}
         </div>
       ) : (
-        <Skeleton className="h-[18px] w-30 mb-3" />
+        <Skeleton className="h-4.5 w-30 mb-3" />
       )}
 
       {loading ? (

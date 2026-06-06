@@ -18,7 +18,7 @@ const NavLinkItem: React.FC<NavLinkItemProps> = ({ to, end, children }) => (
     to={to}
     end={end}
     className={({ isActive }) =>
-      clsx(linkBase, isActive ? 'text-body font-semibold scale-105' : 'text-dim hover:text-body')
+      clsx(linkBase, isActive ? 'text-body font-semibold' : 'text-dim hover:text-body')
     }
   >
     {children}

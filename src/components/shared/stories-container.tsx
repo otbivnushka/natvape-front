@@ -1,24 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
-import { Api } from '../../api';
-import type { StorySet } from '../../api/stories';
 import { StoriesItem } from './stories-item';
 import { StoriesModal } from './modals';
+import { useStoriesStore } from '../../store/useStoriesStore';
 
 interface StoriesContainerProps {
   className?: string;
 }
 
 const StoriesContainer: React.FC<StoriesContainerProps> = ({ className }) => {
-  const [storySets, setStorySets] = useState<StorySet[]>([]);
+  const {storySets} = useStoriesStore();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    Api.stories
-      .getAll()
-      .then(setStorySets)
-      .catch(() => {});
-  }, []);
 
   if (storySets.length === 0) return null;
 

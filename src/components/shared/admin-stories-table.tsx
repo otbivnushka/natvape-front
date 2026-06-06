@@ -1,13 +1,12 @@
 import React from 'react';
 import type { StorySet } from '../../api/stories';
-import { Plus, Trash2, Pencil, BookOpen } from 'lucide-react';
+import { Plus, Trash2, BookOpen } from 'lucide-react';
 import { Spinner } from '../ui';
 
 interface AdminStoriesTableProps {
   storySets: StorySet[];
   loading: boolean;
   onCreate: () => void;
-  onEdit: (id: number) => void;
   onDelete: (id: number) => void;
 }
 
@@ -15,7 +14,6 @@ const AdminStoriesTable: React.FC<AdminStoriesTableProps> = ({
   storySets,
   loading,
   onCreate,
-  onEdit,
   onDelete,
 }) => {
   return (
@@ -42,7 +40,6 @@ const AdminStoriesTable: React.FC<AdminStoriesTableProps> = ({
               <thead>
                 <tr className="border-b border-line text-left text-muted text-[13px]">
                   <th className="p-3 font-semibold">#</th>
-                  <th className="p-3 font-semibold">Превью</th>
                   <th className="p-3 font-semibold">Заголовок</th>
                   <th className="p-3 font-semibold">Слайдов</th>
                   <th className="p-3 font-semibold text-right">Действия</th>
@@ -52,24 +49,10 @@ const AdminStoriesTable: React.FC<AdminStoriesTableProps> = ({
                 {storySets.map((set) => (
                   <tr key={set.id} className="border-b border-line last:border-none text-body">
                     <td className="p-3 text-muted">{set.id}</td>
-                    <td className="p-3">
-                      <img
-                        src={set.image}
-                        alt={set.title}
-                        className="w-16 aspect-video rounded-lg object-cover"
-                      />
-                    </td>
                     <td className="p-3 font-medium">{set.title}</td>
                     <td className="p-3 text-muted">{set.stories.length}</td>
                     <td className="p-3 text-right">
                       <div className="flex gap-2 justify-end">
-                        <button
-                          onClick={() => onEdit(set.id)}
-                          className="p-1.5 border border-line rounded-lg text-muted cursor-pointer hover:text-body hover:border-muted transition-colors"
-                          title="Редактировать"
-                        >
-                          <Pencil size={14} />
-                        </button>
                         <button
                           onClick={() => onDelete(set.id)}
                           className="p-1.5 border border-line rounded-lg text-muted cursor-pointer hover:text-red-500 hover:border-red-300 transition-colors"

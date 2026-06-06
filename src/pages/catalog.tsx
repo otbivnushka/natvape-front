@@ -5,13 +5,13 @@ import { CatalogContainer } from '../components/shared/catalog-container';
 import { PageTitle } from '../components/shared/page-title';
 
 const Catalog = () => {
-  const { data: cats, loading } = useApiData(() => Api.categories.getAll(), []);
+  const { data: cats } = useApiData(() => Api.categories.getAll(), []);
 
   return (
     <PageLayout>
       <PageTitle>Каталог</PageTitle>
 
-      <CatalogContainer loading={loading} cats={cats} />
+      <CatalogContainer cats={cats} />
     </PageLayout>
   );
 };

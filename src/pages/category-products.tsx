@@ -113,7 +113,7 @@ const CategoryProducts = () => {
       {catInfo ? (
         <PageTitle>{catInfo.label}</PageTitle>
       ) : (
-        <Skeleton className="h-8 mb-5 w-48 rounded-lg bg-primary" />
+        <Skeleton className="h-8 mb-5 w-48 rounded-lg bg-muted" />
       )}
 
       <div className="flex gap-1.5 items-center mb-4 flex-wrap">

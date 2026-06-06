@@ -4,7 +4,7 @@ import { ShoppingCart, Loader2 } from 'lucide-react';
 import { Api } from '../api';
 import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
-import { PrimaryButton, AddressInput } from '../components/ui';
+import { PrimaryButton, AddressInput, Textarea } from '../components/ui';
 import {
   PageLayout,
   AddressBlock,
@@ -17,6 +17,7 @@ import { useToastStore } from '../store/useToastStore';
 import { useToastError } from '../hooks/useToastError';
 import { geocodeAddress } from '../utils/geocode';
 import { PageTitle } from '../components/shared/page-title';
+import { TimeSelector } from '../components/shared/time-selector';
 
 const pickupPoints = [
   'McDonalds',
@@ -239,33 +240,13 @@ const Checkout = () => {
         </div>
       )}
 
-      <div className="mb-5">
-        <h2 className="text-sm font-semibold text-muted mb-2.5">Время</h2>
-        <div className="flex gap-2 flex-wrap">
-          {(['soon', 'whenever'] as const).map((opt) => (
-            <button
-              key={opt}
-              onClick={() => setTimeOption(opt)}
-              className={
-                timeOption === opt
-                  ? 'py-1.5 px-3.5 rounded-lg border border-primary bg-primary text-on-primary text-[13px] font-medium cursor-pointer'
-                  : 'py-1.5 px-3.5 rounded-lg border border-line bg-surface text-body text-[13px] font-medium cursor-pointer hover:border-muted'
-              }
-            >
-              {opt === 'soon' ? 'Как можно скорее' : 'Не важно когда'}
-            </button>
-          ))}
-        </div>
-      </div>
+      <TimeSelector time={timeOption} setTime={setTimeOption} />
 
       <div className="mb-5">
         <h2 className="text-sm font-semibold text-muted mb-2.5">Комментарий к заказу</h2>
-        <textarea
+        <Textarea
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          placeholder="Необязательно"
-          rows={3}
-          className="w-full resize-none bg-surface border-2 border-line rounded-xl p-3 text-sm text-body outline-none transition-all duration-200 focus:border-primary placeholder:text-dim"
         />
       </div>
 

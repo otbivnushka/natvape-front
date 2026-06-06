@@ -21,6 +21,7 @@ const OrdersContainer: React.FC<OrdersContainerProps> = ({ className, orders, or
       ) : orders.length === 0 ? (
         <EmptyState icon={<Package size={48} />} title="Нет заказов" />
       ) : (
+        
         orders.map((order) => <OrderCard key={order.id} order={order} />)
       )}
     </div>

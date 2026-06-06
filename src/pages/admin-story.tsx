@@ -1,29 +1,19 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Api } from '../api';
 import { ArrowLeft, Plus, Trash2, Loader2 } from 'lucide-react';
 import { Input, ImageUpload } from '../components/ui';
 import { useAdminGuard } from '../hooks/useAdminGuard';
 
-interface AdminSlideForm {
-  storyId?: number;
+interface SlideForm {
   imageId: number | null;
-  previewUrl: string;
   duration: number;
   heading: string;
   subtitle: string;
 }
 
-interface AdminStoryForm {
-  title: string;
-  imageId: number | null;
-  previewUrl: string;
-  slides: AdminSlideForm[];
-}
-
-const emptySlide = (): AdminSlideForm => ({
+const emptySlide = (): SlideForm => ({
   imageId: null,
-  previewUrl: '',
   duration: 3000,
   heading: '',
   subtitle: '',
@@ -31,106 +21,27 @@ const emptySlide = (): AdminSlideForm => ({
 
 const AdminStory = () => {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
   useAdminGuard();
-  const isNew = id === 'new';
-  const storySetId = isNew ? null : Number(id);
 
-  const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
-
-  const [form, setForm] = useState<AdminStoryForm>({
-    title: '',
-    imageId: null,
-    previewUrl: '',
-    slides: [emptySlide()],
-  });
-
-  useEffect(() => {
-    if (storySetId == null) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(true);
-    Api.stories
-      .getRawAll()
-      .then((all) => {
-        const set = all.find((s) => s.id === storySetId);
-        if (!set) return;
-        setForm({
-          title: set.title,
-          imageId: set.image_id,
-          previewUrl: set.image,
-          slides: set.stories.map((s) => ({
-            storyId: s.id,
-            imageId: s.image_id,
-            previewUrl: s.url,
-            duration: s.duration,
-            heading: s.title ?? '',
-            subtitle: s.subtitle ?? '',
-          })),
-        });
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [storySetId]);
+  const [title, setTitle] = useState('');
+  const [imageId, setImageId] = useState<number | null>(null);
+  const [slides, setSlides] = useState<SlideForm[]>([emptySlide()]);
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      if (isNew) {
-        const created = await Api.admin.createStorySet({
-          title: form.title,
-          imageId: form.imageId!,
-          stories: form.slides.map((s) => ({
-            imageId: s.imageId!,
-            duration: s.duration,
-            ...(s.heading || s.subtitle
-              ? { title: s.heading || undefined, subtitle: s.subtitle || undefined }
-              : {}),
-          })),
-        });
-        window.history.replaceState(null, '', `/admin/stories/${created.id}`);
-      } else {
-        await Api.admin.updateStorySet(storySetId!, {
-          title: form.title,
-          ...(form.imageId != null ? { imageId: form.imageId } : {}),
-        });
-
-        const existingIds = new Set(
-          form.slides.filter((s) => s.storyId != null).map((s) => s.storyId!),
-        );
-
-        const prevSet = await Api.stories.getRawAll().then((all) => all.find((s) => s.id === storySetId));
-        for (const story of prevSet?.stories ?? []) {
-          if (!existingIds.has(story.id)) {
-            await Api.admin.deleteStory(story.id);
-          }
-        }
-
-        for (const slide of form.slides) {
-          const dto = {
-            imageId: slide.imageId!,
-            duration: slide.duration,
-            ...(slide.heading || slide.subtitle
-              ? { title: slide.heading || undefined, subtitle: slide.subtitle || undefined }
-              : {}),
-          };
-
-          if (slide.storyId != null) {
-            const prev = prevSet?.stories.find((s) => s.id === slide.storyId);
-            if (
-              prev &&
-              (prev.image_id !== slide.imageId ||
-                prev.duration !== slide.duration ||
-                (prev.title ?? '') !== slide.heading ||
-                (prev.subtitle ?? '') !== slide.subtitle)
-            ) {
-              await Api.admin.updateStory(slide.storyId, dto);
-            }
-          } else {
-            await Api.admin.createStory(storySetId!, dto);
-          }
-        }
-      }
+      await Api.admin.createStorySet({
+        title,
+        imageId: imageId!,
+        stories: slides.map((s) => ({
+          imageId: s.imageId!,
+          duration: s.duration,
+          ...(s.heading || s.subtitle
+            ? { title: s.heading || undefined, subtitle: s.subtitle || undefined }
+            : {}),
+        })),
+      });
       navigate('/admin/stories');
     } catch {
       /* silent */
@@ -139,39 +50,16 @@ const AdminStory = () => {
     }
   };
 
-  const addSlide = () => {
-    setForm((prev) => ({ ...prev, slides: [...prev.slides, emptySlide()] }));
-  };
-
-  const removeSlide = (i: number) => {
-    setForm((prev) => ({
-      ...prev,
-      slides: prev.slides.filter((_, idx) => idx !== i),
-    }));
-  };
-
-  const updateSlide = (i: number, patch: Partial<AdminSlideForm>) => {
-    setForm((prev) => ({
-      ...prev,
-      slides: prev.slides.map((s, idx) => (idx === i ? { ...s, ...patch } : s)),
-    }));
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-page flex items-center justify-center">
-        <Loader2 size={24} className="animate-spin text-muted" />
-      </div>
-    );
-  }
+  const addSlide = () => setSlides((prev) => [...prev, emptySlide()]);
+  const removeSlide = (i: number) => setSlides((prev) => prev.filter((_, idx) => idx !== i));
+  const updateSlide = (i: number, patch: Partial<SlideForm>) =>
+    setSlides((prev) => prev.map((s, idx) => (idx === i ? { ...s, ...patch } : s)));
 
   return (
     <div className="min-h-screen bg-page">
       <div className="max-w-2xl mx-auto px-4 pb-16 py-6">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-primary">
-            {isNew ? 'Создать историю' : `Редактировать историю #${storySetId}`}
-          </h1>
+          <h1 className="text-2xl font-bold text-primary">Создать историю</h1>
           <button
             onClick={() => navigate('/admin/stories')}
             className="flex items-center gap-1.5 py-1.5 px-3 border border-line rounded-lg bg-surface text-sm text-muted cursor-pointer hover:bg-page transition-colors"
@@ -186,22 +74,20 @@ const AdminStory = () => {
           <div className="flex flex-col gap-3">
             <Input
               placeholder="Заголовок"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
             <ImageUpload
-              value={form.imageId}
-              previewUrl={form.previewUrl}
-              onChange={(imageId) => setForm({ ...form, imageId })}
+              value={imageId}
+              previewUrl=""
+              onChange={setImageId}
             />
           </div>
         </div>
 
         <div className="bg-surface rounded-xl p-5 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-muted">
-              Слайды ({form.slides.length})
-            </h2>
+            <h2 className="text-sm font-semibold text-muted">Слайды ({slides.length})</h2>
             <button
               onClick={addSlide}
               className="flex items-center gap-1 py-1.5 px-3 border-none rounded-lg bg-primary text-on-primary text-xs font-semibold cursor-pointer hover:opacity-85 transition-all"
@@ -212,14 +98,14 @@ const AdminStory = () => {
           </div>
 
           <div className="flex flex-col gap-4">
-            {form.slides.map((slide, i) => (
+            {slides.map((slide, i) => (
               <div key={i} className="bg-page rounded-xl p-4">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-semibold text-muted">Слайд #{i + 1}</span>
                   <button
                     onClick={() => removeSlide(i)}
                     className="p-1 rounded text-muted cursor-pointer hover:text-red-500 transition-colors"
-                    disabled={form.slides.length <= 1}
+                    disabled={slides.length <= 1}
                   >
                     <Trash2 size={12} />
                   </button>
@@ -228,8 +114,8 @@ const AdminStory = () => {
                 <div className="flex flex-col gap-3">
                   <ImageUpload
                     value={slide.imageId}
-                    previewUrl={slide.previewUrl}
-                    onChange={(imageId) => updateSlide(i, { imageId, previewUrl: '' })}
+                    previewUrl=""
+                    onChange={(imageId) => updateSlide(i, { imageId })}
                   />
 
                   <Input
@@ -262,11 +148,11 @@ const AdminStory = () => {
 
         <button
           onClick={handleSave}
-          disabled={saving || !form.title || form.imageId == null || form.slides.some((s) => s.imageId == null)}
+          disabled={saving || !title || imageId == null || slides.some((s) => s.imageId == null)}
           className="w-full py-3 border-none rounded-xl bg-primary text-on-primary text-sm font-semibold cursor-pointer hover:opacity-85 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {saving ? <Loader2 size={16} className="animate-spin" /> : null}
-          {saving ? 'Сохранение...' : isNew ? 'Создать историю' : 'Сохранить изменения'}
+          {saving ? 'Сохранение...' : 'Создать историю'}
         </button>
       </div>
     </div>

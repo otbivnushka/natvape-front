@@ -119,7 +119,6 @@ const Admin = () => {
             storySets={stories}
             loading={storiesLoading}
             onCreate={() => navigate('/admin/stories/new')}
-            onEdit={(id: number) => navigate(`/admin/stories/${id}`)}
             onDelete={(id: number) => handleDelete('story', id)}
           />
         )}

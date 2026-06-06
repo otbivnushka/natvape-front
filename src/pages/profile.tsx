@@ -71,14 +71,14 @@ const Profile = () => {
       {isAdmin() && (
         <FixedButton
           onClick={() => navigate('/admin')}
-          className="bottom-19 right-18 w-11 h-11 hover:scale-105"
+          className="bottom-19 right-18 w-11 h-11"
         >
           <Shield size={20} />
         </FixedButton>
       )}
       <FixedButton
         onClick={() => setInfoOpen(true)}
-        className="bottom-19 right-4 w-11 h-11 hover:scale-105"
+        className="bottom-19 right-4 w-11 h-11"
       >
         <Info size={20} />
       </FixedButton>
