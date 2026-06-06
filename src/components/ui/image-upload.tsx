@@ -80,7 +80,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ value, previewUrl, onChange }
         ) : (
           <Upload size={14} />
         )}
-        {status === 'uploading' ? 'Загрузка...' : 'Выбрать изображение'}
+        {status === 'uploading' ? 'Загрузка...' : 'Загрузить'}
       </button>
 
       {hasImage && (

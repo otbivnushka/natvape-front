@@ -1,6 +1,5 @@
 import React from 'react';
 import type { CartItem } from '@/types';
-import { formatPrice } from '@/utils/formatPrice';
 
 interface OrderSummaryItemProps {
   item: CartItem;
@@ -15,7 +14,7 @@ const OrderSummaryItem: React.FC<OrderSummaryItemProps> = ({ item }) => {
         <span className="text-dim"> × {item.quantity}</span>
       </span>
       <span className="text-body font-medium whitespace-nowrap">
-        {formatPrice(item.product.price * item.quantity)}
+        {item.quantity} шт.
       </span>
     </div>
   );

@@ -1,3 +1,5 @@
+import type { CreateProductDto } from '@/api/dto/admin.dto';
+
 export type Category = 'liquids' | 'coils' | 'cartridges' | 'snus' | 'pods' | 'disposables';
 
 export interface CategoryInfo {
@@ -87,3 +89,23 @@ export interface UserProfile {
 }
 
 export type SortOption = 'price-asc' | 'price-desc' | 'rating' | 'name';
+
+export interface VariantForm {
+  id?: number;
+  name: string;
+  value: string;
+  stock: number;
+}
+
+export interface ColorForm {
+  id?: number;
+  name: string;
+  hex: string;
+  stock: number;
+}
+
+export interface ProductForm extends Omit<CreateProductDto, 'variants' | 'colors' | 'imageId'> {
+  imageId: number | null;
+  variants: VariantForm[];
+  colors: ColorForm[];
+}

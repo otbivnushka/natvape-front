@@ -8,3 +8,8 @@ export { OrdersContainer } from './orders-container';
 export { ProductsContainer } from './products-container';
 export { StoriesContainer } from './stories-container';
 export { UserInfo } from './user-info';
+export { AddressSelector } from './address-selector';
+export { PickupSelector } from './pickup-selector';
+export { AdminProductAddInfo } from './admin-product-add-info';
+export { AdminProductAddVariants } from './admin-product-add-variants';
+export { AdminProductAddColors } from './admin-product-add-colors';
