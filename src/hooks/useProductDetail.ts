@@ -48,10 +48,13 @@ export function useProductDetail(id: string) {
 
   const handleShare = useCallback(async () => {
     try {
-      await navigator.share({
-        title: product?.name ?? 'Товар',
-        url: window.location.href,
-      });
+      const shareUrl = encodeURIComponent(`${window.location.href}`);
+
+      const text = encodeURIComponent(`${product?.name || 'NV'}`);
+
+      window.Telegram.WebApp.openTelegramLink(
+        `https://t.me/share/url?url=${shareUrl}&text=${text}`,
+      );
     } catch {
       // user cancelled or API not supported
     }
