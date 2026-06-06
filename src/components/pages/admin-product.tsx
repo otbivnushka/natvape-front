@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Api } from '../../api';
-import type { CreateProductDto } from '../../api/dto/admin.dto';
+import { Api } from '@/api';
+import type { CreateProductDto } from '@/api/dto/admin.dto';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
-import { ImageUpload, Input, QuantityStepper, Spinner } from '@/components/ui';
-import { useAdminGuard } from '../../hooks/useAdminGuard';
-import { useCategories } from '../../hooks/useCategories';
-import { transliterate } from '../../utils/transliterate';
+import { ImageUpload, Input, QuantityStepper, Spinner, Textarea } from '@/components/ui';
+import { useAdminGuard } from '@/hooks/useAdminGuard';
+import { useCategories } from '@/hooks/useCategories';
+import { transliterate } from '@/utils/transliterate';
 
 interface VariantForm {
   id?: number;
@@ -268,12 +268,10 @@ const AdminProduct = () => {
               previewUrl={previewUrl}
               onChange={(id) => setForm({ ...form, imageId: id })}
             />
-            <textarea
+            <Textarea
               placeholder="Описание"
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              rows={3}
-              className="w-full bg-page border border-line rounded-lg px-3.5 py-2.5 text-sm text-body outline-none transition-colors duration-150 focus:border-primary placeholder:text-dim resize-none"
             />
             <Input
               placeholder="Название варианта (напр. Вкус)"

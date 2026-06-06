@@ -35,23 +35,7 @@ const VariantPicker: React.FC<VariantPickerProps> = ({
         {visible.map((v) => {
           const isOut = disabledValues.includes(v.value);
           return (
-            <button
-              key={v.value}
-              onClick={() => {
-                if (!isOut) onSelect(v.value);
-              }}
-              disabled={isOut}
-              className={clsx(
-                'py-1.5 px-3.5 rounded-lg border text-[13px] font-medium transition-all duration-150',
-                isOut
-                  ? 'border-line text-dim opacity-40 cursor-not-allowed line-through'
-                  : selectedValue === v.value
-                    ? 'bg-primary text-on-primary border-primary cursor-pointer'
-                    : 'bg-surface text-body border-line cursor-pointer hover:border-primary hover:text-primary',
-              )}
-            >
-              {v.name}
-            </button>
+            <VariantButton key={v.value} v={v} isOut={isOut} selectedValue={selectedValue} onSelect={onSelect} />
           );
         })}
       </div>
@@ -64,6 +48,35 @@ const VariantPicker: React.FC<VariantPickerProps> = ({
         </button>
       )}
     </div>
+  );
+};
+
+interface VariantButtonProps {
+  v: ProductVariant;
+  isOut: boolean;
+  selectedValue: string;
+  onSelect: (value: string) => void;
+}
+
+const VariantButton: React.FC<VariantButtonProps> = ({ v, isOut, selectedValue, onSelect }) => {
+  return (
+    <button
+      key={v.value}
+      onClick={() => {
+        if (!isOut) onSelect(v.value);
+      }}
+      disabled={isOut}
+      className={clsx(
+        'py-1.5 px-3.5 rounded-lg border text-[13px] font-medium transition-all duration-150',
+        isOut
+          ? 'border-line text-dim opacity-40 cursor-not-allowed line-through'
+          : selectedValue === v.value
+            ? 'bg-primary text-on-primary border-primary cursor-pointer'
+            : 'bg-surface text-body border-line cursor-pointer hover:border-primary hover:text-primary',
+      )}
+    >
+      {v.name}
+    </button>
   );
 };
 

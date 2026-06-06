@@ -1,4 +1,4 @@
-import type { Address } from '../../types';
+import type { Address } from '@/types';
 
 export interface ApiProfile {
   id: number;

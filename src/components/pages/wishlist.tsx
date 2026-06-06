@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Heart } from 'lucide-react';
-import { useWishlistStore } from '../../store/useWishlistStore';
-import { Api } from '../../api';
-import type { Product } from '../../types';
+import { useWishlistStore } from '@/store/useWishlistStore';
+import { Api } from '@/api';
+import type { Product } from '@/types';
 import {
   ProductCard,
   EmptyState,

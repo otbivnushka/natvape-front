@@ -1,10 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Api } from '../../api';
-import type { Product, ProductColor } from '../../types';
-import { useCartStore } from '../../store/useCartStore';
-import { useAuthStore } from '../../store/useAuthStore';
-import { ArrowLeft, HelpCircle, Loader2 } from 'lucide-react';
+import { useProductDetail } from '@/hooks/useProductDetail';
+import { ArrowLeft, HelpCircle, Loader2, Share2 } from 'lucide-react';
 import { StarRating, PriceDisplay } from '@/components/ui';
 import {
   PageLayout,
@@ -14,53 +10,26 @@ import {
   DetailsSkeleton,
   AddProductWidget,
 } from '@/components/shared';
-import { useScrollToTop } from '../../hooks/useScrollToTop';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const user = useAuthStore((s) => s.user);
 
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const [selectedColor, setSelectedColor] = useState<ProductColor | null>(null);
-  const [selectedVariant, setSelectedVariant] = useState<string>('');
-  const [userRating, setUserRating] = useState(0);
-  const [ratingSubmitting, setRatingSubmitting] = useState(false);
-  useScrollToTop();
-
-  useEffect(() => {
-    if (!id) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(true);
-    Api.products
-      .getById(Number(id), user?.id)
-      .then((api) => {
-        const p = Api.products.mapProduct(api);
-        Api.productCache.setOne(p);
-        setProduct(p);
-        if (api.userRate) setUserRating(api.userRate);
-      })
-      .catch(() => setProduct(null))
-      .finally(() => setLoading(false));
-  }, [id, user?.id]);
-
-  const handleRate = useCallback(
-    async (value: number) => {
-      if (!user || !product || ratingSubmitting) return;
-      setRatingSubmitting(true);
-      setUserRating(value);
-      try {
-        await Api.rates.upsert(user.id, product.id, value);
-      } catch {
-        setUserRating(product.userRate ?? 0);
-      } finally {
-        setRatingSubmitting(false);
-      }
-    },
-    [user, product, ratingSubmitting],
-  );
+  const {
+    product,
+    loading,
+    userRating,
+    ratingSubmitting,
+    selectedColor,
+    setSelectedColor,
+    selectedVariant,
+    setSelectedVariant,
+    disabledColorNames,
+    disabledVariantValues,
+    handleRate,
+    handleShare,
+    user,
+  } = useProductDetail(id ?? '');
 
   if (loading) {
     return (
@@ -91,32 +60,20 @@ const ProductDetail = () => {
   const hasVariants = product.variants && product.variants.length > 0;
   const hasColors = product.colors && product.colors.length > 0;
 
-  const cartItems = useCartStore.getState().items;
-  const disabledVariantValues = hasVariants
-    ? product
-        .variants!.filter((v) => {
-          const ci = cartItems.find((i) => i.product.id === product.id && i.variantKey === v.value);
-          return v.stock - (ci?.quantity ?? 0) <= 0;
-        })
-        .map((v) => v.value)
-    : [];
-  const disabledColorNames = hasColors
-    ? product
-        .colors!.filter((c) => {
-          const ci = cartItems.find((i) => i.product.id === product.id && i.variantKey === c.name);
-          return c.stock - (ci?.quantity ?? 0) <= 0;
-        })
-        .map((c) => c.name)
-    : [];
-
   return (
     <PageLayout>
       <FixedButton
         onClick={() => navigate(-1)}
-        className="top-4 left-4 z-10 gap-1.5 py-2 pl-3 pr-4 rounded-full bg-surface/80 backdrop-blur-md border border-line text-sm text-body hover:-translate-x-0.5"
+        className="top-3 left-4 z-10 gap-1.5 py-2 pl-3 pr-4 rounded-full bg-surface/80 backdrop-blur-md border border-line text-sm text-body hover:-translate-x-0.5"
       >
         <ArrowLeft size={16} />
         Назад
+      </FixedButton>
+      <FixedButton
+        onClick={handleShare}
+        className="top-3 left-30 z-10 p-2.5 rounded-full bg-surface/80 backdrop-blur-md border border-line text-sm text-body hover:scale-105"
+      >
+        <Share2 size={16} />
       </FixedButton>
 
       <div className="max-w-5xl pt-12 md:pt-0 mx-auto md:grid md:grid-cols-2 md:gap-10 md:items-start">
@@ -146,9 +103,7 @@ const ProductDetail = () => {
               variants={product.variants!}
               variantLabel={product.variantLabel!}
               selectedValue={selectedVariant}
-              onSelect={(obj) => {
-                setSelectedVariant(obj);
-              }}
+              onSelect={(obj) => setSelectedVariant(obj)}
               disabledValues={disabledVariantValues}
             />
           )}
@@ -157,9 +112,7 @@ const ProductDetail = () => {
             <ColorPicker
               colors={product.colors!}
               selectedColor={selectedColor}
-              onSelect={(obj) => {
-                setSelectedColor(obj);
-              }}
+              onSelect={(obj) => setSelectedColor(obj)}
               disabledKeys={disabledColorNames}
             />
           )}

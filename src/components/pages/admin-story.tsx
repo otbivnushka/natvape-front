@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Api } from '../../api';
+import { Api } from '@/api';
 import { ArrowLeft, Plus, Trash2, Loader2 } from 'lucide-react';
 import { Input, ImageUpload } from '@/components/ui';
-import { useAdminGuard } from '../../hooks/useAdminGuard';
+import { useAdminGuard } from '@/hooks/useAdminGuard';
 
 interface SlideForm {
   imageId: number | null;

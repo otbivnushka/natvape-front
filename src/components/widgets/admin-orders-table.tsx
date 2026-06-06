@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import type { AdminOrder } from '@/api/dto/admin.dto';
-import { Check, Trash2, ShoppingBag, Info, Pen } from 'lucide-react';
+import { Check, Trash2, ShoppingBag, Info } from 'lucide-react';
 import { Spinner } from '@/components/ui';
 
 interface AdminOrdersTableProps {
@@ -50,12 +50,6 @@ const AdminOrdersTable: React.FC<AdminOrdersTableProps> = ({
                     </td>
                     <td className="p-3 text-right">
                       <div className="flex gap-2 justify-end">
-                        <button
-                          onClick={() => alert('write')}
-                          className="flex items-center gap-1 py-1.5 px-2.5 border-none rounded-lg bg-dim text-on-accent text-[12px] font-semibold cursor-pointer hover:opacity-85 transition-all duration-200"
-                        >
-                          <Pen size={12} />
-                        </button>
                         <Link
                           to={`/admin/order/${o.id}`}
                           className="flex items-center gap-1 py-1.5 px-2.5 border-none rounded-lg bg-primary text-on-accent text-[12px] font-semibold cursor-pointer hover:opacity-85 transition-all duration-200"
