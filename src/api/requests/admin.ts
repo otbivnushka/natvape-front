@@ -1,8 +1,14 @@
-import { ApiRoutes } from './constants';
-import type { AdminOrder, CreateProductDto } from './dto/admin.dto';
-import type { ApiProduct } from './dto/product.dto';
-import type { CreateStorySetDto, UpdateStorySetDto, CreateStoryDto, UpdateStoryDto, ApiStorySet } from './dto/story.dto';
-import { axiosInstance } from './instance';
+import { ApiRoutes } from '../constants';
+import type { AdminOrder, CreateProductDto } from '../dto/admin.dto';
+import type { ApiProduct } from '../dto/product.dto';
+import type {
+  CreateStorySetDto,
+  UpdateStorySetDto,
+  CreateStoryDto,
+  UpdateStoryDto,
+  ApiStorySet,
+} from '../dto/story.dto';
+import { axiosInstance } from '../instance';
 
 export const createProduct = async (dto: CreateProductDto): Promise<ApiProduct> => {
   const { data } = await axiosInstance.post<ApiProduct>(ApiRoutes.ADMIN_PRODUCTS, dto);
@@ -103,10 +109,7 @@ export const createStorySet = async (dto: CreateStorySetDto): Promise<ApiStorySe
   return data;
 };
 
-export const updateStorySet = async (
-  id: number,
-  dto: UpdateStorySetDto,
-): Promise<ApiStorySet> => {
+export const updateStorySet = async (id: number, dto: UpdateStorySetDto): Promise<ApiStorySet> => {
   const { data } = await axiosInstance.put<ApiStorySet>(
     ApiRoutes.ADMIN_STORY_SET_BY_ID.replace(':id', String(id)),
     dto,
@@ -118,28 +121,14 @@ export const deleteStorySet = async (id: number): Promise<void> => {
   await axiosInstance.delete(ApiRoutes.ADMIN_STORY_SET_BY_ID.replace(':id', String(id)));
 };
 
-export const createStory = async (
-  storySetId: number,
-  dto: CreateStoryDto,
-): Promise<void> => {
-  await axiosInstance.post(
-    ApiRoutes.ADMIN_STORIES.replace(':id', String(storySetId)),
-    dto,
-  );
+export const createStory = async (storySetId: number, dto: CreateStoryDto): Promise<void> => {
+  await axiosInstance.post(ApiRoutes.ADMIN_STORIES.replace(':id', String(storySetId)), dto);
 };
 
-export const updateStory = async (
-  storyId: number,
-  dto: UpdateStoryDto,
-): Promise<void> => {
-  await axiosInstance.patch(
-    ApiRoutes.ADMIN_STORY_BY_ID.replace(':id', String(storyId)),
-    dto,
-  );
+export const updateStory = async (storyId: number, dto: UpdateStoryDto): Promise<void> => {
+  await axiosInstance.patch(ApiRoutes.ADMIN_STORY_BY_ID.replace(':id', String(storyId)), dto);
 };
 
 export const deleteStory = async (storyId: number): Promise<void> => {
-  await axiosInstance.delete(
-    ApiRoutes.ADMIN_STORY_BY_ID.replace(':id', String(storyId)),
-  );
+  await axiosInstance.delete(ApiRoutes.ADMIN_STORY_BY_ID.replace(':id', String(storyId)));
 };

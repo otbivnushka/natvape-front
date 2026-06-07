@@ -1,6 +1,6 @@
-import { ApiRoutes } from './constants';
-import type { ApiProfile } from './dto/profile.dto';
-import { axiosInstance } from './instance';
+import { ApiRoutes } from '../constants';
+import type { ApiProfile } from '../dto/profile.dto';
+import { axiosInstance } from '../instance';
 
 export const get = async (): Promise<ApiProfile> => {
   const { data } = await axiosInstance.get<ApiProfile>(ApiRoutes.PROFILE);

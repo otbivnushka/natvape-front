@@ -14,7 +14,7 @@ import {
 const Wishlist = () => {
   const productIds = useWishlistStore((s) => s.productIds);
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (productIds.length === 0) {
@@ -23,7 +23,6 @@ const Wishlist = () => {
       setLoading(false);
       return;
     }
-    setLoading(true);
     Api.products
       .getAll({ limit: 999 })
       .then((res) => {
@@ -31,8 +30,13 @@ const Wishlist = () => {
         Api.productCache.set(all);
         setProducts(all.filter((p) => productIds.includes(p.id)));
       })
-      .catch(() => setProducts([]))
-      .finally(() => setLoading(false));
+      .catch(() => setProducts([]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line
+    setProducts((prev) => prev.filter((p) => productIds.includes(p.id)));
   }, [productIds]);
 
   return (

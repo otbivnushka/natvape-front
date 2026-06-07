@@ -9,7 +9,6 @@ import {
   VariantPicker,
   DetailsSkeleton,
   AddProductWidget,
-  Seo,
 } from '@/components/shared';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 
@@ -65,7 +64,6 @@ const ProductDetail = () => {
 
   return (
     <>
-      <Seo title={product.name} description={product.description} image={product.image} />
       <PageLayout>
         <FixedButton
           onClick={() => navigate(-1)}

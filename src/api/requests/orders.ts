@@ -1,7 +1,7 @@
-import { ApiRoutes } from './constants';
-import type { ApiOrder, CreateOrderDto, ApiOrderItem } from './dto/order.dto';
-import type { Order, OrderItem } from '../types';
-import { axiosInstance } from './instance';
+import { ApiRoutes } from '../constants';
+import type { ApiOrder, CreateOrderDto, ApiOrderItem } from '../dto/order.dto';
+import type { Order, OrderItem } from '../../types';
+import { axiosInstance } from '../instance';
 
 function mapOrderItem(i: ApiOrderItem): OrderItem {
   return i;

@@ -16,7 +16,6 @@ import {
   Profile,
   Wishlist,
 } from '@/components/pages';
-import { HelmetProvider } from 'react-helmet-async';
 
 function AppContent() {
   useTelegramBackButton();
@@ -46,11 +45,9 @@ function App() {
   useInit();
 
   return (
-    <HelmetProvider>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
-    </HelmetProvider>
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 }
 

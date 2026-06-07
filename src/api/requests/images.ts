@@ -1,6 +1,6 @@
-import { ApiRoutes } from './constants';
-import type { ApiImage } from './dto/image.dto';
-import { axiosInstance } from './instance';
+import { ApiRoutes } from '../constants';
+import type { ApiImage } from '../dto/image.dto';
+import { axiosInstance } from '../instance';
 
 export const upload = async (file: File): Promise<ApiImage> => {
   const formData = new FormData();

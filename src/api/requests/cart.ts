@@ -1,6 +1,6 @@
-import { ApiRoutes } from './constants';
-import type { ApiCartResponse } from './dto/cart.dto';
-import { axiosInstance } from './instance';
+import { ApiRoutes } from '../constants';
+import type { ApiCartResponse } from '../dto/cart.dto';
+import { axiosInstance } from '../instance';
 
 export const get = async (): Promise<ApiCartResponse> => {
   const { data } = await axiosInstance.get<ApiCartResponse>(ApiRoutes.CART);

@@ -1,7 +1,7 @@
-import { ApiRoutes } from './constants';
-import type { ApiStorySet } from './dto/story.dto';
-import type { Story } from '../lib/stories';
-import { axiosInstance } from './instance';
+import { ApiRoutes } from '../constants';
+import type { ApiStorySet } from '../dto/story.dto';
+import type { Story } from '../../lib/stories';
+import { axiosInstance } from '../instance';
 
 export interface StorySet {
   id: number;
@@ -21,7 +21,13 @@ function mapStorySet(api: ApiStorySet): StorySet {
       url: s.url,
       duration: s.duration,
       ...(s.header?.heading || s.header?.subheading
-        ? { header: { heading: s.header.heading ?? '', subheading: s.header.subheading ?? '', profileImage: s.header.profileImage ?? '' } }
+        ? {
+            header: {
+              heading: s.header.heading ?? '',
+              subheading: s.header.subheading ?? '',
+              profileImage: s.header.profileImage ?? '',
+            },
+          }
         : {}),
     })),
   };

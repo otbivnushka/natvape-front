@@ -4,7 +4,7 @@ import { Api } from '@/api';
 import type { Product } from '@/types';
 import type { AdminOrder } from '@/api/dto/admin.dto';
 import type { AdminTab } from '@/components/widgets/admin-tab-picker';
-import type { StorySet } from '@/api/stories';
+import type { StorySet } from '@/api/requests/stories';
 import { useAdminGuard } from '@/hooks/useAdminGuard';
 import { useConfirmDialog } from '@/hooks/useConfirmDialog';
 import {

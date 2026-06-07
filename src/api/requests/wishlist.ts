@@ -1,6 +1,6 @@
-import { ApiRoutes } from './constants';
-import type { WishlistResponse } from './dto/wishlist.dto';
-import { axiosInstance } from './instance';
+import { ApiRoutes } from '../constants';
+import type { WishlistResponse } from '../dto/wishlist.dto';
+import { axiosInstance } from '../instance';
 
 export const get = async (): Promise<WishlistResponse> => {
   const { data } = await axiosInstance.get<WishlistResponse>(ApiRoutes.WISHLIST);

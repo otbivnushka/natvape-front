@@ -1,5 +1,5 @@
 import React from 'react';
-import type { StorySet } from '@/api/stories';
+import type { StorySet } from '@/api/requests/stories';
 import { Plus, Trash2, BookOpen } from 'lucide-react';
 import { Spinner } from '@/components/ui';
 

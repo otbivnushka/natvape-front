@@ -1,6 +1,6 @@
-import { ApiRoutes } from './constants';
-import type { Address } from '../types';
-import { axiosInstance } from './instance';
+import { ApiRoutes } from '../constants';
+import type { Address } from '../../types';
+import { axiosInstance } from '../instance';
 
 export const getAll = async (): Promise<Address[]> => {
   const { data } = await axiosInstance.get<Address[]>(ApiRoutes.ADDRESSES);

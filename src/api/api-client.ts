@@ -1,15 +1,15 @@
-import * as auth from './auth';
-import * as categories from './categories';
-import * as products from './products';
-import * as cart from './cart';
-import * as wishlist from './wishlist';
-import * as orders from './orders';
-import * as profile from './profile';
-import * as addresses from './addresses';
-import * as admin from './admin';
-import * as images from './images';
-import * as rates from './rates';
-import * as stories from './stories';
+import * as auth from './requests/auth';
+import * as categories from './requests/categories';
+import * as products from './requests/products';
+import * as cart from './requests/cart';
+import * as wishlist from './requests/wishlist';
+import * as orders from './requests/orders';
+import * as profile from './requests/profile';
+import * as addresses from './requests/addresses';
+import * as admin from './requests/admin';
+import * as images from './requests/images';
+import * as rates from './requests/rates';
+import * as stories from './requests/stories';
 import { productCache } from './product-cache';
 
 export const Api = {

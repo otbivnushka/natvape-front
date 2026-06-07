@@ -1,7 +1,7 @@
-import { ApiRoutes } from './constants';
-import type { ApiProduct, ApiProductsResponse, ProductsQuery } from './dto/product.dto';
-import type { Product, Category } from '../types';
-import { axiosInstance } from './instance';
+import { ApiRoutes } from '../constants';
+import type { ApiProduct, ApiProductsResponse, ProductsQuery } from '../dto/product.dto';
+import type { Product, Category } from '../../types';
+import { axiosInstance } from '../instance';
 
 export const getAll = async (query?: ProductsQuery): Promise<ApiProductsResponse> => {
   const { data } = await axiosInstance.get<ApiProductsResponse>(ApiRoutes.PRODUCTS, {
