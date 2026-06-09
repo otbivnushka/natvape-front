@@ -7,6 +7,11 @@ export const getAll = async (): Promise<Address[]> => {
   return data;
 };
 
+export const getAllPickups = async (): Promise<Address[]> => {
+  const { data } = await axiosInstance.get<Address[]>(ApiRoutes.PICKUPS);
+  return data;
+};
+
 export const create = async (dto: {
   label: string;
   lat: number;

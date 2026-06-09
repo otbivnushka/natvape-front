@@ -19,6 +19,7 @@ export const ApiRoutes = {
   PROFILE: '/profile',
 
   ADDRESSES: '/addresses',
+  PICKUPS: '/addresses/pickup',
   ADDRESS_BY_ID: '/addresses/:id',
 
   ADMIN_PRODUCTS: '/admin/products',
@@ -44,6 +45,9 @@ export const ApiRoutes = {
   ADMIN_STORY_SET_BY_ID: '/admin/story-sets/:id',
   ADMIN_STORIES: '/admin/story-sets/:id/stories',
   ADMIN_STORY_BY_ID: '/admin/stories/:id',
+
+  ADMIN_PICKUPS: '/admin/addresses',
+  ADMIN_PICKUP_BY_ID: '/admin/addresses/:id',
 } as const;
 
 export const errorCodes: Record<number, string> = {

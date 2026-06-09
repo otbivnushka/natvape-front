@@ -1,5 +1,5 @@
 import { ApiRoutes } from '../constants';
-import type { AdminOrder, CreateProductDto } from '../dto/admin.dto';
+import type { AdminOrder, CreatePickupAddressDto, CreateProductDto } from '../dto/admin.dto';
 import type { ApiProduct } from '../dto/product.dto';
 import type {
   CreateStorySetDto,
@@ -131,4 +131,12 @@ export const updateStory = async (storyId: number, dto: UpdateStoryDto): Promise
 
 export const deleteStory = async (storyId: number): Promise<void> => {
   await axiosInstance.delete(ApiRoutes.ADMIN_STORY_BY_ID.replace(':id', String(storyId)));
+};
+
+export const createPickup = async (dto: CreatePickupAddressDto): Promise<void> => {
+  await axiosInstance.post(ApiRoutes.ADMIN_PICKUPS, dto);
+};
+
+export const deletePickup = async (id: number): Promise<void> => {
+  await axiosInstance.delete(ApiRoutes.ADMIN_PICKUP_BY_ID.replace(':id', String(id)));
 };

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Api } from '@/api';
-import type { Product } from '@/types';
+import type { Address, Product } from '@/types';
 import type { AdminOrder } from '@/api/dto/admin.dto';
 import type { AdminTab } from '@/components/widgets/admin-tab-picker';
 import type { StorySet } from '@/api/requests/stories';
@@ -12,6 +12,7 @@ import {
   AdminProductsTable,
   AdminOrdersTable,
   AdminStoriesTable,
+  AdminPickupsTable,
 } from '@/components/widgets';
 
 const Admin = () => {
@@ -31,8 +32,10 @@ const Admin = () => {
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [stories, setStories] = useState<StorySet[]>([]);
   const [storiesLoading, setStoriesLoading] = useState(false);
+  const [pickups, setPickups] = useState<Address[]>([]);
+  const [pickupsLoading, setPickupsLoading] = useState(false);
   const { confirm, ConfirmDialog } = useConfirmDialog<{
-    type: 'product' | 'order' | 'story';
+    type: 'product' | 'order' | 'story' | 'pickup';
     id: number;
   }>();
 
@@ -52,23 +55,32 @@ const Admin = () => {
         .then(setOrders)
         .catch(() => {})
         .finally(() => setOrdersLoading(false));
-    } else {
+    } else if (tab === 'stories') {
       setStoriesLoading(true);
       Api.stories
         .getAll()
         .then(setStories)
         .catch(() => {})
         .finally(() => setStoriesLoading(false));
+    } else {
+      setPickupsLoading(true);
+      Api.addresses
+        .getAllPickups()
+        .then(setPickups)
+        .catch(() => {})
+        .finally(() => setPickupsLoading(false));
     }
   }, [tab]);
 
-  const handleDelete = async (type: 'product' | 'order' | 'story', id: number) => {
+  const handleDelete = async (type: 'product' | 'order' | 'story' | 'pickup', id: number) => {
     const msg =
       type === 'product'
         ? 'Вы уверены, что хотите удалить этот товар?'
         : type === 'order'
           ? 'Вы уверены, что хотите удалить этот заказ?'
-          : 'Вы уверены, что хотите удалить эту историю?';
+          : type === 'story'
+            ? 'Вы уверены, что хотите удалить эту историю?'
+            : 'Вы уверены, что хотите удалить эту точку самовывоза?';
     const ok = await confirm({ type, id }, msg);
     if (!ok) return;
     try {
@@ -78,9 +90,12 @@ const Admin = () => {
       } else if (type === 'order') {
         await Api.admin.deleteOrder(id);
         setOrders((prev) => prev.filter((o) => o.id !== id));
-      } else {
+      } else if (type === 'story') {
         await Api.admin.deleteStorySet(id);
         setStories((prev) => prev.filter((s) => s.id !== id));
+      } else {
+        await Api.admin.deletePickup(id);
+        setPickups((prev) => prev.filter((p) => p.id !== id));
       }
     } catch {
       /* silent */
@@ -128,6 +143,14 @@ const Admin = () => {
             loading={storiesLoading}
             onCreate={() => navigate('/admin/stories/new')}
             onDelete={(id: number) => handleDelete('story', id)}
+          />
+        )}
+        {tab === 'pickups' && (
+          <AdminPickupsTable
+            pickups={pickups}
+            loading={pickupsLoading}
+            onCreate={() => navigate('/admin/pickups/new')}
+            onDelete={(id: number) => handleDelete('pickup', id)}
           />
         )}
       </div>

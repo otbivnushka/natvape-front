@@ -1,5 +1,6 @@
 export { AdminOrderPage } from './admin-order';
 export { AdminProduct } from './admin-product';
+export { AdminPickup } from './admin-pickup';
 export { AdminStory } from './admin-story';
 export { Admin } from './admin';
 export { Cart } from './cart';

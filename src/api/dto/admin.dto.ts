@@ -41,3 +41,9 @@ export interface CreateProductDto {
   variants?: { name: string; value: string; stock: number }[];
   colors?: { name: string; hex: string; stock: number }[];
 }
+
+export interface CreatePickupAddressDto {
+  label: string;
+  lat: number;
+  lng: number;
+}

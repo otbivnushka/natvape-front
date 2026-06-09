@@ -1,17 +1,11 @@
-import React from 'react';
-
-const pickupPoints = [
-  'McDonalds',
-  'Трио',
-  'Зеленая гура',
-  'Континент',
-  'Марко',
-  'Правды 60а (Евроопт)',
-];
+import { Api } from '@/api';
+import type { Address } from '@/types';
+import clsx from 'clsx';
+import React, { useEffect, useState } from 'react';
 
 interface PickupSelectorProps {
-  pickupPoint: string;
-  setPickupPoint: (point: string) => void;
+  pickupPoint: number | null;
+  setPickupPoint: (point: number) => void;
   className?: string;
 }
 
@@ -20,21 +14,31 @@ const PickupSelector: React.FC<PickupSelectorProps> = ({
   setPickupPoint,
   className,
 }) => {
+  const [pickupPoints, setPickupPoints] = useState<Address[]>([]);
+
+  useEffect(() => {
+    Api.addresses
+      .getAllPickups()
+      .then((res) => setPickupPoints(res))
+      .catch(() => {});
+  }, []);
+
   return (
     <div className={className}>
       <h2 className="text-sm font-semibold text-muted mb-2.5">Точка самовывоза</h2>
-      <div className="flex flex-wrap gap-2">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
         {pickupPoints.map((p) => (
           <button
-            key={p}
-            onClick={() => setPickupPoint(p)}
-            className={
-              pickupPoint === p
-                ? 'py-1.5 px-3.5 rounded-lg border border-primary bg-primary text-on-primary text-[13px] font-medium cursor-pointer'
-                : 'py-1.5 px-3.5 rounded-lg border border-line bg-surface text-body text-[13px] font-medium cursor-pointer hover:border-muted'
-            }
+            key={p.id}
+            onClick={() => setPickupPoint(p.id)}
+            className={clsx(
+              'py-4 px-3.5 rounded-lg text-[13px] font-medium cursor-pointer',
+              pickupPoint === p.id
+                ? 'bg-primary text-on-primary'
+                : 'bg-surface text-body hover:border-muted',
+            )}
           >
-            {p}
+            {p.label}
           </button>
         ))}
       </div>

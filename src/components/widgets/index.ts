@@ -1,6 +1,7 @@
 export { AdminOrdersTable } from './admin-orders-table';
 export { AdminProductsTable } from './admin-products-table';
 export { AdminStoriesTable } from './admin-stories-table';
+export { AdminPickupsTable } from './admin-pickups-table';
 export { AdminTabPicker } from './admin-tab-picker';
 export { CatalogContainer } from './catalog-container';
 export { OrderSummary } from './order-summary';

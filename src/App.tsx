@@ -6,6 +6,7 @@ import { useInit } from '@/hooks/useInit';
 import {
   Admin,
   AdminOrderPage,
+  AdminPickup,
   AdminProduct,
   AdminStory,
   Cart,
@@ -32,6 +33,7 @@ function AppContent() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin/:tab?" element={<Admin />} />
         <Route path="/admin/stories/new" element={<AdminStory />} />
+        <Route path="/admin/pickups/new" element={<AdminPickup />} />
         <Route path="/admin/products/:id" element={<AdminProduct />} />
         <Route path="/admin/order/:id" element={<AdminOrderPage />} />
       </Routes>

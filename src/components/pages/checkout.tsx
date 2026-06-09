@@ -24,7 +24,6 @@ const Checkout = () => {
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
 
   const [delivery, setDelivery] = useState<DeliveryMethod>('pickup');
-  const [pickupPoint, setPickupPoint] = useState('');
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -45,14 +44,10 @@ const Checkout = () => {
 
     setSubmitting(true);
     try {
-      const extras: string[] = [];
-      if (delivery === 'pickup' && pickupPoint) extras.push(`Самовывоз: ${pickupPoint}`);
-      if (comment) extras.push(comment);
-      const commentSend = extras.length > 0 ? extras.join(' | ') : undefined;
       const order = await Api.orders.create({
         deliveryMethod: delivery,
-        comment: commentSend,
-        addressId: delivery === 'delivery' ? (selectedAddressId ?? undefined) : undefined,
+        comment: comment,
+        addressId: selectedAddressId ?? undefined,
         deliveryTime:
           timeOption === 'soon'
             ? 'как можно скорее'
@@ -89,7 +84,7 @@ const Checkout = () => {
       <DeliveryMethodSelector value={delivery} onChange={setDelivery} />
 
       {delivery === 'pickup' && (
-        <PickupSelector className="mb-5" pickupPoint={pickupPoint} setPickupPoint={setPickupPoint} />
+        <PickupSelector className="mb-5" pickupPoint={selectedAddressId} setPickupPoint={setSelectedAddressId} />
       )}
 
       {delivery === 'delivery' && (
