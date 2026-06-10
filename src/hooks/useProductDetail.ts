@@ -63,13 +63,13 @@ export function useProductDetail(id: string) {
   const disabledColorNames = useMemo(() => {
     if (!product?.colors?.length) return [];
     return product.colors
-      .filter((c: { name: string; stock: number }) => {
+      .filter((c: ProductColor) => {
         const ci = cartItems.find(
-          (i: CartItem) => i.product.id === product.id && i.variantKey === c.name,
+          (i: CartItem) => i.product.id === product.id && i.variantKey === c.hex,
         );
         return c.stock - (ci?.quantity ?? 0) <= 0;
       })
-      .map((c: { name: string }) => c.name);
+      .map((c: ProductColor) => c.name);
   }, [product, cartItems]);
 
   return {

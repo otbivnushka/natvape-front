@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { ShoppingCart, Loader2 } from 'lucide-react';
 import { Api } from '@/api';
 import { useCart, useClearCart } from '@/hooks/queries/useCartQuery';
@@ -12,9 +13,11 @@ import type { DeliveryMethod } from '@/components/shared/delivery-method-selecto
 import { useToastStore } from '@/store/useToastStore';
 import { useToastError } from '@/hooks/useToastError';
 import { calcCartSubtotal } from '@/utils/cartTotals';
+import { queryKeys } from '@/hooks/queries/queryKeys';
 
 const Checkout = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { data: items = [] } = useCart();
   const clearCart = useClearCart();
   const addToast = useToastStore((s) => s.addToast);
@@ -54,6 +57,8 @@ const Checkout = () => {
       });
       addToast(`Заказ #${order.id} оформлен! Спасибо за покупку!`);
       clearCart.mutate();
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.products.all });
       navigate('/profile');
     } catch {
       toastError('оформлении заказа');

@@ -11,11 +11,13 @@ export const add = async (
   productId: number,
   quantity: number,
   variantKey?: string,
+  variantName?: string,
 ): Promise<ApiCartResponse> => {
   const { data } = await axiosInstance.post<ApiCartResponse>(ApiRoutes.CART, {
     productId,
     quantity,
     variantKey,
+    variantName,
   });
   return data;
 };

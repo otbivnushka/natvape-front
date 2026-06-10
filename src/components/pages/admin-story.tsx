@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { Api } from '@/api';
 import { ArrowLeft, Plus, Trash2, Loader2 } from 'lucide-react';
+import { queryKeys } from '@/hooks/queries/queryKeys';
 import { Input, ImageUpload } from '@/components/ui';
 import { useAdminGuard } from '@/hooks/useAdminGuard';
 
@@ -21,6 +23,7 @@ const emptySlide = (): SlideForm => ({
 
 const AdminStory = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   useAdminGuard();
 
   const [saving, setSaving] = useState(false);
@@ -42,6 +45,7 @@ const AdminStory = () => {
             : {}),
         })),
       });
+      queryClient.invalidateQueries({ queryKey: queryKeys.stories.all });
       navigate('/admin/stories');
     } catch {
       /* silent */

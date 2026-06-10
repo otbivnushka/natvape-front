@@ -30,11 +30,11 @@ const AddProductWidget: React.FC<AddProductWidgetProps> = ({ product, selected }
     : hasColors
       ? (() => {
           const c = product.colors!.find((c) => c.name === selected);
-          if (!selected) return 0;
+          if (!c || !selected) return 0;
           const ci = cartItems.find(
-            (i: CartItem) => i.product.id === product.id && i.variantKey === selected,
+            (i: CartItem) => i.product.id === product.id && i.variantKey === c.hex,
           );
-          return c!.stock - (ci?.quantity ?? 0);
+          return c.stock - (ci?.quantity ?? 0);
         })()
       : 0;
 
@@ -44,10 +44,23 @@ const AddProductWidget: React.FC<AddProductWidgetProps> = ({ product, selected }
   const effectiveQuantity = maxQuantity > 0 && quantity > maxQuantity ? maxQuantity : quantity;
 
   const handleAddToCart = () => {
-    const variantKey = selected || undefined;
-    if (!variantKey && !canAdd) return;
-    addToCart.mutate({ productId: product.id, variantKey, quantity: effectiveQuantity });
-    const label = selected ? product.variants?.find((v) => v.value === selected)?.name : selected;
+    if (!selected && !canAdd) return;
+
+    let variantKey: string | undefined;
+    let variantName: string | undefined;
+
+    if (hasVariants && selected) {
+      const v = product.variants!.find((v) => v.value === selected);
+      variantKey = v?.value;
+      variantName = v?.name;
+    } else if (hasColors && selected) {
+      const c = product.colors!.find((c) => c.name === selected);
+      variantKey = c?.hex;
+      variantName = c?.name;
+    }
+
+    addToCart.mutate({ productId: product.id, variantKey, variantName, quantity: effectiveQuantity });
+    const label = variantName;
     addToast(
       `${product.name}${label ? ` — ${label}` : ''} добавлен в корзину (${effectiveQuantity} шт.)`,
     );

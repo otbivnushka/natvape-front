@@ -36,7 +36,7 @@ const Cart = () => {
         <>
           <div className="grid gap-2.5 md:grid-cols-2 lg:grid-cols-3">
             {items.map((item: CartItem, i: number) => (
-              <CartItemComponent key={item.product.id + i * i} item={item} />
+              <CartItemComponent key={item.product.id + i * i} item={item} allItems={items} />
             ))}
           </div>
           <div className="mt-5 p-4 bg-surface rounded-xl">

@@ -15,6 +15,7 @@ export interface ApiCartItem {
   product: ApiCartProduct;
   quantity: number;
   variantKey: string | null;
+  variantName: string | null;
 }
 
 export interface ApiCartResponse {

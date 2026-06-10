@@ -30,6 +30,7 @@ function mapApiItem(i: ApiCartItem): CartItem {
     product,
     quantity: i.quantity,
     variantKey: i.variantKey ?? undefined,
+    variantName: i.variantName ?? undefined,
   };
 }
 
@@ -54,15 +55,17 @@ export function useAddToCart() {
     mutationFn: async ({
       productId,
       variantKey,
+      variantName,
       quantity = 1,
     }: {
       productId: number;
       variantKey?: string;
+      variantName?: string;
       quantity?: number;
     }) => {
       if (!authToken) return;
       try {
-        await Api.cart.add(productId, quantity, variantKey);
+        await Api.cart.add(productId, quantity, variantKey, variantName);
       } catch {
         /* fallback — keep local */
       }
@@ -70,10 +73,12 @@ export function useAddToCart() {
     onMutate: async ({
       productId,
       variantKey,
+      variantName,
       quantity = 1,
     }: {
       productId: number;
       variantKey?: string;
+      variantName?: string;
       quantity?: number;
     }) => {
       await queryClient.cancelQueries({ queryKey: queryKeys.cart.all });
@@ -119,6 +124,7 @@ export function useAddToCart() {
               } as Product),
             quantity,
             variantKey,
+            variantName,
           },
         ]);
       }

@@ -8,15 +8,7 @@ import { QuantityStepper, PriceDisplay } from '@/components/ui';
 
 interface CartItemProps {
   item: CartItemType;
-}
-
-function getVariantName(item: CartItemType): string | null {
-  if (!item.variantKey) return null;
-  const v = item.product.variants?.find((x) => x.value === item.variantKey);
-  if (v) return v.name;
-  const c = item.product.colors?.find((x) => x.name === item.variantKey);
-  if (c) return c.name;
-  return null;
+  allItems?: CartItemType[];
 }
 
 function getVariantStock(item: CartItemType): number {
@@ -28,10 +20,10 @@ function getVariantStock(item: CartItemType): number {
   return Infinity;
 }
 
-const CartItem: React.FC<CartItemProps> = ({ item }) => {
+const CartItem: React.FC<CartItemProps> = ({ item, allItems }) => {
   const removeMutation = useRemoveFromCart();
   const updateQtyMutation = useUpdateCartQuantity();
-  const variantName = getVariantName(item);
+  const variantName = item.variantName ?? null;
   const maxQty = getVariantStock(item);
 
   return (
@@ -48,7 +40,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
           <PriceDisplay price={item.product.price} doublePrice={item.product.doublePrice} />
         </div>
         <div className="text-xs text-muted mt-0.5">
-          Сумма: {formatPrice(calcCartItemTotal(item, []))}
+          Сумма: {formatPrice(calcCartItemTotal(item, allItems ?? []))}
         </div>
         <div className="mt-2">
           <QuantityStepper

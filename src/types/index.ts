@@ -44,6 +44,7 @@ export interface CartItem {
   product: Product;
   quantity: number;
   variantKey?: string;
+  variantName?: string;
 }
 
 export interface OrderItem {
