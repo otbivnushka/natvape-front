@@ -13,9 +13,7 @@ const OrderSummaryItem: React.FC<OrderSummaryItemProps> = ({ item }) => {
         {item.variantKey && <span className="text-dim"> ({item.variantKey})</span>}
         <span className="text-dim"> × {item.quantity}</span>
       </span>
-      <span className="text-body font-medium whitespace-nowrap">
-        {item.quantity} шт.
-      </span>
+      <span className="text-body font-medium whitespace-nowrap">{item.quantity} шт.</span>
     </div>
   );
 };

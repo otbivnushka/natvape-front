@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { HelpCircle } from 'lucide-react';
-import { Api } from '@/api';
-import type { ApiCategoryInfo } from '@/api/dto/category.dto';
 import type { SortOption, Product } from '@/types';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { useDebounce } from '@uidotdev/usehooks';
+import { useProducts, useBrands } from '@/hooks/queries/useProductsQuery';
+import { useCategoryByKey } from '@/hooks/queries/useCategoriesQuery';
 import { SearchBar, SortSelect, PriceFilter, BrandFilter, Skeleton } from '@/components/ui';
 import { EmptyState, PageLayout, PageTitle } from '@/components/shared';
 import { ProductsContainer } from '@/components/widgets';
@@ -21,71 +21,47 @@ const CategoryProducts = () => {
   const [globalMinPrice, setGlobalMinPrice] = useState(0);
   const [globalMaxPrice, setGlobalMaxPrice] = useState(0);
   const [brand, setBrand] = useState('');
-  const [products, setProducts] = useState<Product[]>([]);
-  const [brands, setBrands] = useState<string[]>([]);
-  const [catInfo, setCatInfo] = useState<ApiCategoryInfo | null>(null);
-  const [loading, setLoading] = useState(true);
   const initialLoad = useRef(true);
-  const skipNextFetch = useRef(false);
   const debouncedSearch = useDebounce(search, 300);
   const debouncedMinPrice = useDebounce(minPrice, 300);
   const debouncedMaxPrice = useDebounce(maxPrice, 300);
 
-  useEffect(() => {
-    Api.categories
-      .getAll()
-      .then((cats) => {
-        const found = cats.find((c) => c.key === category);
-        setCatInfo(found ?? null);
-      })
-      .catch(() => {});
-  }, [category]);
-
-  useEffect(() => {
-    if (!category) return;
-    Api.products
-      .getBrands(category)
-      .then(setBrands)
-      .catch(() => setBrands([]));
-  }, [category]);
-
-  useEffect(() => {
-    if (!category) return;
-    if (skipNextFetch.current) {
-      skipNextFetch.current = false;
-      return;
-    }
-    setLoading(true);
-    Api.products
-      .getAll({
-        category,
-        search: debouncedSearch || undefined,
-        sort: sort,
-        brand: brand || undefined,
-        priceMin: debouncedMinPrice > 0 ? debouncedMinPrice : undefined,
-        priceMax: debouncedMaxPrice > 0 ? debouncedMaxPrice : undefined,
-      })
-      .then((res) => {
-        const mapped = res.items.map(Api.products.mapProduct);
-        Api.productCache.set(mapped);
-        setProducts(mapped);
-        if (res.items.length > 0 && initialLoad.current) {
-          initialLoad.current = false;
-          const prices = res.items.map((p) => p.price);
-          const gMin = Math.min(...prices);
-          const gMax = Math.max(...prices);
-          setGlobalMinPrice(gMin);
-          setGlobalMaxPrice(gMax);
-          setMinPrice(gMin);
-          setMaxPrice(gMax);
-          skipNextFetch.current = true;
+  const { data: catInfo } = useCategoryByKey(category ?? '');
+  const { data: brands } = useBrands(category);
+  const { data: productsData, isLoading: productsLoading } = useProducts(
+    category
+      ? {
+          category,
+          search: debouncedSearch || undefined,
+          sort,
+          brand: brand || undefined,
+          priceMin:
+            debouncedMinPrice > 0 && debouncedMinPrice !== globalMinPrice
+              ? debouncedMinPrice
+              : undefined,
+          priceMax:
+            debouncedMaxPrice > 0 && debouncedMaxPrice !== globalMaxPrice
+              ? debouncedMaxPrice
+              : undefined,
         }
-      })
-      .catch(() => {
-        setProducts([]);
-      })
-      .finally(() => setLoading(false));
-  }, [category, debouncedSearch, sort, brand, debouncedMinPrice, debouncedMaxPrice]);
+      : undefined,
+  );
+
+  const products: Product[] = useMemo(() => productsData?.items ?? [], [productsData]);
+  const loading = productsLoading;
+
+  useEffect(() => {
+    if (products.length > 0 && initialLoad.current) {
+      initialLoad.current = false;
+      const prices = products.map((p) => p.price);
+      const gMin = Math.min(...prices);
+      const gMax = Math.max(...prices);
+      setGlobalMinPrice(gMin);
+      setGlobalMaxPrice(gMax);
+      setMinPrice(gMin);
+      setMaxPrice(gMax);
+    }
+  }, [products]);
 
   const handleBack = () => navigate('/');
 
@@ -120,7 +96,7 @@ const CategoryProducts = () => {
           <SearchBar value={search} onChange={setSearch} />
         </div>
         <SortSelect value={sort} onChange={setSort} />
-        <BrandFilter value={brand} options={brands} onChange={setBrand} />
+        <BrandFilter value={brand} options={brands ?? []} onChange={setBrand} />
         <PriceFilter
           min={minPrice}
           max={maxPrice}

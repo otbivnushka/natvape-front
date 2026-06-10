@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
+import type { CartItem } from '@/types';
 import { ShoppingCart } from 'lucide-react';
-import { useCartStore } from '@/store/useCartStore';
+import { useCart } from '@/hooks/queries/useCartQuery';
 import { PrimaryButton } from '@/components/ui';
 import {
   CartItem as CartItemComponent,
@@ -9,18 +10,13 @@ import {
   PageTitle,
 } from '@/components/shared';
 import { formatPrice } from '@/utils/formatPrice';
-import { useEffect } from 'react';
+import { calcCartSubtotal } from '@/utils/cartTotals';
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { items, syncFromServer, subtotal } = useCartStore();
+  const { data: items = [] } = useCart();
 
-  useEffect(() => {
-    syncFromServer();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const total = subtotal();
+  const total = calcCartSubtotal(items);
 
   const handleCheckout = () => navigate('/checkout');
 
@@ -39,7 +35,7 @@ const Cart = () => {
       ) : (
         <>
           <div className="grid gap-2.5 md:grid-cols-2 lg:grid-cols-3">
-            {items.map((item, i) => (
+            {items.map((item: CartItem, i: number) => (
               <CartItemComponent key={item.product.id + i * i} item={item} />
             ))}
           </div>

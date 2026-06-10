@@ -1,17 +1,16 @@
 import { PageLayout } from '@/components/shared';
-import { useApiData } from '@/hooks/useApiData';
-import { Api } from '@/api';
+import { useCategories } from '@/hooks/queries/useCategoriesQuery';
 import { CatalogContainer } from '@/components/widgets';
 import { PageTitle } from '@/components/shared';
 
 const Catalog = () => {
-  const { data: cats } = useApiData(() => Api.categories.getAll(), []);
+  const { data: cats } = useCategories();
 
   return (
     <PageLayout>
       <PageTitle>Каталог</PageTitle>
 
-      <CatalogContainer cats={cats} />
+      <CatalogContainer cats={cats ?? []} />
     </PageLayout>
   );
 };

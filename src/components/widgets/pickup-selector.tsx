@@ -1,7 +1,7 @@
-import { Api } from '@/api';
+import React from 'react';
 import type { Address } from '@/types';
+import { usePickups } from '@/hooks/queries/usePickupsQuery';
 import clsx from 'clsx';
-import React, { useEffect, useState } from 'react';
 
 interface PickupSelectorProps {
   pickupPoint: number | null;
@@ -14,20 +14,13 @@ const PickupSelector: React.FC<PickupSelectorProps> = ({
   setPickupPoint,
   className,
 }) => {
-  const [pickupPoints, setPickupPoints] = useState<Address[]>([]);
-
-  useEffect(() => {
-    Api.addresses
-      .getAllPickups()
-      .then((res) => setPickupPoints(res))
-      .catch(() => {});
-  }, []);
+  const { data: pickupPoints = [] } = usePickups();
 
   return (
     <div className={className}>
       <h2 className="text-sm font-semibold text-muted mb-2.5">Точка самовывоза</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-        {pickupPoints.map((p) => (
+        {pickupPoints.map((p: Address) => (
           <button
             key={p.id}
             onClick={() => setPickupPoint(p.id)}

@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/useAuthStore';
-import { Api } from '@/api';
-import type { Order } from '@/types';
+import { useOrders } from '@/hooks/queries/useOrdersQuery';
 import { Lock, Info, Shield } from 'lucide-react';
 import { PageLayout, FixedButton, PageTitle } from '@/components/shared';
 import { StoriesContainer, UserInfo, OrdersContainer } from '@/components/widgets';
@@ -12,6 +11,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const { user, isLoggedIn, isAdmin } = useAuthStore();
   const { name: userName } = user ?? {};
+  const { data: orders = [], isLoading: ordersLoading } = useOrders();
 
   const tg = window.Telegram?.WebApp;
   const tgUser = tg.initDataUnsafe.user;
@@ -19,22 +19,7 @@ const Profile = () => {
   const displayAvatar = tgUser?.photo_url;
   const displayTelegram = tgUser?.username;
 
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [ordersLoading, setOrdersLoading] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
-
-  useEffect(() => {
-    if (!user) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setOrdersLoading(true);
-    Api.orders
-      .getAll()
-      .then(setOrders)
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => setOrdersLoading(false));
-  }, [user]);
 
   if (!isLoggedIn()) {
     return (

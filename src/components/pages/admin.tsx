@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Api } from '@/api';
-import type { Address, Product } from '@/types';
-import type { AdminOrder } from '@/api/dto/admin.dto';
 import type { AdminTab } from '@/components/widgets/admin-tab-picker';
-import type { StorySet } from '@/api/requests/stories';
 import { useAdminGuard } from '@/hooks/useAdminGuard';
 import { useConfirmDialog } from '@/hooks/useConfirmDialog';
+import { useProducts } from '@/hooks/queries/useProductsQuery';
+import { useSentOrders } from '@/hooks/queries/useOrdersQuery';
+import { useStories } from '@/hooks/queries/useStoriesQuery';
+import { usePickups } from '@/hooks/queries/usePickupsQuery';
+import { queryClient } from '@/lib/queryClient';
+import { queryKeys } from '@/hooks/queries/queryKeys';
+import { Api } from '@/api';
 import {
   AdminTabPicker,
   AdminProductsTable,
@@ -14,6 +16,7 @@ import {
   AdminStoriesTable,
   AdminPickupsTable,
 } from '@/components/widgets';
+import { useState } from 'react';
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -26,51 +29,17 @@ const Admin = () => {
     navigate(`/admin/${next}`, { replace: true });
   };
 
-  const [products, setProducts] = useState<Product[]>([]);
-  const [productsLoading, setProductsLoading] = useState(false);
-  const [orders, setOrders] = useState<AdminOrder[]>([]);
-  const [ordersLoading, setOrdersLoading] = useState(false);
-  const [stories, setStories] = useState<StorySet[]>([]);
-  const [storiesLoading, setStoriesLoading] = useState(false);
-  const [pickups, setPickups] = useState<Address[]>([]);
-  const [pickupsLoading, setPickupsLoading] = useState(false);
+  const { data: productsData, isLoading: productsLoading } = useProducts();
+  const { data: orders = [], isLoading: ordersLoading } = useSentOrders();
+  const { data: stories = [], isLoading: storiesLoading } = useStories();
+  const { data: pickups = [], isLoading: pickupsLoading } = usePickups();
+
   const { confirm, ConfirmDialog } = useConfirmDialog<{
     type: 'product' | 'order' | 'story' | 'pickup';
     id: number;
   }>();
 
-  useEffect(() => {
-    if (tab === 'products') {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setProductsLoading(true);
-      Api.products
-        .getAll()
-        .then((res) => setProducts(res.items.map(Api.products.mapProduct)))
-        .catch(() => {})
-        .finally(() => setProductsLoading(false));
-    } else if (tab === 'orders') {
-      setOrdersLoading(true);
-      Api.admin
-        .getSentOrders()
-        .then(setOrders)
-        .catch(() => {})
-        .finally(() => setOrdersLoading(false));
-    } else if (tab === 'stories') {
-      setStoriesLoading(true);
-      Api.stories
-        .getAll()
-        .then(setStories)
-        .catch(() => {})
-        .finally(() => setStoriesLoading(false));
-    } else {
-      setPickupsLoading(true);
-      Api.addresses
-        .getAllPickups()
-        .then(setPickups)
-        .catch(() => {})
-        .finally(() => setPickupsLoading(false));
-    }
-  }, [tab]);
+  const products = productsData?.items ?? [];
 
   const handleDelete = async (type: 'product' | 'order' | 'story' | 'pickup', id: number) => {
     const msg =
@@ -86,16 +55,16 @@ const Admin = () => {
     try {
       if (type === 'product') {
         await Api.admin.deleteProduct(id);
-        setProducts((prev) => prev.filter((p) => p.id !== id));
+        queryClient.invalidateQueries({ queryKey: queryKeys.products.lists() });
       } else if (type === 'order') {
         await Api.admin.deleteOrder(id);
-        setOrders((prev) => prev.filter((o) => o.id !== id));
+        queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
       } else if (type === 'story') {
         await Api.admin.deleteStorySet(id);
-        setStories((prev) => prev.filter((s) => s.id !== id));
+        queryClient.invalidateQueries({ queryKey: queryKeys.stories.all });
       } else {
         await Api.admin.deletePickup(id);
-        setPickups((prev) => prev.filter((p) => p.id !== id));
+        queryClient.invalidateQueries({ queryKey: queryKeys.addresses.pickups() });
       }
     } catch {
       /* silent */
@@ -105,7 +74,7 @@ const Admin = () => {
   const handleCompleteOrder = async (id: number) => {
     try {
       await Api.admin.updateOrderStatus(id, 'end');
-      setOrders((prev) => prev.filter((o) => o.id !== id));
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
     } catch {
       /* silent */
     }

@@ -1,8 +1,12 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { BottomNav } from '@/components/shared';
 import { ToastContainer } from '@/components/ui';
 import { useTelegramBackButton } from '@/hooks/useTelegramBackButton';
 import { useInit } from '@/hooks/useInit';
+import { useAuthStore } from '@/store/useAuthStore';
+import { queryClient } from '@/lib/queryClient';
+import { queryKeys } from '@/hooks/queries/queryKeys';
 import {
   Admin,
   AdminOrderPage,
@@ -18,11 +22,27 @@ import {
   Wishlist,
 } from '@/components/pages';
 
+function AuthSync() {
+  useEffect(() => {
+    const unsub = useAuthStore.subscribe((state, prev) => {
+      if (state.token && !prev?.token) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.cart.all });
+        queryClient.invalidateQueries({ queryKey: queryKeys.wishlist.all });
+        queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      }
+    });
+    return () => unsub();
+  }, []);
+
+  return null;
+}
+
 function AppContent() {
   useTelegramBackButton();
 
   return (
     <div className="min-h-screen bg-page">
+      <AuthSync />
       <Routes>
         <Route path="/" element={<Catalog />} />
         <Route path="/category/:category" element={<CategoryProducts />} />

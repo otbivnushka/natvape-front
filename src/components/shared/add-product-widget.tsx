@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PrimaryButton, QuantityStepper } from '@/components/ui';
-import type { Product } from '@/types';
-import { useCartStore } from '@/store/useCartStore';
+import type { Product, CartItem } from '@/types';
+import { useCart, useAddToCart } from '@/hooks/queries/useCartQuery';
 import { useToastStore } from '@/store/useToastStore';
 
 interface AddProductWidgetProps {
@@ -11,8 +11,9 @@ interface AddProductWidgetProps {
 
 const AddProductWidget: React.FC<AddProductWidgetProps> = ({ product, selected }) => {
   const addToast = useToastStore((s) => s.addToast);
+  const { data: cartItems = [] } = useCart();
+  const addToCart = useAddToCart();
 
-  const cartItems = useCartStore.getState().items;
   const hasVariants = product.variants && product.variants.length > 0;
   const hasColors = product.colors && product.colors.length > 0;
   const canAdd = hasVariants ? selected !== '' : hasColors ? selected !== null : true;
@@ -21,7 +22,9 @@ const AddProductWidget: React.FC<AddProductWidgetProps> = ({ product, selected }
     ? (() => {
         const v = product.variants!.find((v) => v.value === selected);
         if (!v) return 0;
-        const ci = cartItems.find((i) => i.product.id === product.id && i.variantKey === v.value);
+        const ci = cartItems.find(
+          (i: CartItem) => i.product.id === product.id && i.variantKey === v.value,
+        );
         return v.stock - (ci?.quantity ?? 0);
       })()
     : hasColors
@@ -29,7 +32,7 @@ const AddProductWidget: React.FC<AddProductWidgetProps> = ({ product, selected }
           const c = product.colors!.find((c) => c.name === selected);
           if (!selected) return 0;
           const ci = cartItems.find(
-            (i) => i.product.id === product.id && i.variantKey === selected,
+            (i: CartItem) => i.product.id === product.id && i.variantKey === selected,
           );
           return c!.stock - (ci?.quantity ?? 0);
         })()
@@ -37,14 +40,13 @@ const AddProductWidget: React.FC<AddProductWidgetProps> = ({ product, selected }
 
   const maxQuantity = canAdd ? variantStock : 0;
   const [quantity, setQuantity] = useState(1);
-  const { addToCart } = useCartStore((s) => s);
 
   const effectiveQuantity = maxQuantity > 0 && quantity > maxQuantity ? maxQuantity : quantity;
 
   const handleAddToCart = () => {
     const variantKey = selected || undefined;
     if (!variantKey && !canAdd) return;
-    addToCart(product.id, variantKey, effectiveQuantity);
+    addToCart.mutate({ productId: product.id, variantKey, quantity: effectiveQuantity });
     const label = selected ? product.variants?.find((v) => v.value === selected)?.name : selected;
     addToast(
       `${product.name}${label ? ` — ${label}` : ''} добавлен в корзину (${effectiveQuantity} шт.)`,

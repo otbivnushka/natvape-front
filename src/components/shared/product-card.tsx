@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from '@/types';
-import { useWishlistStore } from '@/store/useWishlistStore';
+import { useWishlist, useToggleWishlist } from '@/hooks/queries/useWishlistQuery';
 import { useToastStore } from '@/store/useToastStore';
 import { Heart } from 'lucide-react';
 import { StarRating, Badge, PriceDisplay, PrimaryButton } from '@/components/ui';
@@ -14,20 +14,19 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, index = 0 }) => {
   const navigate = useNavigate();
-  const { toggleWishlist, isWishlisted } = useWishlistStore();
+  const { data: products = [] } = useWishlist();
+  const toggleMutation = useToggleWishlist();
   const addToast = useToastStore((s) => s.addToast);
-  const wishlisted = isWishlisted(product.id);
+  const wishlisted = products.some((p) => p.id === product.id);
 
-  const handleWish = async () => {
-    await toggleWishlist(product.id);
+  const handleWish = () => {
+    toggleMutation.mutate({
+      productId: product.id,
+      action: wishlisted ? 'remove' : 'add',
+    });
     addToast(
       wishlisted ? `${product.name} убран из избранного` : `${product.name} добавлен в избранное`,
     );
-    if (!wishlisted) {
-      const btn = document.activeElement as HTMLElement;
-      btn?.style.setProperty('transform', 'scale(1.3)');
-      setTimeout(() => btn?.style.removeProperty('transform'), 200);
-    }
   };
 
   return (
@@ -44,16 +43,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index = 0 }) => {
           loading="lazy"
           onClick={() => navigate(`/product/${product.id}`)}
         />
-        <button
-          className={clsx(
-            'absolute top-2 right-2 bg-surface/80 backdrop-blur-sm border-none rounded-full w-8 h-8 flex items-center justify-center cursor-pointer z-2 transition-all duration-200',
-            wishlisted ? 'text-primary' : 'text-muted hover:text-primary',
-          )}
-          onClick={handleWish}
-          aria-label={wishlisted ? 'Убрать из избранного' : 'Добавить в избранное'}
-        >
-          <Heart size={16} fill={wishlisted ? 'currentColor' : 'none'} />
-        </button>
+        <HeartButton wishlisted={wishlisted} onClick={handleWish} />
       </div>
       <div className="p-3 flex flex-col gap-1.5 flex-1">
         <div className="text-sm font-semibold text-primary leading-tight line-clamp-2">
@@ -74,5 +64,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index = 0 }) => {
     </div>
   );
 };
+
+interface HeartButtonProps {
+  wishlisted: boolean;
+  onClick: () => void;
+}
+
+const HeartButton: React.FC<HeartButtonProps> = ({ wishlisted, onClick }) => {
+  return (
+    <button
+      className={clsx(
+        'absolute top-2 right-2 bg-surface/80 backdrop-blur-sm border-none rounded-full w-8 h-8 flex items-center justify-center cursor-pointer z-2 transition-all duration-200',
+        wishlisted ? 'text-primary' : 'text-muted hover:text-primary',
+      )}
+      onClick={onClick}
+      aria-label={wishlisted ? 'Убрать из избранного' : 'Добавить в избранное'}
+    >
+      <Heart size={16} fill={wishlisted ? 'currentColor' : 'none'} />
+    </button>
+  );
+};
+
+export { HeartButton };
 
 export { ProductCard };

@@ -1,6 +1,6 @@
 import React from 'react';
 import type { CartItem as CartItemType } from '@/types';
-import { useCartStore } from '@/store/useCartStore';
+import { useRemoveFromCart, useUpdateCartQuantity } from '@/hooks/queries/useCartQuery';
 import { formatPrice } from '@/utils/formatPrice';
 import { calcCartItemTotal } from '@/utils/cartTotals';
 import { X } from 'lucide-react';
@@ -29,8 +29,8 @@ function getVariantStock(item: CartItemType): number {
 }
 
 const CartItem: React.FC<CartItemProps> = ({ item }) => {
-  const { increaseQty, decreaseQty, removeFromCart } = useCartStore();
-  const items = useCartStore((s) => s.items);
+  const removeMutation = useRemoveFromCart();
+  const updateQtyMutation = useUpdateCartQuantity();
   const variantName = getVariantName(item);
   const maxQty = getVariantStock(item);
 
@@ -48,13 +48,17 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
           <PriceDisplay price={item.product.price} doublePrice={item.product.doublePrice} />
         </div>
         <div className="text-xs text-muted mt-0.5">
-          Сумма: {formatPrice(calcCartItemTotal(item, items))}
+          Сумма: {formatPrice(calcCartItemTotal(item, []))}
         </div>
         <div className="mt-2">
           <QuantityStepper
             quantity={item.quantity}
-            onDecrement={() => decreaseQty(item.id)}
-            onIncrement={() => increaseQty(item.id)}
+            onDecrement={() =>
+              updateQtyMutation.mutate({ itemId: item.id, quantity: item.quantity - 1 })
+            }
+            onIncrement={() =>
+              updateQtyMutation.mutate({ itemId: item.id, quantity: item.quantity + 1 })
+            }
             size="sm"
             max={maxQty}
           />
@@ -62,7 +66,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
       </div>
       <button
         className="bg-transparent border-none text-muted cursor-pointer p-1 ml-auto transition-colors duration-150 hover:text-primary"
-        onClick={() => removeFromCart(item.id)}
+        onClick={() => removeMutation.mutate(item.id)}
         aria-label="Удалить"
       >
         <X size={18} />

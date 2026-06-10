@@ -4,7 +4,7 @@ import { Api } from '@/api';
 import { Loader2 } from 'lucide-react';
 import { PrimaryButton, Spinner } from '@/components/ui';
 import { useAdminGuard } from '@/hooks/useAdminGuard';
-import { useCategories } from '@/hooks/useCategories';
+import { useCategories } from '@/hooks/queries/useCategoriesQuery';
 import {
   AdminProductAddColors,
   AdminProductAddInfo,
@@ -19,7 +19,8 @@ const AdminProduct = () => {
   const isNew = id === 'new';
 
   const [productId, setProductId] = useState<number | null>(isNew ? null : Number(id));
-  const { categories, getByKey } = useCategories();
+  const { data: categories = [] } = useCategories();
+  const getByKey = (key: string) => categories.find((c) => c.key === key);
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
 
@@ -134,11 +135,7 @@ const AdminProduct = () => {
               className="mb-6"
             />
 
-            <AdminProductAddColors
-              productId={productId}
-              form={form}
-              setForm={setForm}
-            />
+            <AdminProductAddColors productId={productId} form={form} setForm={setForm} />
           </>
         )}
       </div>

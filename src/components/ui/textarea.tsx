@@ -1,8 +1,12 @@
 import React from 'react';
 import clsx from 'clsx';
 
-const Textarea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement>> = ({ className, rows=3, 
-          placeholder="Необязательно", ...rest }) => {
+const Textarea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement>> = ({
+  className,
+  rows = 3,
+  placeholder = 'Необязательно',
+  ...rest
+}) => {
   return (
     <textarea
       className={clsx(

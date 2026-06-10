@@ -1,7 +1,8 @@
 import clsx from 'clsx';
 import React from 'react';
+import type { ApiCategoryInfo } from '@/api/dto/category.dto';
 import { ImageUpload, Input, PrimaryButton, Textarea } from '../ui';
-import { useCategories } from '@/hooks/useCategories';
+import { useCategories } from '@/hooks/queries/useCategoriesQuery';
 import type { ProductForm } from '@/types';
 import { generateProductDescription } from '@/utils/generateProductDescription';
 
@@ -18,7 +19,7 @@ const AdminProductAddInfo: React.FC<AdminProductAddInfoProps> = ({
   previewUrl,
   className,
 }) => {
-  const { categories } = useCategories();
+  const { data: categories = [] } = useCategories();
 
   return (
     <div className={clsx('bg-surface rounded-xl p-5', className)}>
@@ -35,7 +36,7 @@ const AdminProductAddInfo: React.FC<AdminProductAddInfoProps> = ({
             onChange={(e) => setForm({ ...form, categoryId: Number(e.target.value) })}
             className="flex-1 bg-surface border border-line rounded-lg px-3.5 py-2.5 text-sm text-body outline-none transition-colors duration-150 focus:border-primary"
           >
-            {categories.map((c) => (
+            {categories.map((c: ApiCategoryInfo) => (
               <option key={c.id} value={c.id}>
                 {c.label}
               </option>

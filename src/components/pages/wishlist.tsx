@@ -1,8 +1,5 @@
-import { useEffect, useState } from 'react';
 import { Heart } from 'lucide-react';
-import { useWishlistStore } from '@/store/useWishlistStore';
-import { Api } from '@/api';
-import type { Product } from '@/types';
+import { useWishlist } from '@/hooks/queries/useWishlistQuery';
 import {
   ProductCard,
   EmptyState,
@@ -12,42 +9,17 @@ import {
 } from '@/components/shared';
 
 const Wishlist = () => {
-  const productIds = useWishlistStore((s) => s.productIds);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (productIds.length === 0) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setProducts([]);
-      setLoading(false);
-      return;
-    }
-    Api.products
-      .getAll({ limit: 999 })
-      .then((res) => {
-        const all = res.items.map(Api.products.mapProduct);
-        Api.productCache.set(all);
-        setProducts(all.filter((p) => productIds.includes(p.id)));
-      })
-      .catch(() => setProducts([]));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    // eslint-disable-next-line
-    setProducts((prev) => prev.filter((p) => productIds.includes(p.id)));
-  }, [productIds]);
+  const { data: products, isLoading } = useWishlist();
 
   return (
     <PageLayout>
       <PageTitle>Избранное</PageTitle>
 
-      {loading ? (
+      {isLoading ? (
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
           <ProductSkeleton count={4} />
         </div>
-      ) : products.length === 0 ? (
+      ) : !products?.length ? (
         <div className="mt-10">
           <EmptyState
             icon={<Heart size={48} />}

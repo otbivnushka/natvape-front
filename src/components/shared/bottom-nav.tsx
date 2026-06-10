@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { useCartStore } from '@/store/useCartStore';
+import { useCart } from '@/hooks/queries/useCartQuery';
+import type { CartItem } from '@/types';
 import { LayoutPanelTop, ShoppingCart, Heart, User } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -26,7 +27,8 @@ const NavLinkItem: React.FC<NavLinkItemProps> = ({ to, end, children }) => (
 );
 
 const BottomNav: React.FC = () => {
-  const count = useCartStore((s) => s.totalItems());
+  const { data: items = [] } = useCart();
+  const count = items.reduce((sum: number, i: CartItem) => sum + i.quantity, 0);
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 h-16 bg-surface border-t border-line flex justify-around items-center z-100">

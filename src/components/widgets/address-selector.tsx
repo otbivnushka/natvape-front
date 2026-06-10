@@ -12,7 +12,11 @@ interface AddressSelectorProps {
   className?: string;
 }
 
-const AddressSelector: React.FC<AddressSelectorProps> = ({selectedAddressId, setSelectedAddressId, className }) => {
+const AddressSelector: React.FC<AddressSelectorProps> = ({
+  selectedAddressId,
+  setSelectedAddressId,
+  className,
+}) => {
   const toastError = useToastError();
 
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -28,7 +32,7 @@ const AddressSelector: React.FC<AddressSelectorProps> = ({selectedAddressId, set
         if (list.length > 0) setSelectedAddressId(list[0].id);
       })
       .catch(() => {});
-      // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
   const handleSelectAddress = (address: string, lat: number, lng: number) => {

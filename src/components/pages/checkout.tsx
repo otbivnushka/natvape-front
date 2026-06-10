@@ -2,38 +2,35 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShoppingCart, Loader2 } from 'lucide-react';
 import { Api } from '@/api';
-import { useCartStore } from '@/store/useCartStore';
+import { useCart, useClearCart } from '@/hooks/queries/useCartQuery';
 import { useAuthStore } from '@/store/useAuthStore';
 import { PrimaryButton, Textarea } from '@/components/ui';
-import {
-  PageLayout,
-  DeliveryMethodSelector,
-  PageTitle,
-  TimeSelector,
-} from '@/components/shared';
+import { PageLayout, DeliveryMethodSelector, PageTitle, TimeSelector } from '@/components/shared';
 import { AddressSelector, OrderSummary, PickupSelector } from '@/components/widgets';
+import type { CartItem } from '@/types';
 import type { DeliveryMethod } from '@/components/shared/delivery-method-selector';
 import { useToastStore } from '@/store/useToastStore';
 import { useToastError } from '@/hooks/useToastError';
+import { calcCartSubtotal } from '@/utils/cartTotals';
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { items, subtotal, clearCart } = useCartStore();
-  const toastError = useToastError();
+  const { data: items = [] } = useCart();
+  const clearCart = useClearCart();
   const addToast = useToastStore((s) => s.addToast);
+  const toastError = useToastError();
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
 
   const [delivery, setDelivery] = useState<DeliveryMethod>('pickup');
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
-
   const [timeOption, setTimeOption] = useState<'soon' | 'whenever' | null>(null);
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
 
-
-  const totalQty = items.reduce((sum, i) => sum + i.quantity, 0);
+  const totalQty = items.reduce((sum: number, i: CartItem) => sum + i.quantity, 0);
   const deliveryFee = delivery === 'delivery' && totalQty < 3 ? 3 : 0;
-  const total = subtotal() + deliveryFee;
+  const subtotal = calcCartSubtotal(items);
+  const total = subtotal + deliveryFee;
 
   const handleSubmit = async () => {
     if (!isLoggedIn()) {
@@ -56,7 +53,7 @@ const Checkout = () => {
               : undefined,
       });
       addToast(`Заказ #${order.id} оформлен! Спасибо за покупку!`);
-      clearCart();
+      clearCart.mutate();
       navigate('/profile');
     } catch {
       toastError('оформлении заказа');
@@ -84,11 +81,19 @@ const Checkout = () => {
       <DeliveryMethodSelector value={delivery} onChange={setDelivery} />
 
       {delivery === 'pickup' && (
-        <PickupSelector className="mb-5" pickupPoint={selectedAddressId} setPickupPoint={setSelectedAddressId} />
+        <PickupSelector
+          className="mb-5"
+          pickupPoint={selectedAddressId}
+          setPickupPoint={setSelectedAddressId}
+        />
       )}
 
       {delivery === 'delivery' && (
-        <AddressSelector selectedAddressId={selectedAddressId} setSelectedAddressId={setSelectedAddressId} className="mb-5" />
+        <AddressSelector
+          selectedAddressId={selectedAddressId}
+          setSelectedAddressId={setSelectedAddressId}
+          className="mb-5"
+        />
       )}
 
       <TimeSelector time={timeOption} setTime={setTimeOption} />

@@ -35,7 +35,13 @@ const VariantPicker: React.FC<VariantPickerProps> = ({
         {visible.map((v) => {
           const isOut = disabledValues.includes(v.value);
           return (
-            <VariantButton key={v.value} v={v} isOut={isOut} selectedValue={selectedValue} onSelect={onSelect} />
+            <VariantButton
+              key={v.value}
+              v={v}
+              isOut={isOut}
+              selectedValue={selectedValue}
+              onSelect={onSelect}
+            />
           );
         })}
       </div>
