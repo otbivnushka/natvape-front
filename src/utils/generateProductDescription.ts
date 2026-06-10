@@ -17,7 +17,9 @@ export function generateProductDescription(product: ProductForm): string {
     parts.push(`Цвета: ${colors.map((c) => c.name).join(', ')}.`);
   }
 
-  parts.push(doublePrice ? `Цена ${price} BYN (1 + 1 = ${doublePrice} BYN).` : `Цена ${price} BYN.`);
+  parts.push(
+    doublePrice ? `Цена ${price} BYN (1 + 1 = ${doublePrice} BYN).` : `Цена ${price} BYN.`,
+  );
 
   return parts.join('\n');
 }

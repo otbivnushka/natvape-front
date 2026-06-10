@@ -10,7 +10,6 @@ import * as admin from './requests/admin';
 import * as images from './requests/images';
 import * as rates from './requests/rates';
 import * as stories from './requests/stories';
-import { productCache } from './product-cache';
 
 export const Api = {
   auth,
@@ -25,5 +24,4 @@ export const Api = {
   images,
   rates,
   stories,
-  productCache,
 };

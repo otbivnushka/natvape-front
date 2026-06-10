@@ -1,3 +1,5 @@
+import type { ApiProduct } from './product.dto';
+
 export interface WishlistResponse {
-  productIds: number[];
+  items: ApiProduct[];
 }

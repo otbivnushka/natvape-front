@@ -2,7 +2,6 @@ import { retrieveRawInitData } from '@telegram-apps/sdk';
 import axios from 'axios';
 import { useAuthStore } from '../store/useAuthStore';
 import { useToastStore } from '../store/useToastStore';
-import { errorCodes } from './constants';
 
 let getToken: (() => string | null) | null = null;
 
@@ -35,10 +34,5 @@ axiosInstance.interceptors.response.use(null, (error) => {
       })
       .catch(() => {});
   }
-  return Promise.reject(error);
-});
-
-axiosInstance.interceptors.response.use(null, (error) => {
-  useToastStore.getState().addToast(errorCodes[error.status]);
   return Promise.reject(error);
 });
