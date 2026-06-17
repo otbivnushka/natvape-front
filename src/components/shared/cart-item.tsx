@@ -1,30 +1,41 @@
 import React from 'react';
-import type { CartItem as CartItemType } from '@/types';
+import { useQueryClient } from '@tanstack/react-query';
+import type { CartItem as CartItemType, Product } from '@/types';
 import { useRemoveFromCart, useUpdateCartQuantity } from '@/hooks/queries/useCartQuery';
 import { formatPrice } from '@/utils/formatPrice';
 import { calcCartItemTotal } from '@/utils/cartTotals';
 import { X } from 'lucide-react';
 import { QuantityStepper, PriceDisplay } from '@/components/ui';
+import { queryKeys } from '@/hooks/queries/queryKeys';
 
 interface CartItemProps {
   item: CartItemType;
   allItems?: CartItemType[];
 }
 
-function getVariantStock(item: CartItemType): number {
+function getVariantStock(item: CartItemType, queryClient: ReturnType<typeof useQueryClient>): number {
   if (!item.variantKey) return Infinity;
-  const v = item.product.variants?.find((x) => x.value === item.variantKey);
+  const cached = queryClient.getQueryData<{ product: Product }>(
+    queryKeys.products.detail(item.product.id),
+  );
+  const product = cached?.product;
+  if (!product) return Infinity;
+
+  const v = product.variants?.find((x) => x.value === item.variantKey);
   if (v) return v.stock;
-  const c = item.product.colors?.find((x) => x.name === item.variantKey);
+
+  const c = product.colors?.find((x) => x.hex === item.variantKey);
   if (c) return c.stock;
+
   return Infinity;
 }
 
 const CartItem: React.FC<CartItemProps> = ({ item, allItems }) => {
+  const queryClient = useQueryClient();
   const removeMutation = useRemoveFromCart();
   const updateQtyMutation = useUpdateCartQuantity();
   const variantName = item.variantName ?? null;
-  const maxQty = getVariantStock(item);
+  const maxQty = getVariantStock(item, queryClient);
 
   return (
     <div className="flex gap-3 p-3 bg-surface rounded-xl items-center">
