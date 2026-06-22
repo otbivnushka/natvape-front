@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Api } from '@/api';
 import { queryKeys } from './queryKeys';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useToastStore } from '@/store/useToastStore';
 import type { ApiCartItem } from '@/api/dto/cart.dto';
 import type { CartItem, Product } from '@/types';
 import { sortCartItems } from '@/utils/sortCartItems';
@@ -64,11 +65,7 @@ export function useAddToCart() {
       quantity?: number;
     }) => {
       if (!authToken) return;
-      try {
-        await Api.cart.add(productId, quantity, variantKey, variantName);
-      } catch {
-        /* fallback — keep local */
-      }
+      await Api.cart.add(productId, quantity, variantKey, variantName);
     },
     onMutate: async ({
       productId,
@@ -136,6 +133,8 @@ export function useAddToCart() {
       if (context?.prev) {
         queryClient.setQueryData(queryKeys.cart.all, context.prev);
       }
+      const msg = (_err as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      if (msg) useToastStore.getState().addToast(msg);
     },
     onSettled: () => {
       if (useAuthStore.getState().isLoggedIn()) {
@@ -188,14 +187,10 @@ export function useUpdateCartQuantity() {
     mutationFn: async ({ itemId, quantity }: { itemId: number; quantity: number }) => {
       const authed = useAuthStore.getState().isLoggedIn();
       if (authed) {
-        try {
-          if (quantity <= 0) {
-            await Api.cart.remove(itemId);
-          } else {
-            await Api.cart.updateQty(itemId, quantity);
-          }
-        } catch {
-          /* fallback */
+        if (quantity <= 0) {
+          await Api.cart.remove(itemId);
+        } else {
+          await Api.cart.updateQty(itemId, quantity);
         }
       }
     },
@@ -221,6 +216,8 @@ export function useUpdateCartQuantity() {
       if (context?.prev) {
         queryClient.setQueryData(queryKeys.cart.all, context.prev);
       }
+      const msg = (_err as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      if (msg) useToastStore.getState().addToast(msg);
     },
     onSettled: () => {
       if (useAuthStore.getState().isLoggedIn()) {
