@@ -48,12 +48,12 @@ const CartItem: React.FC<CartItemProps> = ({ item, allItems }) => {
         className="w-18 h-18 rounded-lg object-cover bg-page shrink-0"
         src={item.product.image}
         alt={item.product.name}
-        onClick={() => navigate(`/catalog/${item.product.id}`)}
+        onClick={() => navigate(`/product/${item.product.id}`)}
       />
       <div className="flex-1 min-w-0">
         <div
-          className="text-sm font-semibold text-muted truncate"
-          onClick={() => navigate(`/catalog/${item.product.id}`)}
+          className="text-sm underline font-semibold text-muted truncate"
+          onClick={() => navigate(`/product/${item.product.id}`)}
         >
           {item.product.name}
         </div>
