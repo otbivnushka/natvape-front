@@ -7,13 +7,17 @@ import { calcCartItemTotal } from '@/utils/cartTotals';
 import { X } from 'lucide-react';
 import { QuantityStepper, PriceDisplay } from '@/components/ui';
 import { queryKeys } from '@/hooks/queries/queryKeys';
+import { useNavigate } from 'react-router-dom';
 
 interface CartItemProps {
   item: CartItemType;
   allItems?: CartItemType[];
 }
 
-function getVariantStock(item: CartItemType, queryClient: ReturnType<typeof useQueryClient>): number {
+function getVariantStock(
+  item: CartItemType,
+  queryClient: ReturnType<typeof useQueryClient>,
+): number {
   if (!item.variantKey) return Infinity;
   const cached = queryClient.getQueryData<{ product: Product }>(
     queryKeys.products.detail(item.product.id),
@@ -31,6 +35,7 @@ function getVariantStock(item: CartItemType, queryClient: ReturnType<typeof useQ
 }
 
 const CartItem: React.FC<CartItemProps> = ({ item, allItems }) => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const removeMutation = useRemoveFromCart();
   const updateQtyMutation = useUpdateCartQuantity();
@@ -43,9 +48,15 @@ const CartItem: React.FC<CartItemProps> = ({ item, allItems }) => {
         className="w-18 h-18 rounded-lg object-cover bg-page shrink-0"
         src={item.product.image}
         alt={item.product.name}
+        onClick={() => navigate(`/catalog/${item.product.id}`)}
       />
       <div className="flex-1 min-w-0">
-        <div className="text-sm font-semibold text-muted truncate">{item.product.name}</div>
+        <div
+          className="text-sm font-semibold text-muted truncate"
+          onClick={() => navigate(`/catalog/${item.product.id}`)}
+        >
+          {item.product.name}
+        </div>
         {variantName && <div className="text-[12px] text-dim mt-0.5">{variantName}</div>}
         <div className="mt-1">
           <PriceDisplay price={item.product.price} doublePrice={item.product.doublePrice} />
