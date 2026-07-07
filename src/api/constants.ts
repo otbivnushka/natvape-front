@@ -6,6 +6,7 @@ export const ApiRoutes = {
   PRODUCTS: '/products',
   PRODUCT_BY_ID: '/products/:id',
   PRODUCTS_BRANDS: '/products/brands',
+  PRODUCTS_ATTRIBUTE_VALUES: '/products/attribute-values',
 
   CART: '/cart',
   CART_ITEM: '/cart/:id',
@@ -48,4 +49,11 @@ export const ApiRoutes = {
 
   ADMIN_PICKUPS: '/admin/addresses',
   ADMIN_PICKUP_BY_ID: '/admin/addresses/:id',
+
+  CATEGORY_ATTRIBUTES: '/categories/:id/attributes',
+
+  ADMIN_CATEGORY_ATTRIBUTES: '/admin/category-attributes',
+  ADMIN_CATEGORY_ATTRIBUTE_BY_ID: '/admin/category-attributes/:id',
+  ADMIN_PRODUCT_ATTRIBUTES: '/admin/products/:id/attributes',
+  ADMIN_PRODUCT_ATTRIBUTE_BY_ID: '/admin/products/attributes/:attrId',
 } as const;

@@ -120,6 +120,20 @@ const ProductDetail = () => {
               />
             )}
 
+            {product.attributes.length > 0 && (
+              <div className="mb-4">
+                <div className="text-sm font-semibold text-muted mb-2">Характеристики</div>
+                <div className="flex flex-col gap-1 text-sm">
+                  {product.attributes.map((a) => (
+                    <div key={a.id} className="flex justify-between">
+                      <span className="text-muted">{a.name}</span>
+                      <span className="text-body">{a.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="mb-4">
               <div className="text-sm font-semibold text-muted mb-2">Описание:</div>
               <p className="text-sm text-muted leading-relaxed">{product.description}</p>

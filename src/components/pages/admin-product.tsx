@@ -9,8 +9,9 @@ import {
   AdminProductAddColors,
   AdminProductAddInfo,
   AdminProductAddVariants,
+  AdminProductAddAttributes,
 } from '@/components/widgets';
-import type { ProductForm } from '@/types';
+import type { ProductForm, ProductAttribute } from '@/types';
 
 const AdminProduct = () => {
   const navigate = useNavigate();
@@ -25,6 +26,8 @@ const AdminProduct = () => {
   const [saving, setSaving] = useState(false);
 
   const [previewUrl, setPreviewUrl] = useState('');
+
+  const [attributes, setAttributes] = useState<ProductAttribute[]>([]);
 
   const [form, setForm] = useState<ProductForm>({
     name: '',
@@ -68,6 +71,7 @@ const AdminProduct = () => {
           colors: apiProduct.colors?.map((c) => ({ ...c })) ?? [],
         });
         setPreviewUrl(apiProduct.image);
+        setAttributes(apiProduct.attributes ?? []);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -128,7 +132,14 @@ const AdminProduct = () => {
 
         {productId != null && (
           <>
-            <AdminProductAddVariants
+            <AdminProductAddAttributes
+          productId={productId}
+          categoryId={form.categoryId}
+          productAttributes={attributes}
+          className="mb-6"
+        />
+
+        <AdminProductAddVariants
               productId={productId}
               form={form}
               setForm={setForm}

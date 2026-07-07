@@ -16,3 +16,4 @@ export { ToastContainer } from './toast';
 export { StatusMark } from './status-mark';
 export { Spinner } from './spinner';
 export { Textarea } from './textarea';
+export { AttributeFilter } from './attribute-filter';

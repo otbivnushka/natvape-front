@@ -1,5 +1,10 @@
 import { ApiRoutes } from '../constants';
 import type { AdminOrder, CreatePickupAddressDto, CreateProductDto } from '../dto/admin.dto';
+import type {
+  CreateCategoryAttributeDto,
+  CreateProductAttributeDto,
+  UpdateProductAttributeDto,
+} from '../dto/admin.dto';
 import type { ApiProduct } from '../dto/product.dto';
 import type {
   CreateStorySetDto,
@@ -13,6 +18,41 @@ import { axiosInstance } from '../instance';
 export const createProduct = async (dto: CreateProductDto): Promise<ApiProduct> => {
   const { data } = await axiosInstance.post<ApiProduct>(ApiRoutes.ADMIN_PRODUCTS, dto);
   return data;
+};
+
+export const createCategoryAttribute = async (dto: CreateCategoryAttributeDto): Promise<void> => {
+  await axiosInstance.post(ApiRoutes.ADMIN_CATEGORY_ATTRIBUTES, dto);
+};
+
+export const deleteCategoryAttribute = async (id: number): Promise<void> => {
+  await axiosInstance.delete(ApiRoutes.ADMIN_CATEGORY_ATTRIBUTE_BY_ID.replace(':id', String(id)));
+};
+
+export const createProductAttribute = async (
+  productId: number,
+  dto: CreateProductAttributeDto,
+): Promise<{ id: number }> => {
+  const { data } = await axiosInstance.post<{ id: number }>(
+    ApiRoutes.ADMIN_PRODUCT_ATTRIBUTES.replace(':id', String(productId)),
+    dto,
+  );
+  return data;
+};
+
+export const updateProductAttribute = async (
+  attrId: number,
+  dto: UpdateProductAttributeDto,
+): Promise<void> => {
+  await axiosInstance.patch(
+    ApiRoutes.ADMIN_PRODUCT_ATTRIBUTE_BY_ID.replace(':attrId', String(attrId)),
+    dto,
+  );
+};
+
+export const deleteProductAttribute = async (attrId: number): Promise<void> => {
+  await axiosInstance.delete(
+    ApiRoutes.ADMIN_PRODUCT_ATTRIBUTE_BY_ID.replace(':attrId', String(attrId)),
+  );
 };
 
 export const updateProduct = async (

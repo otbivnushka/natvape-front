@@ -1,5 +1,13 @@
 import type { ApiCategoryInfo } from './category.dto';
 
+export interface ApiProductAttributeItem {
+  id: number;
+  name: string;
+  key: string;
+  type: string;
+  value: string;
+}
+
 export interface ApiProduct {
   id: number;
   name: string;
@@ -17,6 +25,7 @@ export interface ApiProduct {
   colors?: { id: number; name: string; hex: string; stock: number }[];
   userRate?: number;
   visible: boolean;
+  attributes?: ApiProductAttributeItem[];
 }
 
 export interface ApiProductsResponse {
@@ -38,4 +47,11 @@ export interface ProductsQuery {
   sort?: string;
   page?: number;
   limit?: number;
+  attribute?: Record<string, string>;
+}
+
+export interface AttributeValuesItem {
+  key: string;
+  name: string;
+  values: string[];
 }

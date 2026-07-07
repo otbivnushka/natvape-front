@@ -6,7 +6,8 @@ import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { useDebounce } from '@uidotdev/usehooks';
 import { useProducts, useBrands } from '@/hooks/queries/useProductsQuery';
 import { useCategoryByKey } from '@/hooks/queries/useCategoriesQuery';
-import { SearchBar, SortSelect, PriceFilter, BrandFilter, Skeleton } from '@/components/ui';
+import { useAttributeValues } from '@/hooks/queries/useAttributeValuesQuery';
+import { SearchBar, SortSelect, PriceFilter, BrandFilter, Skeleton, AttributeFilter } from '@/components/ui';
 import { EmptyState, PageLayout, PageTitle } from '@/components/shared';
 import { ProductsContainer } from '@/components/widgets';
 
@@ -21,6 +22,7 @@ const CategoryProducts = () => {
   const [globalMinPrice, setGlobalMinPrice] = useState(0);
   const [globalMaxPrice, setGlobalMaxPrice] = useState(0);
   const [brand, setBrand] = useState('');
+  const [attributeFilters, setAttributeFilters] = useState<Record<string, string>>({});
   const initialLoad = useRef(true);
   const debouncedSearch = useDebounce(search, 300);
   const debouncedMinPrice = useDebounce(minPrice, 300);
@@ -28,6 +30,8 @@ const CategoryProducts = () => {
 
   const { data: catInfo } = useCategoryByKey(category ?? '');
   const { data: brands } = useBrands(category);
+  const { data: attrValues = [] } = useAttributeValues(category);
+  const attrFilterKeys = Object.keys(attributeFilters);
   const { data: productsData, isLoading: productsLoading } = useProducts(
     category
       ? {
@@ -43,6 +47,7 @@ const CategoryProducts = () => {
             debouncedMaxPrice > 0 && debouncedMaxPrice !== globalMaxPrice
               ? debouncedMaxPrice
               : undefined,
+          ...(attrFilterKeys.length > 0 ? { attribute: attributeFilters } : {}),
         }
       : undefined,
   );
@@ -104,6 +109,14 @@ const CategoryProducts = () => {
           onMaxChange={setMaxPrice}
           globalMin={globalMinPrice}
           globalMax={globalMaxPrice}
+        />
+      </div>
+
+      <div className="mb-4">
+        <AttributeFilter
+          attributes={attrValues}
+          selected={attributeFilters}
+          onChange={setAttributeFilters}
         />
       </div>
 

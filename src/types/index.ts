@@ -20,6 +20,14 @@ export interface ProductVariant {
   stock: number;
 }
 
+export interface ProductAttribute {
+  id: number;
+  name: string;
+  key: string;
+  type: string;
+  value: string;
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -37,6 +45,7 @@ export interface Product {
   variantLabel?: string;
   variants?: ProductVariant[];
   colors?: ProductColor[];
+  attributes: ProductAttribute[];
 }
 
 export interface CartItem {

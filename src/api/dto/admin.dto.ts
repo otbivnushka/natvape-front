@@ -47,3 +47,37 @@ export interface CreatePickupAddressDto {
   lat: number;
   lng: number;
 }
+
+export interface ApiCategoryAttribute {
+  id: number;
+  name: string;
+  key: string;
+  type: string;
+  required: boolean;
+}
+
+export interface ApiProductAttribute {
+  id: number;
+  attributeId: number;
+  name: string;
+  key: string;
+  type: string;
+  value: string;
+}
+
+export interface CreateCategoryAttributeDto {
+  categoryId: number;
+  name: string;
+  key: string;
+  type: string;
+  required: boolean;
+}
+
+export interface CreateProductAttributeDto {
+  attributeId: number;
+  value: string;
+}
+
+export interface UpdateProductAttributeDto {
+  value: string;
+}

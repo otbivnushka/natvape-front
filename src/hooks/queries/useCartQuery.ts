@@ -24,6 +24,7 @@ function mapApiItem(i: ApiCartItem): CartItem {
     badge: i.product.badge,
     category: i.product.category.key as Product['category'],
     visible: true,
+    attributes: [],
   };
 
   return {
@@ -114,10 +115,13 @@ export function useAddToCart() {
                 doublePrice: null,
                 rating: 0,
                 image: '',
+                imageId: null,
                 description: '',
                 brand: '',
+                badge: null,
                 category: 'liquids',
                 visible: true,
+                attributes: [],
               } as Product),
             quantity,
             variantKey,

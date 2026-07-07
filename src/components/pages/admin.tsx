@@ -15,6 +15,7 @@ import {
   AdminOrdersTable,
   AdminStoriesTable,
   AdminPickupsTable,
+  AdminCategoryAttributes,
 } from '@/components/widgets';
 import { useState } from 'react';
 
@@ -122,6 +123,7 @@ const Admin = () => {
             onDelete={(id: number) => handleDelete('pickup', id)}
           />
         )}
+        {tab === 'attributes' && <AdminCategoryAttributes />}
       </div>
 
       <ConfirmDialog />

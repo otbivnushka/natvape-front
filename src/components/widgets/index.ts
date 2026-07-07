@@ -14,3 +14,5 @@ export { PickupSelector } from './pickup-selector';
 export { AdminProductAddInfo } from './admin-product-add-info';
 export { AdminProductAddVariants } from './admin-product-add-variants';
 export { AdminProductAddColors } from './admin-product-add-colors';
+export { AdminProductAddAttributes } from './admin-product-add-attributes';
+export { AdminCategoryAttributes } from './admin-category-attributes';
