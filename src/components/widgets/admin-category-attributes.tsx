@@ -5,6 +5,7 @@ import { useCategories } from '@/hooks/queries/useCategoriesQuery';
 import { useCategoryAttributes } from '@/hooks/queries/useCategoryAttributesQuery';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
+import { transliterate } from '@/utils/transliterate';
 
 const AdminCategoryAttributes: React.FC = () => {
   const queryClient = useQueryClient();
@@ -82,8 +83,6 @@ const AdminCategoryAttributes: React.FC = () => {
             >
               <span className="font-medium min-w-20">{attr.name}</span>
               <span className="text-muted min-w-20">{attr.key}</span>
-              <span className="text-dim min-w-16">{attr.type}</span>
-              <span className="text-dim">{attr.required ? 'обязательный' : 'опциональный'}</span>
               <button
                 onClick={() => handleDelete(attr.id)}
                 className="ml-auto p-1 rounded text-muted cursor-pointer hover:text-red-500 transition-colors"
@@ -106,9 +105,7 @@ const AdminCategoryAttributes: React.FC = () => {
             value={newName}
             onChange={(e) => {
               setNewName(e.target.value);
-              if (!newKey || newKey === newName) {
-                setNewKey(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '_'));
-              }
+              setNewKey(transliterate(e.target.value));
             }}
             className="flex-1 min-w-24 bg-page border border-line rounded-lg px-3 py-2 text-sm text-body outline-none transition-colors focus:border-primary placeholder:text-dim"
           />
