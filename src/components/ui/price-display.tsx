@@ -10,7 +10,7 @@ interface PriceDisplayProps {
 
 const PriceDisplay: React.FC<PriceDisplayProps> = ({ price, doublePrice, size = 'sm' }) => {
   return (
-    <div className="flex items-baseline gap-2 flex-wrap">
+    <div className="flex items-center gap-2 flex-wrap">
       <span className={clsx('font-bold text-primary', size === 'lg' ? 'text-xl' : 'text-base')}>
         {formatPrice(price)}
       </span>

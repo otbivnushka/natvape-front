@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Product } from '@/types';
+import type { Product, ProductAttribute } from '@/types';
 import { useWishlist, useToggleWishlist } from '@/hooks/queries/useWishlistQuery';
 import { useToastStore } from '@/store/useToastStore';
 import { Heart } from 'lucide-react';
@@ -44,9 +44,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index = 0 }) => {
           onClick={() => navigate(`/product/${product.id}`)}
         />
         <HeartButton wishlisted={wishlisted} onClick={handleWish} />
+        {product.attributes && <AttributesBadge attributes={product.attributes} />}
       </div>
       <div className="p-3 flex flex-col gap-1.5 flex-1">
-        <div className="text-sm font-semibold text-primary leading-tight line-clamp-2">
+        <div className="truncate text-sm font-semibold text-primary leading-tight line-clamp-2">
           {product.name}
         </div>
         <StarRating rating={product.rating} />
@@ -82,6 +83,25 @@ const HeartButton: React.FC<HeartButtonProps> = ({ wishlisted, onClick }) => {
     >
       <Heart size={16} fill={wishlisted ? 'currentColor' : 'none'} />
     </button>
+  );
+};
+
+interface AttributesBadgeProps {
+  attributes: ProductAttribute[];
+}
+
+const AttributesBadge: React.FC<AttributesBadgeProps> = ({ attributes }) => {
+  return (
+    <div className="flex gap-2 absolute bottom-2 right-2">
+      {attributes.map((attr) => (
+        <span
+          key={attr.id}
+          className="bg-surface/80 backdrop-blur-sm border-none rounded-sm px-1 py-1 text-[11px] text-primary"
+        >
+          {attr.value}
+        </span>
+      ))}
+    </div>
   );
 };
 
