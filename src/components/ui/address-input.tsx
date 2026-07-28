@@ -50,8 +50,8 @@ const AddressInput: React.FC<AddressInputProps> = ({ value, onChange, onSelectAd
           headers: { Accept: 'application/json', 'User-Agent': 'natvape-front/1.0' },
         });
         const data: Suggestion[] = await res.json();
-        setSuggestions(data);
-        setIsOpen(data.length > 0);
+        setSuggestions([]); // setSuggestions(data);
+        setIsOpen(false); // setIsOpen(data.length > 0);
       } catch {
         setSuggestions([]);
         setIsOpen(false);

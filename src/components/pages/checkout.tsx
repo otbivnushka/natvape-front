@@ -8,6 +8,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { PrimaryButton, Textarea } from '@/components/ui';
 import { PageLayout, DeliveryMethodSelector, PageTitle, TimeSelector } from '@/components/shared';
 import { AddressSelector, OrderSummary, PickupSelector } from '@/components/widgets';
+import { OrderErrorModal } from '@/components/widgets/modals';
 import type { CartItem } from '@/types';
 import type { DeliveryMethod } from '@/components/shared/delivery-method-selector';
 import { useToastStore } from '@/store/useToastStore';
@@ -29,6 +30,7 @@ const Checkout = () => {
   const [submitting, setSubmitting] = useState(false);
   const [timeOption, setTimeOption] = useState<'soon' | 'whenever' | null>(null);
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+  const [orderErrors, setOrderErrors] = useState<string[] | null>(null);
 
   const totalQty = items.reduce((sum: number, i: CartItem) => sum + i.quantity, 0);
   const deliveryFee = delivery === 'delivery' && totalQty < 3 ? 3 : 0;
@@ -60,8 +62,13 @@ const Checkout = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.products.all });
       navigate('/profile');
-    } catch {
-      toastError('оформлении заказа');
+    } catch (e) {
+      const msgs = (e as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
+      if (Array.isArray(msgs) && msgs.length > 0) {
+        setOrderErrors(msgs as string[]);
+      } else {
+        toastError('оформлении заказа');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -120,6 +127,12 @@ const Checkout = () => {
           'Подтвердить заказ'
         )}
       </PrimaryButton>
+
+      <OrderErrorModal
+        open={orderErrors != null}
+        onClose={() => setOrderErrors(null)}
+        errors={orderErrors ?? []}
+      />
     </PageLayout>
   );
 };
