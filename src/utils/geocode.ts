@@ -14,7 +14,7 @@ export async function geocodeAddress(address: string): Promise<{ lat: number; ln
     const res = await fetch(`https://nominatim.openstreetmap.org/search?${params}`, {
       headers: {
         Accept: 'application/json',
-        'User-Agent': 'natvape-front/1.0',
+        'User-Agent': 'nat-front/1.0',
       },
     });
     const data = await res.json();

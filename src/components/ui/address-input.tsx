@@ -47,7 +47,7 @@ const AddressInput: React.FC<AddressInputProps> = ({ value, onChange, onSelectAd
           limit: '5',
         });
         const res = await fetch(`https://nominatim.openstreetmap.org/search?${params}`, {
-          headers: { Accept: 'application/json', 'User-Agent': 'natvape-front/1.0' },
+          headers: { Accept: 'application/json', 'User-Agent': 'nat-front/1.0' },
         });
         const data: Suggestion[] = await res.json();
         console.log(data);

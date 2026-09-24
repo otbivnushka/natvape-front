@@ -22,7 +22,7 @@ const ProjectInfoModal: React.FC<ProjectInfoModalProps> = ({ open, onClose }) =>
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-body">NatVape</h2>
+          <h2 className="text-lg font-bold text-body">NatShop</h2>
           <button
             type="button"
             onClick={onClose}
@@ -32,7 +32,10 @@ const ProjectInfoModal: React.FC<ProjectInfoModalProps> = ({ open, onClose }) =>
           </button>
         </div>
 
-        <p className="text-sm text-muted mb-4 leading-relaxed">тг мини апп с вейпами</p>
+        <p className="text-sm text-muted mb-4 leading-relaxed">
+          тг мини апп{' '}
+          <span className="text-sm underline text-red-600 mt-8 leading-relaxed">18+</span>
+        </p>
 
         <div className="text-sm">
           <span className="font-semibold text-body">Поддержка: </span>
@@ -41,15 +44,8 @@ const ProjectInfoModal: React.FC<ProjectInfoModalProps> = ({ open, onClose }) =>
           </span>
         </div>
 
-        <div className="text-sm">
-          <span className="font-semibold text-body">Автор: </span>
-          <span className="font-bold text-body underline">
-            <a href="https://t.me/otbivnuschka">@otbivnuschka</a>
-          </span>
-        </div>
-
         <p className="text-sm text-muted mt-8 leading-relaxed">
-          © Все права не защищены. Всё что можно было нарушить - было нарушено
+          © Все права уже защищены. Вообще ничего не нарушено
         </p>
       </div>
     </div>

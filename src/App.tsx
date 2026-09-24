@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { BottomNav } from '@/components/shared';
+import { BottomNav, AgeGate } from '@/components/shared';
 import { ToastContainer } from '@/components/ui';
 import { useTelegramBackButton } from '@/hooks/useTelegramBackButton';
 import { useInit } from '@/hooks/useInit';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useAgeGateStore } from '@/store/useAgeGateStore';
 import { queryClient } from '@/lib/queryClient';
 import { queryKeys } from '@/hooks/queries/queryKeys';
 import {
@@ -39,6 +40,11 @@ function AuthSync() {
 
 function AppContent() {
   useTelegramBackButton();
+  const ageStatus = useAgeGateStore((s) => s.status);
+
+  if (ageStatus !== 'ok') {
+    return <AgeGate />;
+  }
 
   return (
     <div className="min-h-screen bg-page">

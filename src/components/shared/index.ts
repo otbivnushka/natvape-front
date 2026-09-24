@@ -1,5 +1,6 @@
 export { AddressBlock } from './address-block';
 export { AdminTabPickerButton } from './admin-tab-picker-button';
+export { AgeGate } from './age-gate';
 export { BottomNav } from './bottom-nav';
 export { CartItem } from './cart-item';
 export { CatalogCard } from './catalog-card';
