@@ -44,7 +44,12 @@ const ProjectInfoModal: React.FC<ProjectInfoModalProps> = ({ open, onClose }) =>
           </span>
         </div>
 
-        <p className="text-sm text-muted mt-8 leading-relaxed">
+        <p
+          onClick={() => {
+            window.localStorage.clear();
+          }}
+          className="text-sm text-muted mt-8 leading-relaxed"
+        >
           © Все права уже защищены. Вообще ничего не нарушено
         </p>
       </div>
