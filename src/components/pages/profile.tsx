@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useOrders } from '@/hooks/queries/useOrdersQuery';
+import { useBonus } from '@/hooks/queries/useBonusQuery';
 import { Lock, Info, Shield } from 'lucide-react';
 import { PageLayout, FixedButton, PageTitle } from '@/components/shared';
-import { StoriesContainer, UserInfo, OrdersContainer } from '@/components/widgets';
+import { StoriesContainer, UserInfo, OrdersContainer, BonusHistory } from '@/components/widgets';
 import { ProjectInfoModal } from '@/components/widgets/modals';
 
 const Profile = () => {
@@ -12,6 +13,7 @@ const Profile = () => {
   const { user, isLoggedIn, isAdmin } = useAuthStore();
   const { name: userName } = user ?? {};
   const { data: orders = [], isLoading: ordersLoading } = useOrders();
+  const { data: bonus } = useBonus();
 
   const tg = window.Telegram?.WebApp;
   const tgUser = tg.initDataUnsafe.user;
@@ -46,7 +48,10 @@ const Profile = () => {
           displayName={displayName}
           displayAvatar={displayAvatar}
           displayTelegram={displayTelegram}
+          balance={bonus?.balance}
         />
+
+        <BonusHistory history={bonus?.history ?? []} />
 
         <StoriesContainer />
 

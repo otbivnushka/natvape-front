@@ -9,6 +9,7 @@ export { OrdersContainer } from './orders-container';
 export { ProductsContainer } from './products-container';
 export { StoriesContainer } from './stories-container';
 export { UserInfo } from './user-info';
+export { BonusHistory } from './bonus-history';
 export { AddressSelector } from './address-selector';
 export { PickupSelector } from './pickup-selector';
 export { AdminProductAddInfo } from './admin-product-add-info';

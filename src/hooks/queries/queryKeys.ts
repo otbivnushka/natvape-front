@@ -21,6 +21,9 @@ export const queryKeys = {
     all: ['orders'] as const,
     sent: () => [...queryKeys.orders.all, 'sent'] as const,
   },
+  bonus: {
+    all: ['bonus'] as const,
+  },
   addresses: {
     all: ['addresses'] as const,
     pickups: () => [...queryKeys.addresses.all, 'pickup'] as const,

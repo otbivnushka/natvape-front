@@ -30,6 +30,7 @@ function AuthSync() {
         queryClient.invalidateQueries({ queryKey: queryKeys.cart.all });
         queryClient.invalidateQueries({ queryKey: queryKeys.wishlist.all });
         queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+        queryClient.invalidateQueries({ queryKey: queryKeys.bonus.all });
       }
     });
     return () => unsub();

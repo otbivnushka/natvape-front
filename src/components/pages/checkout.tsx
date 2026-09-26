@@ -4,9 +4,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { ShoppingCart, Loader2 } from 'lucide-react';
 import { Api } from '@/api';
 import { useCart, useClearCart } from '@/hooks/queries/useCartQuery';
+import { useBonus } from '@/hooks/queries/useBonusQuery';
 import { useAuthStore } from '@/store/useAuthStore';
 import { PrimaryButton, Textarea } from '@/components/ui';
-import { PageLayout, DeliveryMethodSelector, PageTitle, TimeSelector } from '@/components/shared';
+import { PageLayout, DeliveryMethodSelector, PageTitle, TimeSelector, BonusSelector } from '@/components/shared';
 import { AddressSelector, OrderSummary, PickupSelector } from '@/components/widgets';
 import { OrderErrorModal } from '@/components/widgets/modals';
 import type { CartItem } from '@/types';
@@ -31,11 +32,17 @@ const Checkout = () => {
   const [timeOption, setTimeOption] = useState<'soon' | 'whenever' | null>(null);
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
   const [orderErrors, setOrderErrors] = useState<string[] | null>(null);
+  const [bonusToUse, setBonusToUse] = useState(0);
+
+  const { data: bonus } = useBonus();
 
   const totalQty = items.reduce((sum: number, i: CartItem) => sum + i.quantity, 0);
   const deliveryFee = delivery === 'delivery' && totalQty < 3 ? 3 : 0;
   const subtotal = calcCartSubtotal(items);
-  const total = subtotal + deliveryFee;
+  const maxBonus = Math.min(bonus?.spendable ?? 0, Math.floor(subtotal));
+  const effectiveBonus = Math.min(bonusToUse, maxBonus);
+
+  const total = subtotal + deliveryFee - effectiveBonus;
 
   const handleSubmit = async () => {
     if (!isLoggedIn()) {
@@ -56,16 +63,20 @@ const Checkout = () => {
             : timeOption === 'whenever'
               ? 'не важно когда'
               : undefined,
+        bonusToUse: effectiveBonus > 0 ? effectiveBonus : undefined,
       });
       addToast(`Заказ #${order.id} оформлен! Спасибо за покупку!`);
       clearCart.mutate();
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.products.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.bonus.all });
       navigate('/profile');
     } catch (e) {
       const msgs = (e as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
       if (Array.isArray(msgs) && msgs.length > 0) {
         setOrderErrors(msgs as string[]);
+      } else if (typeof msgs === 'string') {
+        addToast(msgs);
       } else {
         toastError('оформлении заказа');
       }
@@ -110,12 +121,19 @@ const Checkout = () => {
 
       <TimeSelector time={timeOption} setTime={setTimeOption} />
 
+      <BonusSelector
+        spendable={bonus?.spendable ?? 0}
+        max={maxBonus}
+        value={effectiveBonus}
+        onChange={setBonusToUse}
+      />
+
       <div className="mb-5">
         <h2 className="text-sm font-semibold text-muted mb-2.5">Комментарий к заказу</h2>
         <Textarea value={comment} onChange={(e) => setComment(e.target.value)} />
       </div>
 
-      <OrderSummary items={items} total={total} deliveryFee={deliveryFee} />
+      <OrderSummary items={items} total={total} deliveryFee={deliveryFee} bonusUsed={effectiveBonus} />
 
       <PrimaryButton onClick={handleSubmit} disabled={submitting}>
         {submitting ? (

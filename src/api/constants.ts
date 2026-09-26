@@ -17,6 +17,8 @@ export const ApiRoutes = {
   ORDERS: '/orders',
   ORDER_BY_ID: '/orders/:id',
 
+  BONUS: '/bonus',
+
   PROFILE: '/profile',
 
   ADDRESSES: '/addresses',

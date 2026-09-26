@@ -7,9 +7,10 @@ interface OrderSummaryProps {
   items: CartItem[];
   total: number;
   deliveryFee?: number;
+  bonusUsed?: number;
 }
 
-const OrderSummary: React.FC<OrderSummaryProps> = ({ items, total, deliveryFee }) => {
+const OrderSummary: React.FC<OrderSummaryProps> = ({ items, total, deliveryFee, bonusUsed }) => {
   return (
     <div className="mb-5 p-4 bg-surface rounded-xl">
       <h2 className="text-sm font-semibold text-muted mb-3">Ваш заказ</h2>
@@ -22,6 +23,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ items, total, deliveryFee }
         <div className="flex justify-between text-sm text-muted mt-2">
           <span>Доставка</span>
           <span>+{formatPrice(deliveryFee)}</span>
+        </div>
+      ) : null}
+      {bonusUsed ? (
+        <div className="flex justify-between text-sm text-muted mt-2">
+          <span>Баллы</span>
+          <span>-{formatPrice(bonusUsed)}</span>
         </div>
       ) : null}
       <div className="flex justify-between text-base font-semibold text-body mt-3 pt-3 border-t border-line">

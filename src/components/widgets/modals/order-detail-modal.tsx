@@ -124,6 +124,19 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ open, onClose, orde
               </div>
             )}
 
+            {detail.bonusUsed ? (
+              <div className="flex justify-between text-sm text-muted">
+                <span>Списано баллов</span>
+                <span>-{formatPrice(detail.bonusUsed)}</span>
+              </div>
+            ) : null}
+            {detail.bonusAccrued ? (
+              <div className="flex justify-between text-sm text-muted">
+                <span>Начислено баллов</span>
+                <span className="text-accent">+{formatPrice(detail.bonusAccrued)}</span>
+              </div>
+            ) : null}
+
             <div className="flex justify-between text-base font-bold text-primary pt-3 border-t border-line">
               <span>Итого</span>
               <span>{formatPrice(detail.total)}</span>

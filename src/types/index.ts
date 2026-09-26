@@ -85,7 +85,26 @@ export interface Order {
   addressId?: number;
   address?: Address;
   deliveryTime?: string;
+  bonusUsed?: number;
+  bonusAccrued?: number;
   user: { telegramId: string; telegramUsername: string };
+}
+
+export type BonusHistoryType = 'accrual' | 'spend' | 'expire' | 'admin_adjustment';
+
+export interface BonusHistoryEntry {
+  id: number;
+  amount: number;
+  type: BonusHistoryType;
+  orderId: number | null;
+  description: string;
+  createdAt: string;
+}
+
+export interface Bonus {
+  balance: number;
+  spendable: number;
+  history: BonusHistoryEntry[];
 }
 
 export interface UserProfile {

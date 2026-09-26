@@ -47,6 +47,7 @@ const ProjectInfoModal: React.FC<ProjectInfoModalProps> = ({ open, onClose }) =>
         <p
           onClick={() => {
             window.localStorage.clear();
+            window.location.reload();
           }}
           className="text-sm text-muted mt-8 leading-relaxed"
         >

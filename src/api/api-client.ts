@@ -5,6 +5,7 @@ import * as products from './requests/products';
 import * as cart from './requests/cart';
 import * as wishlist from './requests/wishlist';
 import * as orders from './requests/orders';
+import * as bonus from './requests/bonus';
 import * as profile from './requests/profile';
 import * as addresses from './requests/addresses';
 import * as admin from './requests/admin';
@@ -20,6 +21,7 @@ export const Api = {
   cart,
   wishlist,
   orders,
+  bonus,
   profile,
   addresses,
   admin,

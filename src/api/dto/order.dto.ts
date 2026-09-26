@@ -19,6 +19,8 @@ export interface ApiOrder {
   createdAt: string;
   addressId?: number;
   deliveryTime?: string;
+  bonusUsed?: number;
+  bonusAccrued?: number;
   user: {
     telegramId: string;
     telegramUsername: string;
@@ -30,4 +32,5 @@ export interface CreateOrderDto {
   comment?: string;
   addressId?: number;
   deliveryTime?: string;
+  bonusToUse?: number;
 }
