@@ -69,29 +69,36 @@ const AddProductWidget: React.FC<AddProductWidgetProps> = ({ product, selected }
   const decrement = () => setQuantity((q) => Math.max(1, q - 1));
 
   return (
-    <div className="bg-surface rounded-xl p-4 lg:p-5">
-      <div className="flex items-center justify-between mb-4">
-        <div className="text-sm font-semibold text-muted">
+    <div className="fixed bottom-16 left-0 right-0 z-40 bg-surface border-t border-line px-4 py-2.5">
+      <div className="max-w-5xl mx-auto flex items-center gap-2">
+        <div className="text-sm font-semibold text-muted whitespace-nowrap shrink-0">
           {canAdd ? (
             <>
               Количество:{' '}
-              <span className="text-[11px] font-normal text-dim">(доступно {maxQuantity})</span>
+              <span className="hidden sm:inline text-[11px] font-normal text-dim">
+                (доступно {maxQuantity})
+              </span>
             </>
           ) : (
             <>Количество</>
           )}
         </div>
         <QuantityStepper
+          size="sm"
           quantity={effectiveQuantity}
           onDecrement={decrement}
           onIncrement={increment}
           max={maxQuantity}
         />
+        <PrimaryButton
+          size="sm"
+          className="flex-1"
+          onClick={handleAddToCart}
+          disabled={!canAdd || maxQuantity === 0}
+        >
+          {!canAdd ? 'Выберите вариант' : `В корзину — ${effectiveQuantity} шт.`}
+        </PrimaryButton>
       </div>
-
-      <PrimaryButton onClick={handleAddToCart} disabled={!canAdd || maxQuantity === 0}>
-        {!canAdd ? 'Выберите вариант' : `В корзину — ${effectiveQuantity} шт.`}
-      </PrimaryButton>
     </div>
   );
 };

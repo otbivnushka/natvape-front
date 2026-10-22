@@ -9,12 +9,14 @@ import { AddressBlock } from '../shared';
 interface AddressSelectorProps {
   selectedAddressId: number | null;
   setSelectedAddressId: (id: number | null) => void;
+  onPendingAddressChange?: (value: string) => void;
   className?: string;
 }
 
 const AddressSelector: React.FC<AddressSelectorProps> = ({
   selectedAddressId,
   setSelectedAddressId,
+  onPendingAddressChange,
   className,
 }) => {
   const toastError = useToastError();
@@ -38,9 +40,13 @@ const AddressSelector: React.FC<AddressSelectorProps> = ({
   const handleSelectAddress = (address: string, lat: number, lng: number) => {
     setPendingAddressInput(address);
     setPendingCoords({ lat, lng });
+    onPendingAddressChange?.(address);
   };
   const handleCancelAdd = () => {
     setIsAddingAddress(false);
+    setPendingAddressInput('');
+    setPendingCoords(null);
+    onPendingAddressChange?.('');
   };
   const handleSaveAddress = async () => {
     const trimmed = pendingAddressInput.trim();
@@ -65,6 +71,9 @@ const AddressSelector: React.FC<AddressSelectorProps> = ({
       setAddresses((prev) => [...prev, newAddr]);
       setSelectedAddressId(newAddr.id);
       setIsAddingAddress(false);
+      setPendingAddressInput('');
+      setPendingCoords(null);
+      onPendingAddressChange?.('');
     } catch {
       toastError('сохранении адреса');
     }
@@ -74,6 +83,7 @@ const AddressSelector: React.FC<AddressSelectorProps> = ({
     setIsAddingAddress(true);
     setPendingAddressInput('');
     setPendingCoords(null);
+    onPendingAddressChange?.('');
   };
 
   const handleDeleteAddress = async (id: number) => {
@@ -104,9 +114,13 @@ const AddressSelector: React.FC<AddressSelectorProps> = ({
             onChange={(v) => {
               setPendingAddressInput(v);
               setPendingCoords(null);
+              onPendingAddressChange?.(v);
             }}
             onSelectAddress={handleSelectAddress}
           />
+          <p className="text-xs text-dim">
+            Можно не сохранять — адрес добавится к комментарию заказа
+          </p>
           <div className="flex gap-2">
             <button
               type="button"

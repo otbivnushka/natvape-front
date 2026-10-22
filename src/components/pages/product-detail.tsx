@@ -163,10 +163,11 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            <AddProductWidget product={product} selected={selectedColor?.name || selectedVariant} />
           </div>
         </div>
+        <div aria-hidden className="h-16" />
       </PageLayout>
+      <AddProductWidget product={product} selected={selectedColor?.name || selectedVariant} />
     </>
   );
 };

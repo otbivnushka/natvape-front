@@ -31,6 +31,7 @@ const Checkout = () => {
   const [submitting, setSubmitting] = useState(false);
   const [timeOption, setTimeOption] = useState<'soon' | 'whenever' | null>(null);
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+  const [unsavedAddress, setUnsavedAddress] = useState('');
   const [orderErrors, setOrderErrors] = useState<string[] | null>(null);
   const [bonusToUse, setBonusToUse] = useState(0);
 
@@ -44,6 +45,11 @@ const Checkout = () => {
 
   const total = subtotal + deliveryFee - effectiveBonus;
 
+  const handleDeliveryChange = (method: DeliveryMethod) => {
+    if (method !== delivery) setUnsavedAddress('');
+    setDelivery(method);
+  };
+
   const handleSubmit = async () => {
     if (!isLoggedIn()) {
       addToast('Войдите в профиль, чтобы оформить заказ');
@@ -51,12 +57,17 @@ const Checkout = () => {
       return;
     }
 
+    const typedAddress = delivery === 'delivery' ? unsavedAddress.trim() : '';
+    const fullComment = typedAddress
+      ? [comment.trim(), `Адрес: ${typedAddress}`].filter(Boolean).join('\n')
+      : comment;
+
     setSubmitting(true);
     try {
       const order = await Api.orders.create({
         deliveryMethod: delivery,
-        comment: comment,
-        addressId: selectedAddressId ?? undefined,
+        comment: fullComment,
+        addressId: typedAddress ? undefined : (selectedAddressId ?? undefined),
         deliveryTime:
           timeOption === 'soon'
             ? 'как можно скорее'
@@ -101,7 +112,7 @@ const Checkout = () => {
     <PageLayout>
       <PageTitle>Оформление заказа</PageTitle>
 
-      <DeliveryMethodSelector value={delivery} onChange={setDelivery} />
+      <DeliveryMethodSelector value={delivery} onChange={handleDeliveryChange} />
 
       {delivery === 'pickup' && (
         <PickupSelector
@@ -115,6 +126,7 @@ const Checkout = () => {
         <AddressSelector
           selectedAddressId={selectedAddressId}
           setSelectedAddressId={setSelectedAddressId}
+          onPendingAddressChange={setUnsavedAddress}
           className="mb-5"
         />
       )}
